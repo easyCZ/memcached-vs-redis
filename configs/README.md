@@ -12,6 +12,9 @@ Server has 6 cores
 
 ## Redis
 
+### Disable redis saving
+To bring redis closer to memcached, disable saving of the content
+
 ### Receive Packet Steering (RPS)
 [tuning](https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/6/html/Performance_Tuning_Guide/network-rps.html)
 RPS should be enabled to allow interrupts to be processed by other processes due to Redis being single threaded.
