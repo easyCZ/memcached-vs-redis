@@ -1,7 +1,7 @@
 ## General
 
 ### Memory Allocation
-*nsl200* has about 6GB free memory - set this as the bound
+*nsl200* has about 6GB free memory out of 8GB - set this as the bound. This achieves about 80% memory usage.
 
 ### Deamon Mode
 Run both applications as deamons
