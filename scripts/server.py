@@ -2,12 +2,12 @@ import pssh
 import settings
 
 
+class Server(object):
 
-class Server():
-
-    def __init__(self, cache_type):
+    def __init__(self, cache_type, port=11122):
         self.host = settings.SERVERS
         self.cache_type = cache_type
+        self.connection = pssh.ParallelSSHClient(self.host)
 
     def get_command(self):
         cache = settings.CACHES[self.cache_type]
@@ -15,13 +15,17 @@ class Server():
         flags = {
             '-d': ''
         }
-        return '%s' % cache
+        return '%s -d' % cache
 
     def run(self):
-        self.server = pssh.ParallelSSHClient(self.host)
-        pssh.utils.enable_host_logger()
-        start = self.server.run_command(self.get_command(), {
-            '-d': ''
-        })
+        return self.connection.run_command(self.get_command())
 
-        print start
+    def kill(self):
+        command = "ps -ef | grep '[%s]%s' | awk '{print $2}'" % (
+            self.cache_type[0],
+            self.cache_type[1:]
+        )
+        pid = self.connection.run_command(command)[0]['stdout']
+        return self.connection.run_command("kill %s" % pid)
+
+

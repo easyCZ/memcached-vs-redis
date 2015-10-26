@@ -4,6 +4,8 @@ from server import Server
 def main():
     server = Server('memcached')
     server.run()
+
+
 #
 # # Start cache
 # server_ssh = pssh.ParallelSSHClient(settings.SERVERS)

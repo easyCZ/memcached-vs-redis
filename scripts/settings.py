@@ -11,3 +11,5 @@ CACHE_CONFIGS = {
     'memcached': '~/configs/memcached.conf',
     'redis': '~/configs/redis.conf'
 }
+
+MEMTIER = '~/memtier_benchmark/bin/memtier_benchmark'
