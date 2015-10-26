@@ -11,6 +11,10 @@ def run(type, port, server_conf, memtier_conf):
 
     clients = Clients(type, memtier_conf)
     results = clients.run()
+
+    print("Waiting for results to finish.")
+    results.pool.join()
+
     print results
 
 def parse_config(path):
