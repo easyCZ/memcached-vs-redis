@@ -2,6 +2,7 @@ import pssh
 import settings
 
 
+
 class Server():
 
     def __init__(self, cache_type):
@@ -18,6 +19,7 @@ class Server():
 
     def run(self):
         self.server = pssh.ParallelSSHClient(self.host)
+        pssh.utils.enable_host_logger()
         start = self.server.run_command(self.get_command(), {
             '-d': ''
         })
