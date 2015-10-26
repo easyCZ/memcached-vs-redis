@@ -22,4 +22,4 @@ class Server():
             '-d': ''
         })
 
-        print self.server.get_output(start)
+        print start
