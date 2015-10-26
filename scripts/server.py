@@ -18,6 +18,8 @@ class Server():
 
     def run(self):
         self.server = pssh.ParallelSSHClient(self.host)
-        self.server.run_command(self.get_command(), {
+        start = self.server.run_command(self.get_command(), {
             '-d': ''
         })
+
+        print self.server.get_output(start)
