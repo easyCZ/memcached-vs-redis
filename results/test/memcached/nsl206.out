@@ -1,0 +1,256 @@
+============== Configuration values: ==============
+server = nsl200
+port = 11123
+unix socket = (null)
+protocol = memcache_text
+out_file = (null)
+client_stats = (null)
+run_count = 1
+debug = 0
+requests = 40000
+clients = 50
+threads = 4
+test_time = 0
+ratio = 1:10
+pipeline = 1
+data_size = 32
+data_offset = 0
+random_data = yes
+data_size_range = 0-0
+data_size_list =
+data_size_pattern = R
+expiry_range = 0-0
+data_import = (null)
+data_verify = no
+verify_only = no
+generate_keys = no
+key_prefix = memtier-
+key_minimum = 0
+key_maximum = 1000
+key_pattern = R:R
+key_stddev = 0.000000
+key_median = 0.000000
+reconnect_interval = 0
+multi_key_get = 0
+authenticate =
+select-db = 0
+no-expiry = no
+===================================================
+[RUN #1] Preparing benchmark client...
+[RUN #1] Launching threads now...
+[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 0%,   0 secs]  4 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latencyconnect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+connect: connection failed: Connection timed out
+[RUN #1 0%,   0 secs]  0 threads:           0 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency
+
+4         Threads
+50        Connections per thread
+40000     Requests per thread
+Type        Ops/sec     Hits/sec   Misses/sec      Latency       KB/sec
+------------------------------------------------------------------------
+Sets           0.00          ---          ---      0.00000         0.00
+Gets           0.00         0.00         0.00      0.00000         0.00
+Totals         0.00         0.00         0.00      0.00000         0.00
+
+
+Request Latency Distribution
+Type     <= msec         Percent
+------------------------------------------------------------------------
+---
