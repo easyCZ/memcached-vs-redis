@@ -15,7 +15,9 @@ class Server(object):
         return '%s %s' % (cache, self.server_conf)
 
     def run(self):
-        return self.connection.run_command(self.get_command())
+        command = self.get_command()
+        print("[Server] Running command '%s'" % command)
+        return self.connection.run_command(command)
 
     def kill(self):
         command = "ps -ef | grep '[%s]%s' | awk '{print $2}'" % (
