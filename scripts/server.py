@@ -27,7 +27,7 @@ class Server(object):
         )
         command_out = self.connection.run_command(command)
         print("Getting process ID: %s" % command_out)
-        pid = command_out[0]['stdout']
+        pid = command_out[self.host]['stdout']
         print("Attempting to kill process #%s" % pid)
         return self.connection.run_command("kill %s" % pid)
 
