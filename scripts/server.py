@@ -4,8 +4,9 @@ import settings
 
 class Server(object):
 
-    def __init__(self, cache_type, port=11122):
+    def __init__(self, cache_type, server_conf):
         self.host = settings.SERVERS
+        self.server_conf = server_conf
         self.cache_type = cache_type
         self.connection = pssh.ParallelSSHClient(self.host)
 
@@ -15,7 +16,7 @@ class Server(object):
         flags = {
             '-d': ''
         }
-        return '%s -d' % cache
+        return '%s -d %s' % (cache, self.server_conf)
 
     def run(self):
         return self.connection.run_command(self.get_command())
