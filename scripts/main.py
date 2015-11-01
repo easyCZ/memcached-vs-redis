@@ -5,7 +5,7 @@ from clients import Clients
 from server import Server
 
 
-def run(type, port, server_conf, memtier_conf, output_dir):
+def run(type, server_conf, memtier_conf, output_dir):
 
     server = Server(type, server_conf)
     server.run()
@@ -39,7 +39,6 @@ def parse_config(path):
 def main(argv):
     parser = argparse.ArgumentParser(description='Run performance tests.')
     parser.add_argument('-type', dest='type', help='Type of cache', required=True, choices=['memcached', 'redis'])
-    parser.add_argument('-port', dest='port', help='Port number for server', required=True)
     parser.add_argument('-server-conf', dest='server_conf', help='Server config', required=True)
     parser.add_argument('-memtier-conf', dest='memtier_conf', help='Memtier config', required=True)
     parser.add_argument('-output', dest='output', help='The directory to put the output of clients into', required=True)
@@ -47,7 +46,7 @@ def main(argv):
     args = parser.parse_args()
     server_conf = parse_config(args.server_conf)
     memtier_conf = parse_config(args.memtier_conf)
-    run(args.type, args.port, server_conf, memtier_conf, args.output)
+    run(args.type, server_conf, memtier_conf, args.output)
 
 if __name__ == "__main__":
     main(sys.argv)
