@@ -13,6 +13,7 @@ def run(type, server_conf, memtier_conf, output_dir):
     clients = Clients(type, memtier_conf)
     results = clients.run()
 
+    print("[Main] Writing results to files.")
     for hostname, res in results.iteritems():
 
         filename = '%s/%s.out' % (output_dir, hostname)
@@ -23,6 +24,8 @@ def run(type, server_conf, memtier_conf, output_dir):
             for line in res['stdout']:
                 f.write(line)
                 f.write('\n')
+
+        print("[Main] Wrote results for %s" % hostname)
 
         # out = "\n".join([line for line in res['stdout']])
         # print("%s: %s\n" % (hostname, out))
