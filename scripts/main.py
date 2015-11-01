@@ -5,7 +5,7 @@ from clients import Clients
 from server import Server
 
 
-def run(type, port, server_conf, memtier_conf):
+def run(type, port, server_conf, memtier_conf, output_dir):
 
     server = Server(type, server_conf)
     server.run()
@@ -16,7 +16,7 @@ def run(type, port, server_conf, memtier_conf):
 
     for hostname, res in results.iteritems():
 
-        filename = '../out/test/%s.out' % hostname
+        filename = '%s/%s.out' % (output_dir, hostname)
         if not os.path.exists(os.path.dirname(filename)):
             os.makedirs(os.path.dirname(filename))
 
@@ -43,11 +43,12 @@ def main(argv):
     parser.add_argument('-port', dest='port', help='Port number for server', required=True)
     parser.add_argument('-server-conf', dest='server_conf', help='Server config', required=True)
     parser.add_argument('-memtier-conf', dest='memtier_conf', help='Memtier config', required=True)
+    parser.add_argument('-output', dest='output', help='The directory to put the output of clients into', required=True)
 
     args = parser.parse_args()
     server_conf = parse_config(args.server_conf)
     memtier_conf = parse_config(args.memtier_conf)
-    run(args.type, args.port, server_conf, memtier_conf)
+    run(args.type, args.port, server_conf, memtier_conf, args.output)
 
 if __name__ == "__main__":
     main(sys.argv)
