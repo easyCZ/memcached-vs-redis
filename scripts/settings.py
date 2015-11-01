@@ -12,4 +12,4 @@ CACHE_CONFIGS = {
     'redis': '~/configs/redis.conf'
 }
 
-MEMTIER = '~/memtier_benchmark/bin/memtier_benchmark'
+MEMTIER = '~/memtier_benchmark-1.2.6/memtier_benchmark'
