@@ -26,6 +26,7 @@ class Server(object):
             self.cache_type[1:]
         )
         pid = self.connection.run_command(command)[0]['stdout']
+        print("Attempting to kill process #%s" % pid)
         return self.connection.run_command("kill %s" % pid)
 
 
