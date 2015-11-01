@@ -36,7 +36,7 @@ def run(type, server_conf, memtier_conf, output_dir):
 
 def parse_config(path):
     with open(path) as f:
-        return " ".join([line.strip() for line in f])
+        return " ".join([line.strip() for line in f if not line.strip().startswith('#')])
 
 
 def main(argv):
@@ -47,12 +47,7 @@ def main(argv):
     parser.add_argument('-output', dest='output', help='The directory to put the output of clients into', required=True)
 
     args = parser.parse_args()
-
-    if args.type == 'redis':
-        # Use the filename directly
-        server_conf = args.server_conf
-    else:
-        server_conf = parse_config(args.server_conf)
+    server_conf = parse_config(args.server_conf)
     memtier_conf = parse_config(args.memtier_conf)
     run(args.type, server_conf, memtier_conf, args.output)
 
