@@ -13,6 +13,8 @@ class Clients(object):
         return '%s %s' % (settings.MEMTIER, self.config)
 
     def run(self):
-        results = self.connections.run_command(self.get_command())
+        command = self.get_command()
+        print("[Clients] Running command '%s'" % command)
+        results = self.connections.run_command(command)
         self.connections.pool.join()
         return results
