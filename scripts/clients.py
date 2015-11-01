@@ -13,6 +13,6 @@ class Clients(object):
         return '%s %s' % (settings.MEMTIER, self.config)
 
     def run(self):
-        results = self.connections.exec_command(self.get_command())
+        results = self.connections.run_command(self.get_command())
         self.connections.pool.join()
         return results

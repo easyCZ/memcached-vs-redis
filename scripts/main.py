@@ -15,6 +15,10 @@ def run(type, port, server_conf, memtier_conf):
 
     print results
 
+    # Clean up
+    server.kill()
+
+
 def parse_config(path):
     with open(path) as f:
         return " ".join([line.strip() for line in f])
