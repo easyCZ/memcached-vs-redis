@@ -13,9 +13,9 @@ def run(type, port, server_conf, memtier_conf):
     results = clients.run()
     print("Waiting for results to finish.")
 
-    for server, res in results.iteritems():
+    for hostname, res in results.iteritems():
         out = "\n".join([line for line in res['stdout']])
-        print("%s: %s\n" % (server, out))
+        print("%s: %s\n" % (hostname, out))
 
     # Clean up
     server.kill()
