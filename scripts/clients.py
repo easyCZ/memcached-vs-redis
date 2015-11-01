@@ -17,5 +17,8 @@ class Clients(object):
         print("[Clients] Running command '%s'" % command)
 
         results = self.connections.run_command(command)
+        print("[Clients] Waiting for results to finish...")
         self.connections.pool.join()
+
+        print("[Clients] Results completed.")
         return results
