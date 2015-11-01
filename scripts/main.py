@@ -14,11 +14,16 @@ def run(type, port, server_conf, memtier_conf):
     print("Waiting for results to finish.")
 
     for hostname, res in results.iteritems():
-        out = "\n".join([line for line in res['stdout']])
-        print("%s: %s\n" % (hostname, out))
+
+        with open('../out/test/%s.out' % hostname, 'w') as f:
+            for line in res['stdout']:
+                f.write(line)
+
+        # out = "\n".join([line for line in res['stdout']])
+        # print("%s: %s\n" % (hostname, out))
 
     # Clean up
-    server.kill()
+    # server.kill()
 
 
 def parse_config(path):

@@ -15,6 +15,7 @@ class Clients(object):
     def run(self):
         command = self.get_command()
         print("[Clients] Running command '%s'" % command)
+
         results = self.connections.run_command(command)
         self.connections.pool.join()
         return results
