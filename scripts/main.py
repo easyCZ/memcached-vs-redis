@@ -1,4 +1,5 @@
 import sys
+import os
 import argparse
 from clients import Clients
 from server import Server
@@ -15,7 +16,11 @@ def run(type, port, server_conf, memtier_conf):
 
     for hostname, res in results.iteritems():
 
-        with open('../out/test/%s.out' % hostname, 'w') as f:
+        filename = '../out/test/%s.out' % hostname
+        if not os.path.exists(os.path.dirname(filename)):
+            os.makedirs(os.path.dirname(filename))
+
+        with open(filename, 'w') as f:
             for line in res['stdout']:
                 f.write(line)
 
