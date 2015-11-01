@@ -12,11 +12,7 @@ class Server(object):
 
     def get_command(self):
         cache = settings.CACHES[self.cache_type]
-        config = settings.CACHE_CONFIGS[self.cache_type]
-        flags = {
-            '-d': ''
-        }
-        return '%s -d %s' % (cache, self.server_conf)
+        return '%s %s' % (cache, self.server_conf)
 
     def run(self):
         return self.connection.run_command(self.get_command())
