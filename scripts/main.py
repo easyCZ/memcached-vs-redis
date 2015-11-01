@@ -23,6 +23,7 @@ def run(type, port, server_conf, memtier_conf):
         with open(filename, 'w') as f:
             for line in res['stdout']:
                 f.write(line)
+                f.write('\n')
 
         # out = "\n".join([line for line in res['stdout']])
         # print("%s: %s\n" % (hostname, out))
