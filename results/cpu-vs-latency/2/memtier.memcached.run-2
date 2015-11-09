@@ -1,0 +1,145 @@
+server = nsl200
+port = 11123
+unix socket = (null)
+protocol = memcache_binary
+out_file = (null)
+client_stats = (null)
+run_count = 1
+debug = 0
+requests = 0
+clients = 4
+threads = 1
+test_time = 60
+ratio = 1:10
+pipeline = 1
+data_size = 32
+data_offset = 0
+random_data = no
+data_size_range = 0-0
+data_size_list = 
+data_size_pattern = R
+expiry_range = 0-0
+data_import = (null)
+data_verify = no
+verify_only = no
+generate_keys = no
+key_prefix = memtier-
+key_minimum = 0
+key_maximum = 10000000
+key_pattern = R:R
+key_stddev = 0.000000
+key_median = 0.000000
+reconnect_interval = 0
+multi_key_get = 0
+authenticate = 
+select-db = 0
+no-expiry = no
+1         Threads
+4         Connections per thread
+60        Seconds
+Type        Ops/sec     Hits/sec   Misses/sec      Latency       KB/sec
+------------------------------------------------------------------------
+Sets        3648.90          ---          ---      0.09800       281.11
+Gets       36488.74       229.45     36259.29      0.09700      1385.77
+Totals     40137.63       229.45     36259.29      0.09700      1666.87
+
+
+Request Latency Distribution
+Type     <= msec         Percent
+------------------------------------------------------------------------
+SET        -nan       100.00
+---
+GET       0.050         0.00
+GET       0.051         0.00
+GET       0.052         0.00
+GET       0.053         0.00
+GET       0.054         0.00
+GET       0.055         0.00
+GET       0.056         0.00
+GET       0.057         0.00
+GET       0.058         0.00
+GET       0.059         0.00
+GET       0.060         0.01
+GET       0.061         0.01
+GET       0.062         0.01
+GET       0.063         0.02
+GET       0.064         0.02
+GET       0.065         0.03
+GET       0.066         0.03
+GET       0.067         0.04
+GET       0.068         0.05
+GET       0.069         0.05
+GET       0.070         0.06
+GET       0.071         0.07
+GET       0.072         0.09
+GET       0.073         0.10
+GET       0.074         0.13
+GET       0.075         0.16
+GET       0.076         0.20
+GET       0.077         0.24
+GET       0.078         0.30
+GET       0.079         0.36
+GET       0.080         0.45
+GET       0.081         0.55
+GET       0.082         0.68
+GET       0.083         0.85
+GET       0.084         1.10
+GET       0.085         1.42
+GET       0.086         1.91
+GET       0.087         2.61
+GET       0.088         3.52
+GET       0.089         4.84
+GET       0.090         6.73
+GET       0.091         8.97
+GET       0.092        12.60
+GET       0.093        18.57
+GET       0.094        27.78
+GET       0.095        46.96
+GET       0.096        68.70
+GET       0.097        80.86
+GET       0.098        86.26
+GET       0.099        89.61
+GET       0.100        95.92
+GET       0.110        98.11
+GET       0.120        98.64
+GET       0.130        98.93
+GET       0.140        99.14
+GET       0.150        99.24
+GET       0.160        99.26
+GET       0.170        99.27
+GET       0.180        99.28
+GET       0.190        99.28
+GET       0.200        99.29
+GET       0.210        99.30
+GET       0.220        99.33
+GET       0.230        99.41
+GET       0.240        99.51
+GET       0.250        99.61
+GET       0.260        99.73
+GET       0.270        99.84
+GET       0.280        99.92
+GET       0.290        99.96
+GET       0.300        99.98
+GET       0.310        99.98
+GET       0.320        99.99
+GET       0.330        99.99
+GET       0.340        99.99
+GET       0.350        99.99
+GET       0.360        99.99
+GET       0.370        99.99
+GET       0.380        99.99
+GET       0.390        99.99
+GET       0.400       100.00
+GET       0.410       100.00
+GET       0.420       100.00
+GET       0.430       100.00
+GET       0.440       100.00
+GET       0.450       100.00
+GET       0.460       100.00
+GET       0.480       100.00
+GET       0.490       100.00
+GET       0.530       100.00
+GET       0.550       100.00
+GET       0.580       100.00
+GET       0.600       100.00
+GET       0.610       100.00
