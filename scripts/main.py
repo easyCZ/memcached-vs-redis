@@ -31,7 +31,7 @@ def run(type, server_conf, memtier_conf, output_dir):
         print("[Main] Wrote results for %s" % hostname)
 
     print("[Main] Writing CPU results")
-    for hostname, res in results.iteritems():
+    for hostname, res in cpu.iteritems():
         with open('%s/%s.cpu.log' % (output_dir, hostname), 'w') as f:
             for line in res['stdout']:
                 f.write(line)
