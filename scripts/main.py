@@ -8,7 +8,9 @@ from server import Server
 def run(type, server_conf, memtier_conf, output_dir):
 
     server = Server(type, server_conf)
-    server.run()
+    server.start()
+    # Enable CPU logging
+
 
     clients = Clients(type, memtier_conf)
     results = clients.run()
@@ -26,6 +28,8 @@ def run(type, server_conf, memtier_conf, output_dir):
                 f.write('\n')
 
         print("[Main] Wrote results for %s" % hostname)
+
+
 
         # out = "\n".join([line for line in res['stdout']])
         # print("%s: %s\n" % (hostname, out))
