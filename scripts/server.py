@@ -17,7 +17,7 @@ class Server(object):
         cache = settings.CACHES[self.cache_type]
         return '%s %s' % (cache, self.server_conf)
 
-    def run(self, command=get_cache_command()):
+    def run(self, command):
         print("[Server] Running command '%s'" % command)
         return self.connection.run_command(command)
 
