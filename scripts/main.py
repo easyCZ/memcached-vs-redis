@@ -9,8 +9,9 @@ def run(type, server_conf, memtier_conf, output_dir):
 
     server = Server(type, server_conf)
     server.start()
-    # Enable CPU logging
 
+    # Enable CPU logging
+    cpu = server.log_cpu()
 
     clients = Clients(type, memtier_conf)
     results = clients.run()
@@ -28,6 +29,15 @@ def run(type, server_conf, memtier_conf, output_dir):
                 f.write('\n')
 
         print("[Main] Wrote results for %s" % hostname)
+
+    print("[Main] Writing CPU results")
+    for hostname, res in results.iteritems():
+        with open('%s/%s.cpu.log' % (output_dir, hostname), 'w') as f:
+            for line in res['stdout']:
+                f.write(line)
+                f.write('\n')
+
+        print("[Main] Wrote CPU for %s" % hostname)
 
 
 

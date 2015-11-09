@@ -11,7 +11,7 @@ class Server(object):
         self.connection = pssh.ParallelSSHClient(self.host)
 
     def get_cpu_command(self):
-        return 'mpstat 1 80'
+        return 'mpstat 1 65'
 
     def get_cache_command(self):
         cache = settings.CACHES[self.cache_type]
@@ -23,6 +23,9 @@ class Server(object):
 
     def start(self):
         return self.run(self.get_cache_command())
+
+    def log_cpu(self):
+        return self.run(self.get_cpu_command())
 
     def kill(self):
         command = "ps -ef | grep '[%s]%s' | awk '{print $2}'" % (
