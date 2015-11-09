@@ -3,6 +3,7 @@ import os
 import argparse
 from clients import Clients
 from server import Server
+from parsers.cpu import CPUParser
 
 
 def run(type, server_conf, memtier_conf, output_dir):
@@ -32,17 +33,13 @@ def run(type, server_conf, memtier_conf, output_dir):
 
     print("[Main] Writing CPU results")
     for hostname, res in cpu.iteritems():
+
+        content = [line for line in res['stdout']]
+        cpu_average = CPUParser(content).get_average()
+
         with open('%s/%s.cpu.log' % (output_dir, hostname), 'w') as f:
-            for line in res['stdout']:
-                f.write(line)
-                f.write('\n')
-
-        print("[Main] Wrote CPU for %s" % hostname)
-
-
-
-        # out = "\n".join([line for line in res['stdout']])
-        # print("%s: %s\n" % (hostname, out))
+            f.write(cpu_average)
+        print("[Main] CPU Average: " + str(cpu_average))
 
     # Clean up
     # server.kill()
