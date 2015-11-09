@@ -38,7 +38,7 @@ def run(type, server_conf, memtier_conf, output_dir):
         cpu_average = CPUParser(content).get_average()
 
         with open('%s/%s.cpu.log' % (output_dir, hostname), 'w') as f:
-            f.write(cpu_average)
+            f.write(str(cpu_average))
         print("[Main] CPU Average: " + str(cpu_average))
 
     # Clean up
