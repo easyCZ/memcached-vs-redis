@@ -28,15 +28,16 @@ class Server(object):
         return self.run(self.get_cpu_command())
 
     def kill(self):
-        command = "ps -ef | grep '[%s]%s' | awk '{print $2}'" % (
+        command = "ps -ef | grep '[%s]%s'" % (
             self.cache_type[0],
             self.cache_type[1:]
         )
         command_out = self.connection.run_command(command)
         for hostname, res in command_out.iteritems():
             for pid in res['stdout']:
-                print("Attempting to kill process #%s" % pid)
-                print("[Server] Running 'kill %s'" % pid)
-                return self.connection.run_command("kill %s" % pid)
+                tokens = pid.split()
+                print("Attempting to kill process #%s" % tokens[1])
+                print("[Server] Running 'kill %s'" % tokens[1])
+                return self.connection.run_command("kill %s" % tokens[1])
 
 
