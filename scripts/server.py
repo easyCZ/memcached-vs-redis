@@ -33,10 +33,10 @@ class Server(object):
             self.cache_type[1:]
         )
         command_out = self.connection.run_command(command)
-        print("Getting process ID: %s" % command_out)
         for hostname, res in command_out.iteritems():
             for pid in res['stdout']:
                 print("Attempting to kill process #%s" % pid)
+                print("[Server] Running 'kill %s'" % pid)
                 return self.connection.run_command("kill %s" % pid)
 
 
