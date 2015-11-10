@@ -81,7 +81,7 @@ def run(type, server_conf, memtier_conf, output_dir):
     #     print("[Main] CPU Average: " + str(cpu_average))
 
     # Clean up
-    # server.kill()
+    server.kill()
 
 
 def parse_config(path):
