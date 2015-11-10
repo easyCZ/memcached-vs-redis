@@ -67,6 +67,7 @@ def run(type, server_conf, memtier_conf, output_dir):
 
         with open('%s/%s.cpu.log' % (output_dir, hostname), 'w') as f:
             f.write(str(cpu_average))
+            f.write('\n')
         print("[Main] CPU Average: " + str(cpu_average))
 
     # Clean up
