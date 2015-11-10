@@ -1,82 +1,0 @@
-[RUN #1] Preparing benchmark client...
-[RUN #1] Launching threads now...
-[RUN #1 10%,   1 secs]  1 threads:       10433 ops,   10432 (avg:   10432) ops/sec, 433.27KB/sec (avg: 433.27KB/sec),  0.09 (avg:  0.09) msec latency[RUN #1 20%,   2 secs]  1 threads:       20612 ops,   10177 (avg:   10305) ops/sec, 422.66KB/sec (avg: 427.96KB/sec),  0.10 (avg:  0.09) msec latency[RUN #1 30%,   3 secs]  1 threads:       30783 ops,   10169 (avg:   10260) ops/sec, 422.38KB/sec (avg: 426.10KB/sec),  0.10 (avg:  0.09) msec latency[RUN #1 40%,   4 secs]  1 threads:       40969 ops,   10184 (avg:   10241) ops/sec, 422.97KB/sec (avg: 425.32KB/sec),  0.10 (avg:  0.09) msec latency[RUN #1 50%,   5 secs]  1 threads:       51152 ops,   10181 (avg:   10229) ops/sec, 422.83KB/sec (avg: 424.82KB/sec),  0.10 (avg:  0.09) msec latency[RUN #1 60%,   6 secs]  1 threads:       61332 ops,   10178 (avg:   10220) ops/sec, 422.69KB/sec (avg: 424.47KB/sec),  0.10 (avg:  0.09) msec latency[RUN #1 70%,   7 secs]  1 threads:       71516 ops,   10182 (avg:   10215) ops/sec, 422.88KB/sec (avg: 424.24KB/sec),  0.10 (avg:  0.09) msec latency[RUN #1 80%,   8 secs]  1 threads:       81698 ops,   10180 (avg:   10211) ops/sec, 422.77KB/sec (avg: 424.06KB/sec),  0.10 (avg:  0.09) msec latency[RUN #1 90%,   9 secs]  1 threads:       91875 ops,   10175 (avg:   10207) ops/sec, 422.57KB/sec (avg: 423.89KB/sec),  0.10 (avg:  0.09) msec latency[RUN #1 100%,  10 secs]  0 threads:      102037 ops,   10175 (avg:   10203) ops/sec, 422.57KB/sec (avg: 423.74KB/sec),  0.10 (avg:  0.10) msec latency
-
-1         Threads
-1         Connections per thread
-10        Seconds
-Type        Ops/sec     Hits/sec   Misses/sec      Latency       KB/sec
-------------------------------------------------------------------------
-Sets         927.69          ---          ---      0.09700        71.47
-Gets        9275.91        78.40      9197.51      0.09400       352.27
-Totals     10203.60        78.40      9197.51      0.09500       423.74
-
-
-Request Latency Distribution
-Type     <= msec         Percent
-------------------------------------------------------------------------
-SET        -nan    100.00000
----
-GET       0.057      0.00108
-GET       0.058      0.00647
-GET       0.059      0.03989
-GET       0.060      0.31371
-GET       0.061      0.49051
-GET       0.062      0.58646
-GET       0.063      0.69426
-GET       0.064      0.81285
-GET       0.065      0.86567
-GET       0.066      0.89370
-GET       0.067      0.90556
-GET       0.068      0.92066
-GET       0.069      0.93036
-GET       0.070      0.93575
-GET       0.071      0.94222
-GET       0.072      0.94976
-GET       0.073      0.95623
-GET       0.074      0.96270
-GET       0.075      0.97456
-GET       0.076      0.99396
-GET       0.077      1.00259
-GET       0.078      1.02091
-GET       0.079      1.04679
-GET       0.080      1.07266
-GET       0.081      1.10931
-GET       0.082      1.14597
-GET       0.083      1.21065
-GET       0.084      1.28180
-GET       0.085      1.36589
-GET       0.086      1.43165
-GET       0.087      1.52544
-GET       0.088      1.66882
-GET       0.089      1.96960
-GET       0.090      2.59487
-GET       0.091      4.15912
-GET       0.092      8.89608
-GET       0.093     16.71841
-GET       0.094     35.21130
-GET       0.095     74.97413
-GET       0.096     91.71949
-GET       0.097     95.89909
-GET       0.098     97.71238
-GET       0.099     98.52954
-GET       0.100     99.32622
-GET       0.110     99.73911
-GET       0.120     99.76930
-GET       0.130     99.77145
-GET       0.140     99.77577
-GET       0.150     99.82643
-GET       0.160     99.84045
-GET       0.170     99.84153
-GET       0.200     99.84260
-GET       0.210     99.84368
-GET       0.220     99.85339
-GET       0.230     99.86632
-GET       0.240     99.89112
-GET       0.250     99.91268
-GET       0.260     99.93532
-GET       0.270     99.95688
-GET       0.280     99.97952
-GET       0.290     99.99461
-GET       0.300     99.99892
-GET       0.320    100.00000
