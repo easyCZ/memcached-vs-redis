@@ -12,7 +12,7 @@ class LatencyParser(object):
         first_index = self.content.index(self.TOTALS_DELIM)
         totals = self.content[first_index+3]
         latency = totals.split()[4]
-        return latency
+        return float(latency)
 
     def get_99th_latency(self):
         gets_start = self.content.index(self.GETS_DELIM)
