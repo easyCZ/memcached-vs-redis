@@ -52,7 +52,7 @@ def run(type, server_conf, memtier_conf, output_dir):
         print("[Main] Wrote results for %s" % hostname)
 
     # Aggregate latencies
-    with open('%s/latencies.out' % output_dir) as f:
+    with open('%s/latencies.out' % output_dir, 'w') as f:
         f.write(str(avg(avg_latencies)))
         f.write(',')
         f.write(str(avg(last_percentiles)))
