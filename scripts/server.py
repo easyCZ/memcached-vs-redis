@@ -11,7 +11,7 @@ class Server(object):
         self.connection = pssh.ParallelSSHClient(self.host)
 
     def get_cpu_command(self):
-        return 'mpstat 1 63'
+        return 'mpstat 1 12'
 
     def get_cache_command(self):
         cache = settings.CACHES[self.cache_type]
