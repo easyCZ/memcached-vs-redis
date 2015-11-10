@@ -1,0 +1,79 @@
+[RUN #1] Preparing benchmark client...
+[RUN #1] Launching threads now...
+[RUN #1 10%,   0 secs]  1 threads:       10175 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 20%,   2 secs]  1 threads:       20354 ops,   10177 (avg:   10176) ops/sec, 422.71KB/sec (avg: 422.64KB/sec),  0.10 (avg:  0.10) msec latency[RUN #1 30%,   3 secs]  1 threads:       30532 ops,   10177 (avg:   10176) ops/sec, 422.66KB/sec (avg: 422.64KB/sec),  0.10 (avg:  0.10) msec latency[RUN #1 40%,   4 secs]  1 threads:       40713 ops,   10179 (avg:   10177) ops/sec, 422.79KB/sec (avg: 422.68KB/sec),  0.10 (avg:  0.10) msec latency[RUN #1 50%,   5 secs]  1 threads:       50893 ops,   10179 (avg:   10177) ops/sec, 422.70KB/sec (avg: 422.68KB/sec),  0.10 (avg:  0.10) msec latency[RUN #1 60%,   6 secs]  1 threads:       61072 ops,   10178 (avg:   10177) ops/sec, 422.66KB/sec (avg: 422.68KB/sec),  0.10 (avg:  0.10) msec latency[RUN #1 70%,   7 secs]  1 threads:       71252 ops,   10179 (avg:   10178) ops/sec, 422.73KB/sec (avg: 422.69KB/sec),  0.10 (avg:  0.10) msec latency[RUN #1 80%,   8 secs]  1 threads:       81435 ops,   10182 (avg:   10178) ops/sec, 422.84KB/sec (avg: 422.71KB/sec),  0.10 (avg:  0.10) msec latency[RUN #1 90%,   9 secs]  1 threads:       91611 ops,   10175 (avg:   10178) ops/sec, 422.55KB/sec (avg: 422.69KB/sec),  0.10 (avg:  0.10) msec latency[RUN #1 100%,  10 secs]  0 threads:      101814 ops,   10175 (avg:   10181) ops/sec, 422.55KB/sec (avg: 422.82KB/sec),  0.10 (avg:  0.10) msec latency
+
+1         Threads
+1         Connections per thread
+10        Seconds
+Type        Ops/sec     Hits/sec   Misses/sec      Latency       KB/sec
+------------------------------------------------------------------------
+Sets         925.60          ---          ---      0.09700        71.31
+Gets        9255.78        78.10      9177.68      0.09400       351.51
+Totals     10181.38        78.10      9177.68      0.09500       422.82
+
+
+Request Latency Distribution
+Type     <= msec         Percent
+------------------------------------------------------------------------
+SET        -nan    100.00000
+---
+GET       0.056      0.00108
+GET       0.059      0.00648
+GET       0.060      0.01080
+GET       0.061      0.04106
+GET       0.062      0.10264
+GET       0.063      0.13829
+GET       0.064      0.15990
+GET       0.065      0.16854
+GET       0.066      0.17611
+GET       0.067      0.18151
+GET       0.068      0.18691
+GET       0.069      0.19015
+GET       0.070      0.19771
+GET       0.071      0.20312
+GET       0.072      0.21068
+GET       0.073      0.21608
+GET       0.074      0.21932
+GET       0.075      0.23769
+GET       0.076      0.25389
+GET       0.077      0.27766
+GET       0.078      0.29711
+GET       0.079      0.32412
+GET       0.080      0.34465
+GET       0.081      0.38895
+GET       0.082      0.45809
+GET       0.083      0.53696
+GET       0.084      0.64392
+GET       0.085      0.80706
+GET       0.086      0.99613
+GET       0.087      1.21113
+GET       0.088      1.51040
+GET       0.089      1.90259
+GET       0.090      2.58000
+GET       0.091      4.22654
+GET       0.092      8.01119
+GET       0.093     15.96729
+GET       0.094     37.22315
+GET       0.095     77.99434
+GET       0.096     92.40044
+GET       0.097     95.91067
+GET       0.098     97.35193
+GET       0.099     97.99261
+GET       0.100     99.19294
+GET       0.110     99.76231
+GET       0.120     99.81957
+GET       0.130     99.82714
+GET       0.140     99.83362
+GET       0.150     99.83794
+GET       0.160     99.84226
+GET       0.200     99.84550
+GET       0.210     99.85847
+GET       0.220     99.87143
+GET       0.230     99.88980
+GET       0.240     99.90709
+GET       0.250     99.92113
+GET       0.260     99.93842
+GET       0.270     99.96759
+GET       0.280     99.99244
+GET       0.290     99.99892
+GET       0.300    100.00000

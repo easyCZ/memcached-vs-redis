@@ -1,0 +1,85 @@
+[RUN #1] Preparing benchmark client...
+[RUN #1] Launching threads now...
+[RUN #1 10%,   0 secs]  1 threads:       10165 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 20%,   2 secs]  1 threads:       20343 ops,   10176 (avg:   10170) ops/sec, 422.62KB/sec (avg: 422.39KB/sec),  0.10 (avg:  0.10) msec latency[RUN #1 30%,   3 secs]  1 threads:       30519 ops,   10174 (avg:   10172) ops/sec, 422.57KB/sec (avg: 422.45KB/sec),  0.09 (avg:  0.10) msec latency[RUN #1 40%,   4 secs]  1 threads:       40695 ops,   10174 (avg:   10172) ops/sec, 422.55KB/sec (avg: 422.48KB/sec),  0.09 (avg:  0.10) msec latency[RUN #1 50%,   5 secs]  1 threads:       50874 ops,   10177 (avg:   10173) ops/sec, 422.64KB/sec (avg: 422.51KB/sec),  0.09 (avg:  0.10) msec latency[RUN #1 60%,   6 secs]  1 threads:       61043 ops,   10167 (avg:   10172) ops/sec, 422.27KB/sec (avg: 422.47KB/sec),  0.10 (avg:  0.10) msec latency[RUN #1 70%,   7 secs]  1 threads:       71208 ops,   10163 (avg:   10171) ops/sec, 422.07KB/sec (avg: 422.41KB/sec),  0.10 (avg:  0.10) msec latency[RUN #1 80%,   8 secs]  1 threads:       81360 ops,   10150 (avg:   10168) ops/sec, 421.54KB/sec (avg: 422.30KB/sec),  0.10 (avg:  0.10) msec latency[RUN #1 90%,   9 secs]  1 threads:       91528 ops,   10166 (avg:   10168) ops/sec, 422.18KB/sec (avg: 422.29KB/sec),  0.10 (avg:  0.10) msec latency[RUN #1 100%,  10 secs]  0 threads:      101669 ops,   10166 (avg:   10166) ops/sec, 422.18KB/sec (avg: 422.21KB/sec),  0.10 (avg:  0.10) msec latency
+
+1         Threads
+1         Connections per thread
+10        Seconds
+Type        Ops/sec     Hits/sec   Misses/sec      Latency       KB/sec
+------------------------------------------------------------------------
+Sets         924.30          ---          ---      0.09700        71.21
+Gets        9242.58        78.10      9164.48      0.09500       351.01
+Totals     10166.88        78.10      9164.48      0.09500       422.21
+
+
+Request Latency Distribution
+Type     <= msec         Percent
+------------------------------------------------------------------------
+SET        -nan    100.00000
+---
+GET       0.054      0.00108
+GET       0.055      0.00433
+GET       0.057      0.00541
+GET       0.058      0.00974
+GET       0.059      0.01407
+GET       0.060      0.01623
+GET       0.061      0.02056
+GET       0.062      0.02488
+GET       0.063      0.02705
+GET       0.064      0.02921
+GET       0.065      0.03570
+GET       0.066      0.04111
+GET       0.067      0.05085
+GET       0.068      0.06492
+GET       0.069      0.07574
+GET       0.070      0.08439
+GET       0.071      0.09305
+GET       0.072      0.09954
+GET       0.073      0.10819
+GET       0.074      0.11793
+GET       0.075      0.12983
+GET       0.076      0.14282
+GET       0.077      0.16013
+GET       0.078      0.18285
+GET       0.079      0.21206
+GET       0.080      0.25534
+GET       0.081      0.31809
+GET       0.082      0.38517
+GET       0.083      0.49770
+GET       0.084      0.63402
+GET       0.085      0.78008
+GET       0.086      0.97700
+GET       0.087      1.23017
+GET       0.088      1.60236
+GET       0.089      2.21691
+GET       0.090      3.13548
+GET       0.091      4.76381
+GET       0.092      8.91308
+GET       0.093     17.93327
+GET       0.094     38.08885
+GET       0.095     73.81365
+GET       0.096     90.77749
+GET       0.097     95.13773
+GET       0.098     96.78445
+GET       0.099     97.65218
+GET       0.100     99.06412
+GET       0.110     99.59535
+GET       0.120     99.64079
+GET       0.130     99.64512
+GET       0.140     99.66135
+GET       0.150     99.78253
+GET       0.160     99.83554
+GET       0.170     99.84636
+GET       0.180     99.84745
+GET       0.190     99.84853
+GET       0.210     99.85610
+GET       0.220     99.86476
+GET       0.230     99.87882
+GET       0.240     99.88640
+GET       0.250     99.90262
+GET       0.260     99.92643
+GET       0.270     99.95131
+GET       0.280     99.98593
+GET       0.290     99.99351
+GET       0.300     99.99892
+GET       0.310    100.00000
