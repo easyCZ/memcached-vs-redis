@@ -4,6 +4,13 @@ import argparse
 from clients import Clients
 from server import Server
 from parsers.cpu import CPUParser
+from parsers.latency import LatencyParser
+
+
+def avg(data):
+    if len(data) > 0:
+        return sum(data) / len(data)
+    return 0
 
 
 def run(type, server_conf, memtier_conf, output_dir):
@@ -18,18 +25,39 @@ def run(type, server_conf, memtier_conf, output_dir):
     results = clients.run()
 
     print("[Main] Writing results to files.")
+
+    avg_latencies = []
+    last_percentiles = []
+
     for hostname, res in results.iteritems():
 
         filename = '%s/%s.out' % (output_dir, hostname)
         if not os.path.exists(os.path.dirname(filename)):
             os.makedirs(os.path.dirname(filename))
 
+        content = [line for line in res['stdout']]
+        latency_parser = LatencyParser(content)
+
+        avg_latency = latency_parser.get_average_latency()
+        last_percentile = latency_parser.get_99th_latency()
+
+        avg_latencies.append(avg_latency)
+        last_percentiles.append(last_percentile)
+
         with open(filename, 'w') as f:
-            for line in res['stdout']:
+            for line in content:
                 f.write(line)
                 f.write('\n')
 
         print("[Main] Wrote results for %s" % hostname)
+
+    # Aggregate latencies
+    with open('%s/latencies.out' % output_dir) as f:
+        f.write(str(avg(avg_latencies)))
+        f.write(',')
+        f.write(str(avg(last_percentiles)))
+        f.write('\n')
+
 
     print("[Main] Writing CPU results")
     for hostname, res in cpu.iteritems():
