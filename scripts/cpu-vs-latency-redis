@@ -7,7 +7,7 @@ do
         python main.py \
             -type=memcached \
             -server-conf=../configs/cpu-vs-latency/redis.conf \
-            -memtier-conf=../configs/cpu-vs-latency2/memtier.redis.$i.conf \
+            -memtier-conf=../configs/cpu-vs-latency/memtier.redis.$i.conf \
             -output=../results/cpu-vs-latency2/redis/$i-$j/
     done
 done
