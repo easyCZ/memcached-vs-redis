@@ -1,0 +1,5 @@
+#!/bin/bash
+
+python main.py -type=memcached -server-conf=../configs/cpu-vs-latencvs-latency/1/memtier.memcached.1.conf -output=../results/cpu-vs-latency2/memcached/1-1/
+python main.py -type=memcached -server-conf=../configs/cpu-vs-latencvs-latency/1/memtier.memcached.1.conf -output=../results/cpu-vs-latency2/memcached/1-2/
+python main.py -type=memcached -server-conf=../configs/cpu-vs-latencvs-latency/1/memtier.memcached.1.conf -output=../results/cpu-vs-latency2/memcached/1-3/
