@@ -1,13 +1,13 @@
 #!/bin/bash
 
-for i in {1..15}
+for i in {1..50}
 do
     for j in {1..3}
     do
         python main.py \
             -type=memcached \
             -server-conf=../configs/cpu-vs-latency/memcached.conf \
-            -memtier-conf=../configs/cpu-vs-latency3/memtier.memcached.$i.conf \
-            -output=../results/cpu-vs-latency2/memcached/$((i+15))-$j/
+            -memtier-conf=../configs/cpu-vs-latency/memtier.memcached.$i.conf \
+            -output=../results/cpu-vs-latency/memcached/$i-$j/
     done
 done
