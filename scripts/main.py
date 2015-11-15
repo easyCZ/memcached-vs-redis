@@ -62,7 +62,7 @@ def run(type, server_conf, memtier_conf, output_dir):
     # Aggregate latencies
     with open('%s/cpu-vs-latencies.out' % output_dir, 'w') as f:
         f.write(str(cpu_average))
-        f.write(', ')   
+        f.write(', ')
         f.write(str(avg(avg_latencies)))
         f.write(', ')
         f.write(str(avg(last_percentiles)))
