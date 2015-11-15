@@ -1,6 +1,9 @@
 # memcached-vs-redis
 Honours Project at the University of Edinburgh
 
+## TODO
+- [ ] Generate CPU vs Latency graphs
+
 ## Server testbed
 Inside UoE network, the following nodes:
 * nsl200 (server)
