@@ -1,0 +1,16 @@
+#!/bin/bash
+
+mkdir cpu-vs-latency2
+
+for i in {1..25}
+do
+    echo "-s nsl200
+-p 11123
+--test-time=30
+-c $i
+-t 2
+-P memcache_binary
+--random-data
+--key-minimum=0
+--key-maximum=10000" > cpu-vs-latency2/memtier.memcached.$i.conf
+done

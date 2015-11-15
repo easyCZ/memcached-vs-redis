@@ -1,0 +1,1 @@
+find ./ -name 'cpu-vs-latencies.out' -exec cat {} \; > aggregate.csv
