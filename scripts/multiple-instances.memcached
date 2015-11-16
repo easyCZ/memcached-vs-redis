@@ -1,0 +1,15 @@
+#!/bin/bash
+
+DIR=multiple-instances1
+
+for i in {1..12}
+do
+    for j in {1..3}
+    do
+        python main.py \
+            -type=memcached \
+            -server-conf=../configs/$DIR/memcached.conf \
+            -memtier-conf=../configs/$DIR/memtier.memcached.$i.conf \
+            -output=../results/$DIR/memcached/$i-$j/
+    done
+done

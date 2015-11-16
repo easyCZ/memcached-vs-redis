@@ -1,0 +1,13 @@
+#!/bin/bash
+
+LABEL=multiple-instances1
+
+mkdir $LABEL
+
+for i in {1..12}
+do
+    echo "-d
+-p 11123
+-m 4096
+-t $i" > $LABEL/memcached.$i.conf
+done
