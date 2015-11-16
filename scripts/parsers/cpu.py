@@ -10,7 +10,7 @@ class CPUParser(object):
 # 10:50:23     all    0.08    0.01    0.27    0.00    0.00    0.13    0.00    0.00   99.52
         last = self.content[-1]
         tokens = last.split()
-        usr = float(last[2])
-        sys = float(last[4])
+        usr = float(tokens[2])
+        sys = float(tokens[4])
         total = 100 - float(tokens[-1])
         return (total, usr, sys)
