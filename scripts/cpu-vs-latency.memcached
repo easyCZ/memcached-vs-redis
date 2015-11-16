@@ -6,8 +6,8 @@ do
     do
         python main.py \
             -type=memcached \
-            -server-conf=../configs/cpu-vs-latency4/memcached.conf \
-            -memtier-conf=../configs/cpu-vs-latency4/memtier.memcached.$i.conf \
-            -output=../results/cpu-vs-latency4/memcached/$i-$j/
+            -server-conf=../configs/cpu-vs-latency5/memcached.conf \
+            -memtier-conf=../configs/cpu-vs-latency5/memtier.memcached.$i.conf \
+            -output=../results/cpu-vs-latency5/memcached/$i-$j/
     done
 done
