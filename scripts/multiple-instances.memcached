@@ -8,8 +8,8 @@ do
     do
         python main.py \
             -type=memcached \
-            -server-conf=../configs/$DIR/memcached.conf \
-            -memtier-conf=../configs/$DIR/memtier.memcached.$i.conf \
+            -server-conf=../configs/$DIR/memcached.$i.conf \
+            -memtier-conf=../configs/$DIR/memtier.memcached.conf \
             -output=../results/$DIR/memcached/$i-$j/
     done
 done
