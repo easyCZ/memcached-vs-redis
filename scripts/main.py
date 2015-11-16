@@ -56,13 +56,18 @@ def run(type, server_conf, memtier_conf, output_dir):
     for hostname, res in cpu.iteritems():
 
         content = [line for line in res['stdout']]
-        cpu_average = CPUParser(content).get_average()
+        cpu_average, usr_cpu, sys_cpu = CPUParser(content).get_average()
         print("[Main] CPU Average: " + str(cpu_average))
 
     # Aggregate latencies
     with open('%s/cpu-vs-latencies.out' % output_dir, 'w') as f:
         f.write(str(cpu_average))
         f.write(', ')
+        f.write(str(usr_cpu))
+        f.write(', ')
+        f.write(str(sys_cpu))
+        f.write(', ')
+
         f.write(str(avg(avg_latencies)))
         f.write(', ')
         f.write(str(avg(last_percentiles)))
