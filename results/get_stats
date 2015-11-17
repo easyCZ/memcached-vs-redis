@@ -1,1 +1,1 @@
-find ./multiple-instances1 -name 'cpu-vs-latencies.out' -exec cat {} \; > ./multiple-instances1/aggregate.csv
+find ./multiple-instances2 -name 'cpu-vs-latencies.out' -exec cat {} \; > ./multiple-instances2/aggregate.csv
