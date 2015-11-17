@@ -1,6 +1,6 @@
 #!/bin/bash
 
-LABEL=multiple-instances1
+LABEL=multiple-instances2
 
 mkdir $LABEL
 
@@ -9,8 +9,8 @@ do
     echo "-s nsl200
 -p 11123
 --test-time=30
--c 50
--t 16
+-c 40
+-t 4
 -P memcache_binary
 --random-data
 --key-minimum=100
