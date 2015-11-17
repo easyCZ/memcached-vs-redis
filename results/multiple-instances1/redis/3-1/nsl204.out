@@ -41,6 +41,7 @@ connection dropped.
 connection dropped.
 connection dropped.
 connection dropped.
+read error: Connection reset by peer
 connection dropped.
 connection dropped.
 connection dropped.
@@ -48,36 +49,42 @@ connection dropped.
 connection dropped.
 connection dropped.
 connection dropped.
+read error: Connection reset by peer
 connection dropped.
 connection dropped.
 connection dropped.
 connection dropped.
 connection dropped.
 connection dropped.
+read error: Connection reset by peer
 connection dropped.
 connection dropped.
 connection dropped.
 connection dropped.
 connection dropped.
 connection dropped.
+read error: Connection reset by peer
 connection dropped.
 connection dropped.
 connection dropped.
 connection dropped.
 connection dropped.
 connection dropped.
+read error: Connection reset by peer
 connection dropped.
 connection dropped.
 connection dropped.
 connection dropped.
 connection dropped.
 connection dropped.
+read error: Connection reset by peer
 connection dropped.
 connection dropped.
 connection dropped.
 connection dropped.
 connection dropped.
 connection dropped.
+read error: Connection reset by peer
 connection dropped.
 connection dropped.
 connection dropped.
@@ -89,6 +96,7 @@ connection dropped.
 connection dropped.
 connection dropped.
 connection dropped.
+read error: Connection reset by peer
 connection dropped.
 connection dropped.
 connection dropped.
@@ -105,6 +113,7 @@ connection dropped.
 connection dropped.
 connection dropped.
 connection dropped.
+read error: Connection reset by peer
 connection dropped.
 connection dropped.
 connection dropped.
@@ -121,10 +130,15 @@ connection dropped.
 connection dropped.
 connection dropped.
 connection dropped.
+read error: Connection reset by peer
 connection dropped.
+read error: Connection reset by peer
 connection dropped.
+read error: Connection reset by peer
 connection dropped.
+read error: Connection reset by peer
 connection dropped.
+read error: Connection reset by peer
 connection dropped.
 connection dropped.
 connection dropped.
@@ -141,18 +155,21 @@ connection dropped.
 connection dropped.
 connection dropped.
 connection dropped.
+read error: Connection reset by peer
 connection dropped.
 connection dropped.
 connection dropped.
 connection dropped.
 connection dropped.
 connection dropped.
+read error: Connection reset by peer
 connection dropped.
 connection dropped.
 connection dropped.
 connection dropped.
 connection dropped.
 connection dropped.
+read error: Connection reset by peer
 connection dropped.
 connection dropped.
 connection dropped.
@@ -169,11 +186,14 @@ connection dropped.
 connection dropped.
 connection dropped.
 connection dropped.
+read error: Connection reset by peer
 connection dropped.
 connection dropped.
+read error: Connection reset by peer
 connection dropped.
 connection dropped.
 connection dropped.
+read error: Connection reset by peer
 connection dropped.
 connection dropped.
 connection dropped.
@@ -195,15 +215,24 @@ connection dropped.
 connection dropped.
 connection dropped.
 connection dropped.
+read error: Connection reset by peer
+read error: Connection reset by peer
 connection dropped.
+read error: Connection reset by peer
 connection dropped.
 connection dropped.
 connection dropped.
+read error: Connection reset by peer
 connection dropped.
+read error: Connection reset by peer
 connection dropped.
+read error: Connection reset by peer
 connection dropped.
+read error: Connection reset by peer
 connection dropped.
+read error: Connection reset by peer
 connection dropped.
+read error: Connection reset by peer
 connection dropped.
 connection dropped.
 connection dropped.
@@ -217,16 +246,19 @@ connection dropped.
 connection dropped.
 connection dropped.
 connection dropped.
+read error: Connection reset by peer
 connection dropped.
 connection dropped.
 connection dropped.
 connection dropped.
 connection dropped.
+read error: Connection reset by peer
 connection dropped.
 connection dropped.
 connection dropped.
 connection dropped.
 connection dropped.
+read error: Connection reset by peer
 connection dropped.
 connection dropped.
 connection dropped.
@@ -236,22 +268,27 @@ connection dropped.
 connection dropped.
 connection dropped.
 connection dropped.
+read error: Connection reset by peer
 connection dropped.
+read error: Connection reset by peer
 connection dropped.
 connection dropped.
 connection dropped.
 connection dropped.
 connection dropped.
+read error: Connection reset by peer
 connection dropped.
 connection dropped.
 connection dropped.
 connection dropped.
 connection dropped.
+read error: Connection reset by peer
 connection dropped.
 connection dropped.
 connection dropped.
 connection dropped.
 connection dropped.
+read error: Connection reset by peer
 connection dropped.
 connection dropped.
 connection dropped.
@@ -259,9 +296,13 @@ connection dropped.
 connection dropped.
 connection dropped.
 connection dropped.
+read error: Connection reset by peer
 connection dropped.
+read error: Connection reset by peer
 connection dropped.
+read error: Connection reset by peer
 connection dropped.
+read error: Connection reset by peer
 connection dropped.
 connection dropped.
 connection dropped.
@@ -273,143 +314,125 @@ connection dropped.
 connection dropped.
 connection dropped.
 connection dropped.
+read error: Connection reset by peer
 connection dropped.
+read error: Connection reset by peer
 connection dropped.
+read error: Connection reset by peer
 connection dropped.
+read error: Connection reset by peer
 connection dropped.
+read error: Connection reset by peer
 connection dropped.
+read error: Connection reset by peer
 connection dropped.
-connection dropped.
-connection dropped.
-connection dropped.
-connection dropped.
-connection dropped.
-connection dropped.
-connection dropped.
-connection dropped.
-connection dropped.
-connection dropped.
-connection dropped.
-connection dropped.
-connection dropped.
-connection dropped.
-connection dropped.
-connection dropped.
-connection dropped.
-connection dropped.
-connection dropped.
-connection dropped.
-connection dropped.
-connection dropped.
-connection dropped.
-connection dropped.
-connection dropped.
-connection dropped.
-connection dropped.
-connection dropped.
-connection dropped.
-connection dropped.
-connection dropped.
-connection dropped.
-connection dropped.
-connection dropped.
-connection dropped.
-connection dropped.
-connection dropped.
-connection dropped.
-connection dropped.
-connection dropped.
-connection dropped.
-[RUN #1 3%,   1 secs]  8 threads:       31002 ops,       0 (avg:   30966) ops/sec, 0.00KB/sec (avg: 1.06MB/sec),  0.00 (avg: 10.27) msec latency[RUN #1 7%,   2 secs]  8 threads:       61514 ops,       0 (avg:   30736) ops/sec, 0.00KB/sec (avg: 1.06MB/sec),  0.00 (avg: 10.38) msec latency[RUN #1 10%,   3 secs]  8 threads:       91882 ops,       0 (avg:   30611) ops/sec, 0.00KB/sec (avg: 1.05MB/sec),  0.00 (avg: 10.43) msec latency[RUN #1 13%,   4 secs]  8 threads:      122310 ops,       0 (avg:   30564) ops/sec, 0.00KB/sec (avg: 1.05MB/sec),  0.00 (avg: 10.46) msec latency[RUN #1 17%,   5 secs]  8 threads:      152552 ops,       0 (avg:   30498) ops/sec, 0.00KB/sec (avg: 1.05MB/sec),  0.00 (avg: 10.48) msec latency[RUN #1 20%,   6 secs]  8 threads:      183156 ops,       0 (avg:   30515) ops/sec, 0.00KB/sec (avg: 1.05MB/sec),  0.00 (avg: 10.48) msec latency[RUN #1 23%,   7 secs]  8 threads:      213684 ops,       0 (avg:   30516) ops/sec, 0.00KB/sec (avg: 1.05MB/sec),  0.00 (avg: 10.48) msec latency[RUN #1 27%,   8 secs]  8 threads:      244187 ops,       0 (avg:   30513) ops/sec, 0.00KB/sec (avg: 1.05MB/sec),  0.00 (avg: 10.48) msec latency[RUN #1 30%,   9 secs]  8 threads:      274663 ops,       0 (avg:   30509) ops/sec, 0.00KB/sec (avg: 1.05MB/sec),  0.00 (avg: 10.48) msec latency[RUN #1 33%,  10 secs]  8 threads:      305112 ops,       0 (avg:   30502) ops/sec, 0.00KB/sec (avg: 1.05MB/sec),  0.00 (avg: 10.48) msec latency[RUN #1 37%,  11 secs]  8 threads:      335651 ops,       0 (avg:   30505) ops/sec, 0.00KB/sec (avg: 1.05MB/sec),  0.00 (avg: 10.48) msec latency[RUN #1 40%,  12 secs]  8 threads:      366102 ops,       0 (avg:   30500) ops/sec, 0.00KB/sec (avg: 1.06MB/sec),  0.00 (avg: 10.49) msec latency[RUN #1 43%,  13 secs]  8 threads:      396574 ops,       0 (avg:   30497) ops/sec, 0.00KB/sec (avg: 1.05MB/sec),  0.00 (avg: 10.49) msec latency[RUN #1 47%,  14 secs]  8 threads:      427031 ops,       0 (avg:   30494) ops/sec, 0.00KB/sec (avg: 1.06MB/sec),  0.00 (avg: 10.49) msec latency[RUN #1 50%,  15 secs]  8 threads:      457495 ops,       0 (avg:   30492) ops/sec, 0.00KB/sec (avg: 1.05MB/sec),  0.00 (avg: 10.49) msec latency[RUN #1 53%,  16 secs]  8 threads:      487912 ops,       0 (avg:   30487) ops/sec, 0.00KB/sec (avg: 1.06MB/sec),  0.00 (avg: 10.49) msec latency[RUN #1 57%,  17 secs]  8 threads:      518549 ops,       0 (avg:   30495) ops/sec, 0.00KB/sec (avg: 1.06MB/sec),  0.00 (avg: 10.49) msec latency[RUN #1 60%,  18 secs]  8 threads:      549044 ops,       0 (avg:   30495) ops/sec, 0.00KB/sec (avg: 1.06MB/sec),  0.00 (avg: 10.49) msec latency[RUN #1 63%,  19 secs]  8 threads:      579461 ops,       0 (avg:   30490) ops/sec, 0.00KB/sec (avg: 1.06MB/sec),  0.00 (avg: 10.49) msec latency[RUN #1 67%,  20 secs]  8 threads:      610148 ops,       0 (avg:   30500) ops/sec, 0.00KB/sec (avg: 1.06MB/sec),  0.00 (avg: 10.49) msec latency[RUN #1 70%,  21 secs]  8 threads:      640330 ops,       0 (avg:   30484) ops/sec, 0.00KB/sec (avg: 1.06MB/sec),  0.00 (avg: 10.49) msec latency[RUN #1 73%,  22 secs]  8 threads:      670840 ops,       0 (avg:   30485) ops/sec, 0.00KB/sec (avg: 1.06MB/sec),  0.00 (avg: 10.49) msec latency[RUN #1 77%,  23 secs]  8 threads:      701259 ops,       0 (avg:   30482) ops/sec, 0.00KB/sec (avg: 1.06MB/sec),  0.00 (avg: 10.49) msec latency[RUN #1 80%,  24 secs]  8 threads:      732007 ops,       0 (avg:   30493) ops/sec, 0.00KB/sec (avg: 1.06MB/sec),  0.00 (avg: 10.49) msec latency[RUN #1 83%,  25 secs]  8 threads:      762737 ops,       0 (avg:   30502) ops/sec, 0.00KB/sec (avg: 1.06MB/sec),  0.00 (avg: 10.48) msec latency[RUN #1 87%,  26 secs]  8 threads:      793741 ops,       0 (avg:   30521) ops/sec, 0.00KB/sec (avg: 1.06MB/sec),  0.00 (avg: 10.48) msec latency[RUN #1 90%,  27 secs]  8 threads:      824519 ops,       0 (avg:   30530) ops/sec, 0.00KB/sec (avg: 1.06MB/sec),  0.00 (avg: 10.48) msec latency[RUN #1 93%,  28 secs]  8 threads:      855297 ops,       0 (avg:   30539) ops/sec, 0.00KB/sec (avg: 1.06MB/sec),  0.00 (avg: 10.47) msec latency[RUN #1 97%,  29 secs]  8 threads:      886074 ops,       0 (avg:   30547) ops/sec, 0.00KB/sec (avg: 1.06MB/sec),  0.00 (avg: 10.47) msec latency[RUN #1 100%,  30 secs]  3 threads:      917061 ops,       0 (avg:   30563) ops/sec, 0.00KB/sec (avg: 1.06MB/sec),  0.00 (avg: 10.47) msec latency[RUN #1 102%,  30 secs]  0 threads:      917070 ops,       0 (avg:   30062) ops/sec, 0.00KB/sec (avg: 1.05MB/sec),  0.00 (avg: 10.47) msec latency
+read error: Connection reset by peer
+read error: Connection reset by peer
+read error: Connection reset by peer
+read error: Connection reset by peer
+read error: Connection reset by peer
+read error: Connection reset by peer
+read error: Connection reset by peer
+read error: Connection reset by peer
+read error: Connection reset by peer
+read error: Connection reset by peer
+read error: Connection reset by peer
+read error: Connection reset by peer
+read error: Connection reset by peer
+read error: Connection reset by peer
+read error: Connection reset by peer
+read error: Connection reset by peer
+read error: Connection reset by peer
+read error: Connection reset by peer
+read error: Connection reset by peer
+read error: Connection reset by peer
+read error: Connection reset by peer
+read error: Connection reset by peer
+read error: Connection reset by peer
+read error: Connection reset by peer
+[RUN #1 3%,   0 secs]  1 threads:        4450 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 7%,   1 secs]  1 threads:        8908 ops,       0 (avg:    4548) ops/sec, 0.00KB/sec (avg: 170.93KB/sec),  0.00 (avg: 11.21) msec latency[RUN #1 10%,   2 secs]  1 threads:       13371 ops,       0 (avg:    4519) ops/sec, 0.00KB/sec (avg: 167.33KB/sec),  0.00 (avg: 11.19) msec latency[RUN #1 13%,   3 secs]  1 threads:       17863 ops,       0 (avg:    4512) ops/sec, 0.00KB/sec (avg: 167.62KB/sec),  0.00 (avg: 11.18) msec latency[RUN #1 17%,   4 secs]  1 threads:       22313 ops,       0 (avg:    4499) ops/sec, 0.00KB/sec (avg: 168.35KB/sec),  0.00 (avg: 11.19) msec latency[RUN #1 20%,   5 secs]  1 threads:       26863 ops,       0 (avg:    4507) ops/sec, 0.00KB/sec (avg: 166.78KB/sec),  0.00 (avg: 11.16) msec latency[RUN #1 23%,   6 secs]  1 threads:       31363 ops,       0 (avg:    4506) ops/sec, 0.00KB/sec (avg: 166.31KB/sec),  0.00 (avg: 11.15) msec latency[RUN #1 27%,   7 secs]  1 threads:       35855 ops,       0 (avg:    4504) ops/sec, 0.00KB/sec (avg: 166.08KB/sec),  0.00 (avg: 11.15) msec latency[RUN #1 30%,   8 secs]  1 threads:       40349 ops,       0 (avg:    4503) ops/sec, 0.00KB/sec (avg: 165.75KB/sec),  0.00 (avg: 11.15) msec latency[RUN #1 33%,   9 secs]  1 threads:       44805 ops,       0 (avg:    4498) ops/sec, 0.00KB/sec (avg: 165.90KB/sec),  0.00 (avg: 11.16) msec latency[RUN #1 37%,  10 secs]  1 threads:       49311 ops,       0 (avg:    4499) ops/sec, 0.00KB/sec (avg: 165.51KB/sec),  0.00 (avg: 11.15) msec latency[RUN #1 40%,  11 secs]  1 threads:       53764 ops,       0 (avg:    4495) ops/sec, 0.00KB/sec (avg: 165.66KB/sec),  0.00 (avg: 11.15) msec latency[RUN #1 43%,  12 secs]  1 threads:       58264 ops,       0 (avg:    4495) ops/sec, 0.00KB/sec (avg: 166.04KB/sec),  0.00 (avg: 11.15) msec latency[RUN #1 47%,  13 secs]  1 threads:       62771 ops,       0 (avg:    4496) ops/sec, 0.00KB/sec (avg: 166.01KB/sec),  0.00 (avg: 11.15) msec latency[RUN #1 50%,  14 secs]  1 threads:       67271 ops,       0 (avg:    4496) ops/sec, 0.00KB/sec (avg: 166.07KB/sec),  0.00 (avg: 11.14) msec latency[RUN #1 53%,  15 secs]  1 threads:       71814 ops,       0 (avg:    4499) ops/sec, 0.00KB/sec (avg: 166.22KB/sec),  0.00 (avg: 11.14) msec latency[RUN #1 57%,  16 secs]  1 threads:       76271 ops,       0 (avg:    4496) ops/sec, 0.00KB/sec (avg: 166.75KB/sec),  0.00 (avg: 11.14) msec latency[RUN #1 60%,  17 secs]  1 threads:       80787 ops,       0 (avg:    4497) ops/sec, 0.00KB/sec (avg: 166.80KB/sec),  0.00 (avg: 11.14) msec latency[RUN #1 63%,  18 secs]  1 threads:       85287 ops,       0 (avg:    4497) ops/sec, 0.00KB/sec (avg: 167.24KB/sec),  0.00 (avg: 11.13) msec latency[RUN #1 67%,  19 secs]  1 threads:       89788 ops,       0 (avg:    4498) ops/sec, 0.00KB/sec (avg: 167.36KB/sec),  0.00 (avg: 11.13) msec latency[RUN #1 70%,  20 secs]  1 threads:       94337 ops,       0 (avg:    4500) ops/sec, 0.00KB/sec (avg: 167.21KB/sec),  0.00 (avg: 11.13) msec latency[RUN #1 73%,  21 secs]  1 threads:       98837 ops,       0 (avg:    4500) ops/sec, 0.00KB/sec (avg: 167.23KB/sec),  0.00 (avg: 11.12) msec latency[RUN #1 77%,  22 secs]  1 threads:      103387 ops,       0 (avg:    4502) ops/sec, 0.00KB/sec (avg: 167.37KB/sec),  0.00 (avg: 11.12) msec latency[RUN #1 80%,  23 secs]  1 threads:      107898 ops,       0 (avg:    4502) ops/sec, 0.00KB/sec (avg: 167.52KB/sec),  0.00 (avg: 11.12) msec latency[RUN #1 83%,  24 secs]  1 threads:      112398 ops,       0 (avg:    4502) ops/sec, 0.00KB/sec (avg: 167.56KB/sec),  0.00 (avg: 11.12) msec latency[RUN #1 87%,  25 secs]  1 threads:      116854 ops,       0 (avg:    4500) ops/sec, 0.00KB/sec (avg: 167.86KB/sec),  0.00 (avg: 11.12) msec latency[RUN #1 90%,  26 secs]  1 threads:      121365 ops,       0 (avg:    4501) ops/sec, 0.00KB/sec (avg: 167.83KB/sec),  0.00 (avg: 11.12) msec latency[RUN #1 93%,  27 secs]  1 threads:      125903 ops,       0 (avg:    4502) ops/sec, 0.00KB/sec (avg: 167.71KB/sec),  0.00 (avg: 11.12) msec latency[RUN #1 97%,  28 secs]  1 threads:      130603 ops,       0 (avg:    4509) ops/sec, 0.00KB/sec (avg: 168.09KB/sec),  0.00 (avg: 11.10) msec latency[RUN #1 100%,  29 secs]  0 threads:      136360 ops,       0 (avg:    4551) ops/sec, 0.00KB/sec (avg: 169.72KB/sec),  0.00 (avg: 11.00) msec latency
 
-16        Threads
-40        Connections per thread
+8         Threads
+50        Connections per thread
 30        Seconds
 Type        Ops/sec     Hits/sec   Misses/sec      Latency       KB/sec
 ------------------------------------------------------------------------
-Sets           0.00          ---          ---     10.46800         0.00
-Gets           0.00         0.00         0.00     10.46500         0.00
-Totals         0.00         0.00         0.00     10.46500         0.00
+Sets           0.00          ---          ---     11.01800         0.00
+Gets           0.00         0.00         0.00     10.99400         0.00
+Totals         0.00         0.00         0.00     10.99600         0.00
 
 
 Request Latency Distribution
 Type     <= msec         Percent
 ------------------------------------------------------------------------
-SET       4.000      0.05388
-SET       5.000      0.08621
-SET       6.000      0.18319
-SET       7.000      0.24306
-SET       8.000      0.30771
-SET       9.000      1.65350
-SET      10.000     98.50694
-SET      11.000     99.94133
-SET      12.000     99.99880
-SET      15.000    100.00000
+SET       1.000      0.77338
+SET       3.000      0.78144
+SET       4.000      0.84589
+SET       7.000      0.91034
+SET       9.000      2.11069
+SET      10.000     39.86949
+SET      11.000     96.07669
+SET      12.000     99.19439
+SET      13.000     99.62136
+SET      14.000     99.79860
+SET      15.000     99.91944
+SET      16.000     99.97583
+SET      18.000    100.00000
 ---
-GET       3.000      0.00012
-GET       3.200      0.00132
-GET       3.300      0.00432
-GET       3.400      0.00492
-GET       3.500      0.01704
-GET       3.600      0.02135
-GET       3.700      0.02519
-GET       3.800      0.03083
-GET       3.900      0.03335
-GET       4.000      0.03599
-GET       4.100      0.04415
-GET       4.200      0.04919
-GET       4.300      0.05159
-GET       4.400      0.05339
-GET       4.500      0.05411
-GET       4.600      0.05435
-GET       4.700      0.05447
-GET       5.300      0.05627
-GET       5.400      0.05866
-GET       5.500      0.06058
-GET       5.600      0.06094
-GET       6.000      0.06106
-GET       6.200      0.06238
-GET       6.300      0.06682
-GET       6.400      0.07318
-GET       6.500      0.07978
-GET       6.600      0.08206
-GET       6.700      0.08242
-GET       6.800      0.08422
-GET       6.900      0.08674
-GET       7.000      0.08938
-GET       7.100      0.09070
-GET       7.200      0.10065
-GET       7.300      0.10281
-GET       7.400      0.10941
-GET       7.500      0.12057
-GET       7.600      0.12429
-GET       7.700      0.12633
-GET       7.800      0.12909
-GET       7.900      0.12993
-GET       8.000      0.14252
-GET       8.100      0.15740
-GET       8.200      0.15992
-GET       8.300      0.16244
-GET       8.400      0.17240
-GET       8.500      0.18043
-GET       8.600      0.18511
-GET       8.700      0.18619
-GET       8.900      0.18763
-GET       9.000      0.19591
-GET       9.100      0.20179
-GET       9.200      0.21378
-GET       9.300      0.26141
-GET       9.400      0.38870
-GET       9.500      0.56361
-GET       9.600      0.77764
-GET       9.700      0.93792
-GET       9.800      1.06292
-GET       9.900      1.19957
-GET      10.000     61.51305
-GET      11.000     99.77062
-GET      12.000     99.92334
-GET      14.000     99.95021
-GET      16.000     99.96161
-GET      17.000     99.98176
-GET      18.000     99.98788
-GET      19.000    100.00000
+GET       0.820      0.00081
+GET       0.890      0.00161
+GET       0.900      0.00242
+GET       0.910      0.00323
+GET       0.930      0.00403
+GET       0.940      0.00565
+GET       0.950      0.00887
+GET       0.960      0.00968
+GET       0.970      0.01210
+GET       0.980      0.01291
+GET       0.990      0.01372
+GET       1.000      0.03873
+GET       1.100      0.32353
+GET       1.200      0.57767
+GET       1.300      0.63253
+GET       1.400      0.64544
+GET       1.500      0.66238
+GET       1.600      0.72047
+GET       1.700      0.77049
+GET       1.800      0.77533
+GET       3.200      0.77694
+GET       3.300      0.79147
+GET       3.400      0.79550
+GET       4.000      0.79631
+GET       4.100      0.80034
+GET       4.300      0.80196
+GET       4.500      0.80357
+GET       4.600      0.80680
+GET       4.700      0.80841
+GET       6.900      0.81002
+GET       7.000      0.82535
+GET       7.100      0.82939
+GET       7.200      0.83019
+GET       7.300      0.84391
+GET       7.400      0.85117
+GET       7.500      0.86731
+GET       7.600      0.88909
+GET       7.700      0.90361
+GET       7.800      0.93750
+GET       7.900      0.94234
+GET       8.100      0.94799
+GET       8.200      0.96331
+GET       9.400      0.96493
+GET       9.500      0.98833
+GET       9.600      1.02786
+GET       9.700      1.09079
+GET       9.800      1.18599
+GET       9.900      1.73865
+GET      10.000     12.34318
+GET      11.000     85.55108
+GET      12.000     99.58611
+GET      13.000     99.90883
+GET      14.000     99.93384
+GET      15.000     99.97096
+GET      16.000     99.99516
+GET      17.000     99.99758
+GET      18.000    100.00000
