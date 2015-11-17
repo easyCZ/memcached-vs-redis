@@ -16,7 +16,11 @@ def avg(data):
 def run(type, server_conf, memtier_conf, output_dir):
 
     server = Server(type, server_conf)
-    server.start()
+
+    # Temporary
+    if type != 'redis':
+
+        server.start()
 
     # Enable CPU logging
     cpu = server.log_cpu()
