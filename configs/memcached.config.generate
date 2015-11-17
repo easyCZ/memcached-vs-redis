@@ -1,10 +1,10 @@
 #!/bin/bash
 
-LABEL=multiple-instances1
+LABEL=multiple-instances2
 
 mkdir $LABEL
 
-for i in {1..12}
+for i in {1..6}
 do
     echo "-d
 -p 11123
