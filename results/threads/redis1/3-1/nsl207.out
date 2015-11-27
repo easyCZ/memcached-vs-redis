@@ -1,0 +1,96 @@
+[RUN #1] Preparing benchmark client...
+[RUN #1] Launching threads now...
+[RUN #1 5%,   1 secs]  8 threads:       11860 ops,   11858 (avg:   11858) ops/sec, 425.58KB/sec (avg: 425.58KB/sec),  9.36 (avg:  9.36) msec latency[RUN #1 10%,   2 secs]  8 threads:       23790 ops,   11928 (avg:   11893) ops/sec, 419.52KB/sec (avg: 422.55KB/sec),  9.42 (avg:  9.39) msec latency[RUN #1 15%,   3 secs]  8 threads:       35689 ops,   11897 (avg:   11894) ops/sec, 420.07KB/sec (avg: 421.72KB/sec),  9.39 (avg:  9.39) msec latency[RUN #1 20%,   4 secs]  8 threads:       47646 ops,   11955 (avg:   11909) ops/sec, 436.78KB/sec (avg: 425.49KB/sec),  9.38 (avg:  9.39) msec latency[RUN #1 25%,   5 secs]  8 threads:       59630 ops,   11982 (avg:   11924) ops/sec, 421.44KB/sec (avg: 424.68KB/sec),  9.35 (avg:  9.38) msec latency[RUN #1 30%,   6 secs]  8 threads:       71586 ops,   11954 (avg:   11929) ops/sec, 419.99KB/sec (avg: 423.90KB/sec),  9.38 (avg:  9.38) msec latency[RUN #1 35%,   7 secs]  8 threads:       83454 ops,   11866 (avg:   11920) ops/sec, 422.30KB/sec (avg: 423.67KB/sec),  9.41 (avg:  9.38) msec latency[RUN #1 40%,   8 secs]  8 threads:       95333 ops,   11877 (avg:   11915) ops/sec, 426.94KB/sec (avg: 424.08KB/sec),  9.39 (avg:  9.39) msec latency[RUN #1 45%,   9 secs]  8 threads:      107303 ops,   11968 (avg:   11921) ops/sec, 429.22KB/sec (avg: 424.65KB/sec),  9.39 (avg:  9.39) msec latency[RUN #1 50%,  10 secs]  8 threads:      119187 ops,   11882 (avg:   11917) ops/sec, 427.25KB/sec (avg: 424.91KB/sec),  9.39 (avg:  9.39) msec latency[RUN #1 55%,  11 secs]  8 threads:      131159 ops,   11970 (avg:   11922) ops/sec, 429.06KB/sec (avg: 425.29KB/sec),  9.39 (avg:  9.39) msec latency[RUN #1 60%,  12 secs]  8 threads:      143043 ops,   11882 (avg:   11918) ops/sec, 422.50KB/sec (avg: 425.05KB/sec),  9.40 (avg:  9.39) msec latency[RUN #1 65%,  13 secs]  8 threads:      155015 ops,   11970 (avg:   11922) ops/sec, 417.23KB/sec (avg: 424.45KB/sec),  9.38 (avg:  9.39) msec latency[RUN #1 70%,  14 secs]  8 threads:      166899 ops,   11882 (avg:   11919) ops/sec, 429.88KB/sec (avg: 424.84KB/sec),  9.39 (avg:  9.39) msec latency[RUN #1 75%,  15 secs]  8 threads:      178836 ops,   11935 (avg:   11920) ops/sec, 424.67KB/sec (avg: 424.83KB/sec),  9.40 (avg:  9.39) msec latency[RUN #1 80%,  16 secs]  8 threads:      190635 ops,   11797 (avg:   11913) ops/sec, 416.03KB/sec (avg: 424.28KB/sec),  9.48 (avg:  9.39) msec latency[RUN #1 85%,  17 secs]  8 threads:      202523 ops,   11886 (avg:   11911) ops/sec, 421.62KB/sec (avg: 424.12KB/sec),  9.40 (avg:  9.39) msec latency[RUN #1 90%,  18 secs]  8 threads:      214367 ops,   11842 (avg:   11907) ops/sec, 424.05KB/sec (avg: 424.12KB/sec),  9.45 (avg:  9.40) msec latency[RUN #1 95%,  19 secs]  8 threads:      226224 ops,   11855 (avg:   11905) ops/sec, 439.62KB/sec (avg: 424.93KB/sec),  9.45 (avg:  9.40) msec latency[RUN #1 100%,  20 secs]  4 threads:      239088 ops,   11855 (avg:   11953) ops/sec, 439.62KB/sec (avg: 426.57KB/sec),  9.45 (avg:  9.36) msec latency[RUN #1 100%,  20 secs]  0 threads:      239115 ops,   11855 (avg:   11955) ops/sec, 439.62KB/sec (avg: 426.62KB/sec),  9.45 (avg:  9.36) msec latency
+
+8         Threads
+14        Connections per thread
+20        Seconds
+Type        Ops/sec     Hits/sec   Misses/sec      Latency       KB/sec
+------------------------------------------------------------------------
+Sets        1038.15          ---          ---      9.36200        76.96
+Gets       10347.87       181.33     10166.54      9.36300       329.36
+Totals     11386.02       181.33     10166.54      9.36300       406.32
+
+
+Request Latency Distribution
+Type     <= msec         Percent
+------------------------------------------------------------------------
+SET       3.000      0.33942
+SET       4.000      0.35318
+SET       5.000      0.38529
+SET       6.000      1.02284
+SET       7.000      1.06871
+SET       8.000      3.41712
+SET       9.000     98.90836
+SET      10.000     99.73856
+SET      11.000     99.81194
+SET      12.000     99.87616
+SET      13.000     99.94955
+SET      14.000    100.00000
+---
+GET       3.500      0.00598
+GET       3.600      0.01150
+GET       3.700      0.03957
+GET       3.800      0.09065
+GET       3.900      0.11320
+GET       4.000      0.11826
+GET       4.100      0.11872
+GET       4.600      0.12332
+GET       4.700      0.13437
+GET       4.800      0.13575
+GET       4.900      0.17210
+GET       5.000      0.23468
+GET       5.100      0.26690
+GET       5.200      0.28300
+GET       5.300      0.29911
+GET       5.400      0.32534
+GET       5.500      0.33270
+GET       5.600      0.33316
+GET       5.800      0.33454
+GET       5.900      0.33546
+GET       6.000      0.35893
+GET       6.100      0.39160
+GET       6.200      0.42427
+GET       6.300      0.48778
+GET       6.400      0.59637
+GET       6.500      0.69209
+GET       6.600      0.79056
+GET       6.700      0.89640
+GET       6.800      0.97187
+GET       6.900      1.00454
+GET       7.000      1.01697
+GET       7.100      1.02433
+GET       7.200      1.02663
+GET       7.300      1.02801
+GET       7.400      1.03123
+GET       7.500      1.04089
+GET       7.600      1.07449
+GET       7.700      1.09197
+GET       7.800      1.09519
+GET       7.900      1.09888
+GET       8.000      1.12142
+GET       8.100      1.14949
+GET       8.200      1.15824
+GET       8.300      1.18447
+GET       8.400      1.22312
+GET       8.500      1.27282
+GET       8.600      1.37544
+GET       8.700      1.57699
+GET       8.800      2.03117
+GET       8.900      3.44710
+GET       9.000      7.44502
+GET       9.100     16.90235
+GET       9.200     29.96968
+GET       9.300     45.46990
+GET       9.400     60.93377
+GET       9.500     74.74426
+GET       9.600     85.59543
+GET       9.700     92.42199
+GET       9.800     96.41071
+GET       9.900     98.37147
+GET      10.000     99.75013
+GET      11.000     99.78510
+GET      12.000     99.79707
+GET      13.000     99.83618
+GET      14.000     99.95951
+GET      15.000    100.00000
