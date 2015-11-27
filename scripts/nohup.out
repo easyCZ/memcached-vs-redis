@@ -278,3 +278,93 @@ IOError: [Errno 2] No such file or directory: '../configs/threads/memtier.redis.
 [Main] Wrote results for nsl207
 [Main] Wrote results for nsl206
 [Main] CPU Average: 74.65
+/afs/inf.ed.ac.uk/user/s11/s1115104/_programming/memcached-vs-redis/scripts/venv/lib/python2.6/site-packages/Crypto/Util/number.py:57: PowmInsecureWarning: Not using mpz_powm_sec.  You should rebuild using libgmp >= 5 to avoid timing attack vulnerability.
+  _warn("Not using mpz_powm_sec.  You should rebuild using libgmp >= 5 to avoid timing attack vulnerability.", PowmInsecureWarning)
+/afs/inf.ed.ac.uk/user/s11/s1115104/_programming/memcached-vs-redis/scripts/venv/lib/python2.6/site-packages/Crypto/Util/number.py:57: PowmInsecureWarning: Not using mpz_powm_sec.  You should rebuild using libgmp >= 5 to avoid timing attack vulnerability.
+  _warn("Not using mpz_powm_sec.  You should rebuild using libgmp >= 5 to avoid timing attack vulnerability.", PowmInsecureWarning)
+/afs/inf.ed.ac.uk/user/s11/s1115104/_programming/memcached-vs-redis/scripts/venv/lib/python2.6/site-packages/Crypto/Util/number.py:57: PowmInsecureWarning: Not using mpz_powm_sec.  You should rebuild using libgmp >= 5 to avoid timing attack vulnerability.
+  _warn("Not using mpz_powm_sec.  You should rebuild using libgmp >= 5 to avoid timing attack vulnerability.", PowmInsecureWarning)
+/afs/inf.ed.ac.uk/user/s11/s1115104/_programming/memcached-vs-redis/scripts/venv/lib/python2.6/site-packages/Crypto/Util/number.py:57: PowmInsecureWarning: Not using mpz_powm_sec.  You should rebuild using libgmp >= 5 to avoid timing attack vulnerability.
+  _warn("Not using mpz_powm_sec.  You should rebuild using libgmp >= 5 to avoid timing attack vulnerability.", PowmInsecureWarning)
+/afs/inf.ed.ac.uk/user/s11/s1115104/_programming/memcached-vs-redis/scripts/venv/lib/python2.6/site-packages/Crypto/Util/number.py:57: PowmInsecureWarning: Not using mpz_powm_sec.  You should rebuild using libgmp >= 5 to avoid timing attack vulnerability.
+  _warn("Not using mpz_powm_sec.  You should rebuild using libgmp >= 5 to avoid timing attack vulnerability.", PowmInsecureWarning)
+/afs/inf.ed.ac.uk/user/s11/s1115104/_programming/memcached-vs-redis/scripts/venv/lib/python2.6/site-packages/Crypto/Util/number.py:57: PowmInsecureWarning: Not using mpz_powm_sec.  You should rebuild using libgmp >= 5 to avoid timing attack vulnerability.
+  _warn("Not using mpz_powm_sec.  You should rebuild using libgmp >= 5 to avoid timing attack vulnerability.", PowmInsecureWarning)
+[Server] Running command 'mpstat 1 23'
+[Clients] Running command '~/memtier_fork/memtier_benchmark -s nsl200 -p 11124 --test-time=20 -c 7 -t 16 --random-data --key-minimum=100 --key-maximum=10000'
+[Clients] Waiting for results to finish...
+[Clients] Results completed.
+[Main] Writing results to files.
+[Main] Wrote results for nsl201
+[Main] Wrote results for nsl203
+[Main] Wrote results for nsl202
+[Main] Wrote results for nsl205
+[Main] Wrote results for nsl204
+[Main] Wrote results for nsl207
+[Main] Wrote results for nsl206
+[Main] CPU Average: 88.53
+[Server] Running command 'mpstat 1 23'
+[Clients] Running command '~/memtier_fork/memtier_benchmark -s nsl200 -p 11123 --test-time=20 -c 7 -t 16 --random-data --key-minimum=100 --key-maximum=10000'
+[Clients] Waiting for results to finish...
+[Clients] Results completed.
+[Main] Writing results to files.
+[Main] Wrote results for nsl201
+[Main] Wrote results for nsl203
+[Main] Wrote results for nsl202
+[Main] Wrote results for nsl205
+[Main] Wrote results for nsl204
+[Main] Wrote results for nsl207
+[Main] Wrote results for nsl206
+[Main] CPU Average: 88.45
+[Server] Running command 'mpstat 1 23'
+[Clients] Running command '~/memtier_fork/memtier_benchmark -s nsl200 -p 11126 --test-time=20 -c 7 -t 16 --random-data --key-minimum=100 --key-maximum=10000'
+[Clients] Waiting for results to finish...
+[Clients] Results completed.
+[Main] Writing results to files.
+[Main] Wrote results for nsl201
+[Main] Wrote results for nsl203
+[Main] Wrote results for nsl202
+[Main] Wrote results for nsl205
+[Main] Wrote results for nsl204
+[Main] Wrote results for nsl207
+[Main] Wrote results for nsl206
+[Main] CPU Average: 88.4
+[Server] Running command 'mpstat 1 23'
+[Clients] Running command '~/memtier_fork/memtier_benchmark -s nsl200 -p 11127 --test-time=20 -c 7 -t 16 --random-data --key-minimum=100 --key-maximum=10000'
+[Clients] Waiting for results to finish...
+[Clients] Results completed.
+[Main] Writing results to files.
+[Main] Wrote results for nsl201
+[Main] Wrote results for nsl203
+[Main] Wrote results for nsl202
+[Main] Wrote results for nsl205
+[Main] Wrote results for nsl204
+[Main] Wrote results for nsl207
+[Main] Wrote results for nsl206
+[Main] CPU Average: 88.34
+[Server] Running command 'mpstat 1 23'
+[Clients] Running command '~/memtier_fork/memtier_benchmark -s nsl200 -p 11125 --test-time=20 -c 7 -t 16 --random-data --key-minimum=100 --key-maximum=10000'
+[Clients] Waiting for results to finish...
+[Clients] Results completed.
+[Main] Writing results to files.
+[Main] Wrote results for nsl201
+[Main] Wrote results for nsl203
+[Main] Wrote results for nsl202
+[Main] Wrote results for nsl205
+[Main] Wrote results for nsl204
+[Main] Wrote results for nsl207
+[Main] Wrote results for nsl206
+[Main] CPU Average: 88.32
+[Server] Running command 'mpstat 1 23'
+[Clients] Running command '~/memtier_fork/memtier_benchmark -s nsl200 -p 11128 --test-time=20 -c 7 -t 16 --random-data --key-minimum=100 --key-maximum=10000'
+[Clients] Waiting for results to finish...
+[Clients] Results completed.
+[Main] Writing results to files.
+[Main] Wrote results for nsl201
+[Main] Wrote results for nsl203
+[Main] Wrote results for nsl202
+[Main] Wrote results for nsl205
+[Main] Wrote results for nsl204
+[Main] Wrote results for nsl207
+[Main] Wrote results for nsl206
+[Main] CPU Average: 88.32
