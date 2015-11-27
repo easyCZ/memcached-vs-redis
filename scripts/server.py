@@ -14,7 +14,7 @@ class Server(object):
         return self.run('ulimit -n {0}'.format(value))
 
     def get_cpu_command(self):
-        return 'mpstat 1 33'
+        return 'mpstat 1 23'
 
     def get_cache_command(self):
         cache = settings.CACHES[self.cache_type]
