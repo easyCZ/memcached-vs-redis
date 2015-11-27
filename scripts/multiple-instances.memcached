@@ -2,7 +2,7 @@
 
 DIR=threads
 
-for i in {1..30}
+for i in {30..60}
 do
     python main.py \
         -type=memcached \
