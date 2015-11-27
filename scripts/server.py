@@ -10,6 +10,9 @@ class Server(object):
         self.cache_type = cache_type
         self.connection = pssh.ParallelSSHClient(self.host)
 
+    def set_ulimit(self, value=65555):
+        return self.run('ulimit -n {0}'.format(value))
+
     def get_cpu_command(self):
         return 'mpstat 1 33'
 
