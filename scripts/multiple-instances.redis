@@ -1,5 +1,6 @@
 #!/bin/bash
 
-DIR=threads
-
-python main.py -type=redis -server-conf=../configs/$DIR/dummy.conf -memtier-conf=../configs/$DIR/memtier.redis.conf -output=../results/$DIR/redis/2-1/
+for i in {1..3}
+do
+    nohup python main.py -type=redis -server-conf=../configs/threads/dummy.conf -memtier-conf=../configs/threads/memtier.redis.3-$i.conf -output=../results/threads/redis1/3-$i/ &
+done
