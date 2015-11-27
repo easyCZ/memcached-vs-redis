@@ -1,1 +1,1 @@
-find ./multiple-instances2/redis -name 'cpu-vs-latencies.out' -exec cat {} \; > ./multiple-instances2/redis/aggregate.csv
+find ./threads/memcached -name 'cpu-vs-latencies.out' -exec cat {} \; > ./threads/memcached/aggregate.csv

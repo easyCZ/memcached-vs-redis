@@ -1,5 +1,5 @@
 #!/bin/bash
 
-DIR=multiple-instances1
+DIR=threads
 
-python main.py -type=redis -server-conf=../configs/multiple-instances1/dummy.conf -memtier-conf=../configs/multiple-instances1/memtier.redis.conf -output=../results/multiple-instances1/redis/2-1/
+python main.py -type=redis -server-conf=../configs/$DIR/dummy.conf -memtier-conf=../configs/$DIR/memtier.redis.conf -output=../results/$DIR/redis/2-1/
