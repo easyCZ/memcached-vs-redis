@@ -1,10 +1,10 @@
 #!/bin/bash
 
-LABEL=multiple-instances2
+LABEL=threads
 
 mkdir $LABEL
 
-for i in {1..6}
+for i in {1..30}
 do
     echo "-d
 -p 11123

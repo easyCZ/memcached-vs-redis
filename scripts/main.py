@@ -17,6 +17,9 @@ def run(type, server_conf, memtier_conf, output_dir):
 
     server = Server(type, server_conf)
 
+    # Set ulimit
+    server.set_ulimit(65555)
+
     # Temporary
     if type != 'redis':
 
