@@ -1,6 +1,8 @@
 #!/bin/bash
 
-for i in {1..4}
+END=5
+
+for i in {1..$END}
 do
-    nohup python main.py -type=redis -server-conf=../configs/threads/dummy.conf -memtier-conf=../configs/threads/memtier.redis.4-$i.conf -output=../results/threads/redis1/4-$i/ &
+    nohup python main.py -type=redis -server-conf=../configs/threads/dummy.conf -memtier-conf=../configs/threads/memtier.redis.$END-$i.conf -output=../results/threads/redis1/$END-$i/ &
 done
