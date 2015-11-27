@@ -9,5 +9,6 @@ do
     echo "-d
 -p 11123
 -m 4096
+-c 8096
 -t $i" > $LABEL/memcached.$i.conf
 done
