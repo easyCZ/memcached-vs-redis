@@ -18,7 +18,7 @@ class Server(object):
 
     def get_cache_command(self):
         cache = settings.CACHES[self.cache_type]
-        return '%s %s' % (cache, self.server_conf)
+        return 'ulimit -n 65555; %s %s' % (cache, self.server_conf)
 
     def run(self, command):
         print("[Server] Running command '%s'" % command)
