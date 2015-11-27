@@ -4,7 +4,7 @@ import settings
 
 class Clients(object):
 
-    def __init__(self, cache_type, config, server_count):
+    def __init__(self, cache_type, config):
         self.cache_type = cache_type
         self.config = config
         self.connections = pssh.ParallelSSHClient(settings.CLIENTS)
