@@ -10,7 +10,7 @@ class Server(object):
 
     def __init__(self, cache_type, server_conf, instances=1):
         self.instances = instances
-        self.port = ConfigParser(cache_type, server_conf).get_port()
+        self.port = ConfigParser(server_conf, cache_type).get_port()
         self.host = settings.SERVERS
         self.server_conf = server_conf
         self.cache_type = cache_type
