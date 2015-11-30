@@ -4,43 +4,50 @@ import settings
 
 class Server(object):
 
-    def __init__(self, cache_type, server_conf):
+    MPSTAT_CMD = 'mpstat 1 23'
+    ULIMIT_CMD = 'ulimit -n 65535'
+
+    def __init__(self, cache_type, server_conf, instances=1):
+        self.instances = instances
         self.host = settings.SERVERS
         self.server_conf = server_conf
         self.cache_type = cache_type
-        self.connection = pssh.ParallelSSHClient(self.host)
+        self.connections = self._make_connections()
 
-    def set_ulimit(self, value=65555):
-        return self.run('ulimit -n {0}'.format(value))
+    def _make_connections(self):
+        return [pssh.ParallelSSHClient(self.host) for i in range(self.instances)]
 
-    def get_cpu_command(self):
-        return 'mpstat 1 23'
-
-    def get_cache_command(self):
-        cache = settings.CACHES[self.cache_type]
-        return 'ulimit -n 65555; %s %s' % (cache, self.server_conf)
-
-    def run(self, command):
+    def execute(self, command):
         print("[Server] Running command '%s'" % command)
-        return self.connection.run_command(command)
+        return [instance.run_command(command) for instance in self.connections]
 
-    def start(self):
-        return self.run(self.get_cache_command())
+    def kill(self, pid):
+        return self.execute('kill %s' % (str(pid)))
 
-    def log_cpu(self):
-        return self.run(self.get_cpu_command())
-
-    def kill(self):
-        command = "ps -ef | grep '[%s]%s'" % (
+    def kill_cache(self):
+        ps_grep = "ps -ef | grep '[%s]%s'" % (
             self.cache_type[0],
             self.cache_type[1:]
         )
-        command_out = self.connection.run_command(command)
-        for hostname, res in command_out.iteritems():
-            for pid in res['stdout']:
-                tokens = pid.split()
-                print("Attempting to kill process #%s" % tokens[1])
-                print("[Server] Running 'kill %s'" % tokens[1])
-                return self.connection.run_command("kill %s" % tokens[1])
+        ps_grep_out = self.connections[0].run_command(ps_grep)
+
+        killed_pids = []
+        for hostname, res in ps_grep_out.iteritems():
+            for processes in res['stdout']:
+                pid = processes.split()[1]
+                self.kill(pid)
+                killed_pids.append(pid)
+
+        print('[Server] Killed %s' % ', '.join(killed_pids))
 
 
+    def start_cache(self):
+        command = '%s; %s %s' % (
+            self.ULIMIT_CMD,
+            settings.CACHES[self.cache_type],
+            self.server_conf
+        )
+        return self.execute(command)
+
+    def log_cpu(self):
+        return self.execute(self.MPSTAT_CMD)
