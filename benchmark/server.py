@@ -1,6 +1,6 @@
 import pssh
 import settings
-from parsers.config import ConfigParser
+from parsers.config import ServerConfigParser
 
 
 class Server(object):
@@ -8,9 +8,9 @@ class Server(object):
     MPSTAT_CMD = 'mpstat 1 %d'
     ULIMIT_CMD = 'ulimit -n 65535'
 
-    def __init__(self, cache_type, server_conf, instances=1):
+    def __init__(self, cache_type, server_conf, base_port, instances=1):
         self.instances = instances
-        self.port = ConfigParser(server_conf, cache_type).get_port()
+        self.port = base_port
         self.host = settings.SERVERS
         self.server_conf = server_conf
         self.cache_type = cache_type
@@ -55,9 +55,8 @@ class Server(object):
         # Generate unique configs for each instance
         configs = []
         for port_offset in range(self.instances):
-            parser = ConfigParser(self.server_conf, self.cache_type)
-            base_port = parser.get_port()
-            config = parser.set_port(base_port + port_offset)
+            parser = ServerConfigParser(self.server_conf, self.cache_type)
+            config = parser.set_port(self.port + port_offset)
             configs.append(config)
 
         base_command = '%s; %s %s' % (self.ULIMIT_CMD, settings.CACHES[self.cache_type], '%s')

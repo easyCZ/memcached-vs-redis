@@ -1,24 +1,52 @@
 import pssh
 import settings
+from parsers.config import MemtierConfigParser
+
+
+class Client(object):
+
+    MEMTIER_CMD = '%s %s' % (settings.MEMTIER, '%s')
+
+    def __init__(self, cache_type):
+        self.cache_type = cache_type
+        self.hosts = settings.CLIENTS
+        self.connections = self._make_connections()
+
+    def _make_connections(self):
+        return pssh.ParallelSSHClient(self.hosts)
+
+    def execute(self, command):
+        print("[Client] Running command '%s'" % command)
+        return self.connections.run_command(command)
+
+    def run_memtier(self, config):
+        return self.execute(self.MEMTIER_CMD % config)
+        # self.clients.pool.join()
 
 
 class Clients(object):
 
-    def __init__(self, cache_type, config):
+    def __init__(self, cache_type, config, base_port, instances=1):
+        self.instances = instances
+        self.base_port = base_port
         self.cache_type = cache_type
         self.config = config
-        self.connections = pssh.ParallelSSHClient(settings.CLIENTS)
 
-    def get_command(self):
-        return '%s %s' % (settings.MEMTIER, self.config)
+        self.clients = self._make_connections()
 
-    def run(self):
-        command = self.get_command()
-        print("[Clients] Running command '%s'" % command)
+    def run_memtier(self):
+        # generate configs
+        configs = []
+        for i in range(self.instances):
+            config = MemtierConfigParser(self.config).set_port(self.base_port + i)
+            configs.append(config)
 
-        results = self.connections.run_command(command)
-        print("[Clients] Waiting for results to finish...")
-        self.connections.pool.join()
+        output = []
+        for client, config in zip(self.clients, configs):
+            out = client.run_memtier(config)
+            output.append(out)
 
-        print("[Clients] Results completed.")
-        return results
+        return output
+
+    def _make_connections(self):
+        return [Client(self.cache_type) for i in range(self.instances)]

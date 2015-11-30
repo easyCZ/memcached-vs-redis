@@ -1,7 +1,7 @@
 import settings
 
 
-class ConfigParser(object):
+class ServerConfigParser(object):
 
     def __init__(self, config, type):
         self.config = config
@@ -24,3 +24,20 @@ class ConfigParser(object):
         tokens[self._get_port_index()] = port
         return ' '.join(map(str, tokens))
 
+
+class MemtierConfigParser(object):
+
+    def __init__(self, config):
+        self.config = config
+        self.config_tokens = config.split()
+
+    def _get_port_index(self):
+        return 1 + self.config_tokens.index('-p')
+
+    def get_port(self):
+        return self.config_tokens[self._get_port_index()]
+
+    def set_port(self, port):
+        tokens = list(self.config_tokens)
+        tokens[self._get_port_index()] = port
+        return ' '.join(map(str, tokens))
