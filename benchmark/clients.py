@@ -34,13 +34,15 @@ class Clients(object):
 
         self.clients = self._make_connections()
 
-    def run_memtier(self):
-        # generate configs
+    def generate_configs(self):
         configs = []
         for i in range(self.instances):
             config = MemtierConfigParser(self.config).set_port(self.base_port + i)
             configs.append(config)
+        return configs
 
+    def run_memtier(self):
+        configs = self.generate_configs()
         output = []
         for client, config in zip(self.clients, configs):
             out = client.run_memtier(config)
