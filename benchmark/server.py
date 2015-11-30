@@ -21,8 +21,12 @@ class Server(object):
         print("[Server] Running command '%s'" % command)
         return [instance.run_command(command) for instance in self.connections]
 
+    def execute_single(self, command):
+        print("[Server] Running command '%s'" % command)
+        return self.connections[0].run_command(command)
+
     def kill(self, pid):
-        return self.execute('kill %s' % (str(pid)))
+        return self.execute_single('kill %s' % (str(pid)))
 
     def kill_cache(self):
         ps_grep = "ps -ef | grep '[%s]%s'" % (
@@ -50,4 +54,4 @@ class Server(object):
         return self.execute(command)
 
     def log_cpu(self):
-        return self.execute(self.MPSTAT_CMD)
+        return self.execute_single(self.MPSTAT_CMD)
