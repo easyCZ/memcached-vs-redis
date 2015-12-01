@@ -43,6 +43,7 @@ class MemtierResultsParser(object):
         averages = {}
         for hostname, results in content.iteritems():
             matrix = [self.get_instance_averages(rows) for rows in results]
+            print(matrix)
             averages[hostname] = self._average_matrix(matrix)
 
         return averages
