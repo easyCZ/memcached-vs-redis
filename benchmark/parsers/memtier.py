@@ -40,11 +40,11 @@ class MemtierResultsParser(object):
     def get_averages(self, content=None):
         if content is None: content = self.content
 
-        averages = []
+        averages = {}
         for hostname, results in content.iteritems():
             instance_averages = [self.get_instance_averages(rows) for rows in results]
             N = float(len(instance_averages))
-            averages.append(tuple(sum(col)/N for col in zip(*instance_averages)))
+            averages[hostname] = tuple(sum(col)/N for col in zip(*instance_averages))
 
         return averages
 
