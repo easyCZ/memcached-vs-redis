@@ -42,9 +42,8 @@ class MemtierResultsParser(object):
 
         averages = {}
         for hostname, results in content.iteritems():
-            instance_averages = [self.get_instance_averages(rows) for rows in results]
-            N = float(len(instance_averages))
-            averages[hostname] = tuple(sum(col)/N for col in zip(*instance_averages))
+            matrix = [self.get_instance_averages(rows) for rows in results]
+            averages[hostname] = self._average_matrix(matrix)
 
         return averages
 
@@ -60,6 +59,23 @@ class MemtierResultsParser(object):
         tokens[1] = 0
         tokens[2] = 0
         return [float(token) for token in tokens]
+
+    def _average_matrix(self, matrix):
+        """
+        ([738.25999999999999, 0.0, 0.0, 0.125, 56.869999999999997],
+        [7382.4799999999996, 17.93, 7364.54, 0.11899999999999999, 280.37],
+        [8120.7399999999998, 17.93, 7364.54, 0.11899999999999999, 337.24000000000001])
+        """
+        rows = len(matrix)
+        cols = len(matrix[0])
+
+        results = []
+        for col in range(cols):
+            average = sum([matrix[row][col] for row in range(rows)]) / rows
+            results.append(average)
+
+        return tuple(results)
+
 
 
 
