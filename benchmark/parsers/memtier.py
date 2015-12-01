@@ -12,7 +12,7 @@ class MemtierResultsParser(object):
         return output
 
     def read(self):
-        results = [self._get_stdout(gen) for generator in self.generators]
+        results = [self._get_stdout(generator) for generator in self.generators]
 
         # group by hostname
         grouped = defaultdict(list)
