@@ -13,25 +13,17 @@ def avg(data):
     return 0
 
 
-def run(type, server_conf, memtier_conf, output_dir):
+def run(type, server_conf, memtier_conf, output_dir, base_port=11120, instances=1, duration=30):
+    server = Server(type, server_conf, base_port, instances)
+    clients = Clients(type, memtier_conf, base_port, instances)
 
-    server = Server(type, server_conf)
+    server.start_cache()
+    server_cpu = server.log_cpu(duration)
 
-    # Set ulimit
-    # server.set_ulimit(65555)
+    client_results = clients.run_memtier()
 
-    # Temporary
-    if type != 'redis':
 
-        server.start()
 
-    # Enable CPU logging
-    cpu = server.log_cpu()
-
-    clients = Clients(type, memtier_conf)
-    results = clients.run()
-
-    print("[Main] Writing results to files.")
 
     avg_latencies = []
     last_percentiles = []
