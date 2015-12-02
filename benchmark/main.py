@@ -28,7 +28,9 @@ def run(type, server_conf, memtier_conf, output_dir, base_port=11120, instances=
     clients = Clients(type, memtier_conf, base_port, instances)
 
     server.start_cache()
-    server_cpu = server.log_cpu(duration)
+    server_cpu = server.log_cpu(duration + 3)
+
+    cpu_parser = CPUParser()
 
     client_results = clients.run_memtier()
 
@@ -41,6 +43,12 @@ def run(type, server_conf, memtier_conf, output_dir, base_port=11120, instances=
         ', '.join(memtier_parser.get_totals_headers()),
         memtier_parser.get_averaged_totals(),
         '%s/totals.csv' % output_dir
+    )
+
+    write(
+        ', '.join(cpu_parser.get_labels()),
+        cpu_parser.get_average_stats(server_cpu),
+        '%s/cpu.csv' % output_dir
     )
 
 
