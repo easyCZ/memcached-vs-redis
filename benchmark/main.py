@@ -106,7 +106,7 @@ def run(type, server_conf, memtier_conf, output_dir, base_port=11120, instances=
     #     print("[Main] CPU Average: " + str(cpu_average))
 
     # Clean up
-    server.kill_cache()
+    # server.kill_cache()
 
 
 def parse_config(path):
