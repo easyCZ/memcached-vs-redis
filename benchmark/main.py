@@ -36,6 +36,8 @@ def run(type, server_conf, memtier_conf, output_dir, base_port=11120, instances=
     memtier_parser = MemtierResultsParser(client_results)
 
     memtier_parser.read()
+
+    # write results
     write(
         ', '.join(memtier_parser.get_totals_headers()),
         memtier_parser.get_averaged_totals(),
@@ -71,26 +73,26 @@ def run(type, server_conf, memtier_conf, output_dir, base_port=11120, instances=
     #     print("[Main] Wrote results for %s" % hostname)
 
 
-    cpu_average = 0
-    for hostname, res in cpu.iteritems():
-
-        content = [line for line in res['stdout']]
-        cpu_average, usr_cpu, sys_cpu = CPUParser(content).get_average()
-        print("[Main] CPU Average: " + str(cpu_average))
-
-    # Aggregate latencies
-    with open('%s/cpu-vs-latencies.out' % output_dir, 'w') as f:
-        f.write(str(cpu_average))
-        f.write(', ')
-        f.write(str(usr_cpu))
-        f.write(', ')
-        f.write(str(sys_cpu))
-        f.write(', ')
-
-        f.write(str(avg(avg_latencies)))
-        f.write(', ')
-        f.write(str(avg(last_percentiles)))
-        f.write('\n')
+    # cpu_average = 0
+    # for hostname, res in cpu.iteritems():
+    #
+    #     content = [line for line in res['stdout']]
+    #     cpu_average, usr_cpu, sys_cpu = CPUParser(content).get_average()
+    #     print("[Main] CPU Average: " + str(cpu_average))
+    #
+    # # Aggregate latencies
+    # with open('%s/cpu-vs-latencies.out' % output_dir, 'w') as f:
+    #     f.write(str(cpu_average))
+    #     f.write(', ')
+    #     f.write(str(usr_cpu))
+    #     f.write(', ')
+    #     f.write(str(sys_cpu))
+    #     f.write(', ')
+    #
+    #     f.write(str(avg(avg_latencies)))
+    #     f.write(', ')
+    #     f.write(str(avg(last_percentiles)))
+    #     f.write('\n')
 
 
     # print("[Main] Writing CPU results")
@@ -105,8 +107,7 @@ def run(type, server_conf, memtier_conf, output_dir, base_port=11120, instances=
     #     print("[Main] CPU Average: " + str(cpu_average))
 
     # Clean up
-    if type != 'redis':
-        server.kill()
+    server.kill()
 
 
 def parse_config(path):
