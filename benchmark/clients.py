@@ -20,8 +20,9 @@ class Client(object):
         return self.connections.run_command(command)
 
     def run_memtier(self, config):
-        return self.execute(self.MEMTIER_CMD % config)
-        # self.clients.pool.join()
+        results = self.execute(self.MEMTIER_CMD % config)
+        self.connections.pool.join()
+        return results
 
 
 class Clients(object):

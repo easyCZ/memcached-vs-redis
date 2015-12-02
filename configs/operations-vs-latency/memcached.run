@@ -11,5 +11,5 @@ do
         -output=../results/$DIR/memcached/$i/ \
         -base-port=11120 \
         -instances=4 \
-        -duration=30 
+        -duration=30
 done
