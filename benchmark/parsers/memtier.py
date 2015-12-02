@@ -113,9 +113,8 @@ class MemtierResultsParser(object):
         return sum(averages.values()) / len(averages)
 
     def _get_99th(self, rows):
-        print rows
-        gets_start = self.content.index(self.GETS_DELIM)
-        gets = self.content[gets_start+1:]
+        gets_start = rows.index(self.GETS_DELIM)
+        gets = rows[gets_start+1:]
 
         for get in gets:
             # return first item past 99
