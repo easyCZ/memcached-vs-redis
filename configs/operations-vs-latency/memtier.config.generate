@@ -4,13 +4,13 @@ LABEL=memcached
 
 mkdir $LABEL
 
-for i in {80..560..80}
+for i in {1..16}
 do
     echo "-s nsl200
 -p 11120
---requests=$((i * 75))
--c 1
--t 1
+--test-time=30
+-c 40
+-t $i
 -P memcache_binary
 --random-data
 --key-minimum=200
