@@ -121,11 +121,22 @@ def main(argv):
     parser.add_argument('-server-conf', dest='server_conf', help='Server config', required=True)
     parser.add_argument('-memtier-conf', dest='memtier_conf', help='Memtier config', required=True)
     parser.add_argument('-output', dest='output', help='The directory to put the output of clients into', required=True)
+    parser.add_argument('-base-port', dest='base_port', default=1, type=int)
+    parser.add_argument('-instances', type=int, dest='instances', default=1)
+    parser.add_argument('-duration', type=int, dest='duration', default=30)
 
     args = parser.parse_args()
     server_conf = parse_config(args.server_conf)
     memtier_conf = parse_config(args.memtier_conf)
-    run(args.type, server_conf, memtier_conf, args.output)
+    run(
+        args.type,
+        server_conf,
+        memtier_conf,
+        args.output,
+        args.base_port,
+        args.instances,
+        args.duration
+    )
 
 if __name__ == "__main__":
     main(sys.argv)
