@@ -2,6 +2,7 @@ import sys
 import os
 import argparse
 from clients import Clients
+from parsers.memtier import MemtierResultsParser
 from server import Server
 from parsers.cpu import CPUParser
 from parsers.latency import LatencyParser
@@ -11,6 +12,16 @@ def avg(data):
     if len(data) > 0:
         return sum(data) / len(data)
     return 0
+
+def write(headers, content, path):
+    if not os.path.exists(os.path.dirname(path)):
+            os.makedirs(os.path.dirname(path))
+    with open(path, 'w') as f:
+        f.write(headers)
+        f.write('\n')
+        for row in content:
+            f.write(str(row))
+            f.write('\n')
 
 
 def run(type, server_conf, memtier_conf, output_dir, base_port=11120, instances=1, duration=30):
@@ -22,33 +33,42 @@ def run(type, server_conf, memtier_conf, output_dir, base_port=11120, instances=
 
     client_results = clients.run_memtier()
 
+    memtier_parser = MemtierResultsParser(client_results)
+
+    memtier_parser.read()
+    write(
+        ', '.join(memtier_parser.get_totals_headers()),
+        memtier_parser.get_averaged_totals(),
+        '%s/totals.csv' % output_dir
+    )
 
 
-
-    avg_latencies = []
-    last_percentiles = []
-
-    for hostname, res in results.iteritems():
-
-        filename = '%s/%s.out' % (output_dir, hostname)
-        if not os.path.exists(os.path.dirname(filename)):
-            os.makedirs(os.path.dirname(filename))
-
-        content = [line for line in res['stdout']]
-        latency_parser = LatencyParser(content)
-
-        avg_latency = latency_parser.get_average_latency()
-        last_percentile = latency_parser.get_99th_latency()
-
-        avg_latencies.append(avg_latency)
-        last_percentiles.append(last_percentile)
-
-        with open(filename, 'w') as f:
-            for line in content:
-                f.write(line)
-                f.write('\n')
-
-        print("[Main] Wrote results for %s" % hostname)
+    #
+    #
+    # avg_latencies = []
+    # last_percentiles = []
+    #
+    # for hostname, res in results.iteritems():
+    #
+    #     filename = '%s/%s.out' % (output_dir, hostname)
+    #     if not os.path.exists(os.path.dirname(filename)):
+    #         os.makedirs(os.path.dirname(filename))
+    #
+    #     content = [line for line in res['stdout']]
+    #     latency_parser = LatencyParser(content)
+    #
+    #     avg_latency = latency_parser.get_average_latency()
+    #     last_percentile = latency_parser.get_99th_latency()
+    #
+    #     avg_latencies.append(avg_latency)
+    #     last_percentiles.append(last_percentile)
+    #
+    #     with open(filename, 'w') as f:
+    #         for line in content:
+    #             f.write(line)
+    #             f.write('\n')
+    #
+    #     print("[Main] Wrote results for %s" % hostname)
 
 
     cpu_average = 0

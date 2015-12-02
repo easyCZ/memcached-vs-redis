@@ -3,6 +3,7 @@ from collections import defaultdict
 class MemtierResultsParser(object):
 
     TOTALS_DELIM = '------------------------------------------------------------------------'
+    GETS_DELIM = '---'
 
     def __init__(self, generators):
         self.generators = generators
@@ -40,18 +41,18 @@ class MemtierResultsParser(object):
     def get_instance_totals(self, rows):
         return self.get_instance_averages(rows)[-1]
 
-    def get_averages(self, content=None):
+    def get_averaged_totals(self, content=None):
         if content is None: content = self.content
 
         averages = {}
         for hostname, results in content.iteritems():
             matrix = [self.get_instance_totals(rows) for rows in results]
-            print(matrix)
             averages[hostname] = self._average_matrix(matrix)
 
-        return averages
+        # aggregate across hosts
+        return self._average_matrix(averages.values())
 
-    def get_average_headers(self):
+    def get_totals_headers(self):
         return ('ops/s', 'hits/s', 'miss/s', 'latency', 'KB/s')
 
     def _parse_average_row(self, row):
@@ -94,10 +95,36 @@ class MemtierResultsParser(object):
 
         results = []
         for col in range(cols):
-            average = sum([matrix[row][col] for row in range(rows)]) / rows
+            average = sum([matrix[row][col] for row in range(rows)]) / float(rows)
             results.append(average)
 
         return tuple(results)
+
+    def get_average_99th(self, content=None):
+        if content is None: content = self.content
+
+        averages = {}
+        for hostname, results in content.iteritems():
+            matrix = [self._get_99th(rows) for rows in results]
+            averages[hostname] = sum(matrix) / float(len(matrix))
+
+        # aggregate across hosts
+        return sum(averages.values()) / len(averages)
+
+    def _get_99th(self, rows):
+        gets_start = self.content.index(self.GETS_DELIM)
+        gets = self.content[gets_start+1:]
+
+        for get in gets:
+            # return first item past 99
+            method, msec, percent = get.split()
+            percent = float(percent)
+
+            if percent >= 99.0:
+                return float(msec)
+
+        return 100.0
+
 
 
 

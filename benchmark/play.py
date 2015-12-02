@@ -9,3 +9,6 @@ c = Clients('memcached', '-s nsl200 -p 11123 --test-time=30 -c 1 -t 1 -P memcach
 results = c.run_memtier()
 
 parser = MemtierResultsParser(results)
+parser.read()
+averages = parser.get_averaged_totals()
+average_99th = parser.get_average_99th()
