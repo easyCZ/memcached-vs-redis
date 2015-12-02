@@ -19,9 +19,8 @@ def write(headers, content, path):
     with open(path, 'w') as f:
         f.write(headers)
         f.write('\n')
-        for row in content:
-            f.write(str(row))
-            f.write('\n')
+        f.write(', '.join(map(str, content)))
+        f.write('\n')
 
 
 def run(type, server_conf, memtier_conf, output_dir, base_port=11120, instances=1, duration=30):
@@ -107,7 +106,7 @@ def run(type, server_conf, memtier_conf, output_dir, base_port=11120, instances=
     #     print("[Main] CPU Average: " + str(cpu_average))
 
     # Clean up
-    server.kill()
+    server.kill_cache()
 
 
 def parse_config(path):
