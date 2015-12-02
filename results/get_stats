@@ -1,1 +1,1 @@
-find ./threads/memcached -name 'cpu-vs-latencies.out' -exec cat {} \; > ./threads/memcached/aggregate.csv
+find ./operations-vs-latency/memcached -name 'totals.csv' -exec cat {} \; > ./operations-vs-latency/memcached/totals.csv
