@@ -2,7 +2,10 @@
 Honours Project at the University of Edinburgh
 
 ## TODO
-- [ ] Generate CPU vs Latency graphs
+- [ ] Find single thread load under 1ms
+- [ ] Use previous load to scale memcached
+- [ ] Pin threads and re-run scaling
+- [ ] Queing in the network stack
 
 ## Server testbed
 Inside UoE network, the following nodes:
