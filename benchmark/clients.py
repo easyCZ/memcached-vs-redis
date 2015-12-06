@@ -5,7 +5,7 @@ from parsers.config import MemtierConfigParser
 
 class Client(object):
 
-    MEMTIER_CMD = '%s %s' % (settings.MEMTIER, '%s')
+    MEMTIER_CMD = 'ulimit -n 65555; %s %s' % (settings.MEMTIER, '%s')
 
     def __init__(self, cache_type):
         self.cache_type = cache_type
