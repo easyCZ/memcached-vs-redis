@@ -2,7 +2,7 @@
 
 DIR=single-instance
 
-for i in {1..15}
+for i in {1..30}
 do
     python ../../../benchmark/main.py \
         -type=memcached \
