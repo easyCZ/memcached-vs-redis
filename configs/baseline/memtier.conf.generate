@@ -4,7 +4,7 @@ LABEL=single-instance
 
 mkdir $LABEL
 
-for i in {1..30}
+for i in {30..50}
 do
     echo "-s nsl200
 -p 11120
