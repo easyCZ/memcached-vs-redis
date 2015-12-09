@@ -1,7 +1,7 @@
 
 DIR=single-instance
 
-for i in {1..15}
+for i in {1..50}
 do
     cat $DIR/$i/totals.csv >> $DIR/totals.csv
 done
