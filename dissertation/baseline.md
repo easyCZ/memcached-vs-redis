@@ -24,13 +24,13 @@ The memcached server is configured with the following parameters, other paramete
 * Number of threads: 4 (default)
 
 The clients use the following configuration:
-* Number of connections: <n>
+* Number of connections: *n*
 * Number of threads per connection: 4
 * Memcached binary protocol: true
 * Generate random data
 * Key range: 100 - 10000 (min - max)
 
-where <n> is being varied from 1 to 40 with linear steps.
+where *n* is being varied from 1 to 40 with linear steps.
 
 ![SingleInstance](./single-instance-baseline.png)
 
