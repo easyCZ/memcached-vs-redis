@@ -30,10 +30,18 @@ The clients use the following configuration (rest in default configuration):
 * Generate random data
 * Key range: 100 - 10000 (min - max)
 
-where *n* is being varied from 1 to 40 with linear steps.
+where *n* is being varied from 1 to 40 with linear increments of 1.
 
+### Latency vs Throughput
 ![SingleInstance](./single-instance-baseline.png)
 
 From the figure above, we can see that as we increase the load on the server, the mean latency increases steadily until we get close to 400 000 operations and start seeing a sharp increase in mean latency without significant improvement in throughput. This is the saturation point at which the cache latency stops scaling linearly with load.
+
+The highest throughput occurs with mean latency of 0.668ms at 474936 operations per second. This corresponds to a configuration of 17 conncetions at 4 threads each per each load generating host. This gives a total of 476 simultaneous connections.
+
+The mean throughput below 1ms is 404391 operations per second with a mean latency of 0.563ms.
+
+Moving forward, we can use 16 connections with 4 threads each as a reasonable baseline.
+
 
 
