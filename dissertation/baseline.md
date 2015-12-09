@@ -18,7 +18,11 @@ Benchmark execution is performed as a parallel SSH into the hosts in question an
 ## Single instance baseline
 To establish a single cache instance baseline, benchmarks of increasing load in terms of the number of requests are used to determine the maximum throughput a single instance is able to cope with.
 
-![SingleInstance](./single-instance-baseline.png)
+### Configuration
+The memcached server is configured with the following parameters, other parameters are left in default settings:
+* Memory usage: 6GB
+* Number of threads: 4 (default)
 
+![SingleInstance](./single-instance-baseline.png)
 
 
