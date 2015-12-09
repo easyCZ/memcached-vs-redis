@@ -15,6 +15,10 @@ The network topology is a star with one host acting as cache server with the rem
 Benchmark execution is performed as a parallel SSH into the hosts in question and executing Memtier benchmark. Results are collected and aggregated.
 
 
-##
+## Single instance baseline
+To establish a single cache instance baseline, benchmarks of increasing load in terms of the number of requests are used to determine the maximum throughput a single instance is able to cope with.
+
+![SingleInstance](./single-instance-baseline.png)
+
 
 
