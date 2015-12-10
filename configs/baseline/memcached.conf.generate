@@ -1,0 +1,13 @@
+#!/bin/bash
+
+LABEL=multiple-threads
+
+mkdir $LABEL
+
+for i in {1..100}
+do
+    echo "-d
+-p 11120
+-m 6144
+-t $i" > $LABEL/memcached.$i.conf
+done

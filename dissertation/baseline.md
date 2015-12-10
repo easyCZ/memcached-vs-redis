@@ -44,4 +44,6 @@ The mean throughput below 1ms is 404391 operations per second with a mean latenc
 Moving forward, we can use 16 connections with 4 threads each as a reasonable baseline.
 
 
+## Scaling threads
+A way to improve performance of memcached is provisioning more threads to handle load.
 
