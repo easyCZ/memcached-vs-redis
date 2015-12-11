@@ -34,6 +34,7 @@ where *n* is being varied from 1 to 40 with linear increments of 1.
 
 ## Latency vs Throughput
 ![SingleInstance](./single-instance-baseline.png)
+(Figure 1)
 
 From the figure above, we can see that as we increase the load on the server, the mean latency increases steadily until we get close to 400 000 operations and start seeing a sharp increase in mean latency without significant improvement in throughput. This is the saturation point at which the cache latency stops scaling linearly with load.
 
@@ -65,7 +66,17 @@ Server configuration:
 Where n ranges between 1 and 100 in linear increments of size 1.
 
 #### Results
+In order to understand the impact of threads, we look at the throughput, latency of the responses on the client side and the CPU utilization on the server side.
 ![MultipleThreadsLatency](./multiple-threads-latency.png)
+(Figure 2)
 ![MultipleThreadsOperations](./multiple-threads-operations.png)
+(Figure 3)
 ![MultipleThreadsCPU](./multiple-threads-cpu.png)
+(Figure 4)
+
+From Figure 2, we can see that latency improves dramatically until we reach 6 threads and rises steadily with number of threads larger than 6. Similarly, the number of operations per second peaks at 6 threads and declines steadily after. Figure 4 shows that memcached cpu usage will increase steadily with the number threads until we reach 6 threads at which point the CPU usage remains steady.
+
+#### Analysis
+The results outlined above are consistent with a memcached recommendation to run memacached with the number of threads equal to the number of CPU cores. Indeed, our test server has only 6 cores and from the benchmarks it can be seen that the overhead of larger number of threads than cpu cores actually decreases performance.
+
 
