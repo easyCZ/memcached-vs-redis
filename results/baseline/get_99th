@@ -1,9 +1,9 @@
 
-DIR=multiple-threads
+DIR=multiple-instances
 
 echo "99% latency" > $DIR/99th.csv
 
 for i in {1..100}
 do
-    sed -n '2p' < $DIR/$i/cpu.csv >> $DIR/99th.csv
+    sed -n '2p' < $DIR/$i/latency.csv >> $DIR/99th.csv
 done
