@@ -46,6 +46,12 @@ def run(type, server_conf, memtier_conf, output_dir, base_port=11120, instances=
     )
 
     write(
+        '99th latency',
+        memtier_parser.get_average_99th(),
+        '%s/latency.csv' % output_dir
+    )
+
+    write(
         ', '.join(cpu_parser.get_labels()),
         cpu_parser.get_average_stats(server_cpu).values(),
         '%s/cpu.csv' % output_dir
