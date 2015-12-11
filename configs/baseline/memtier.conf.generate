@@ -9,7 +9,7 @@ do
     echo "-s nsl200
 -p 11120
 --test-time=30
--c 16
+-c $(( (16 / $i) + 1))
 -t 4
 -P memcache_binary
 --random-data
