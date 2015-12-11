@@ -7,7 +7,7 @@ do
     python ../../../benchmark/main.py \
         -type=memcached \
         -server-conf=./memcached.$i.conf \
-        -memtier-conf=./memtier.memcached.conf \
+        -memtier-conf=./memtier.memcached.$i.conf \
         -output=../../../results/baseline/$DIR/$i/ \
         -base-port=11120 \
         -instances=$i \

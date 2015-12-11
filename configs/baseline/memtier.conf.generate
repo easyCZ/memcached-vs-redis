@@ -4,12 +4,12 @@ LABEL=multiple-instances
 
 mkdir $LABEL
 
-for i in {30..50}
+for i in {1..12}
 do
     echo "-s nsl200
 -p 11120
 --test-time=30
--c 16
+-c $((16 / $i))
 -t 4
 -P memcache_binary
 --random-data
