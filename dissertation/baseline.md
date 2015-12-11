@@ -77,6 +77,9 @@ In order to understand the impact of threads, we look at the throughput, latency
 From Figure 2, we can see that latency improves dramatically until we reach 6 threads and rises steadily with number of threads larger than 6. Similarly, the number of operations per second peaks at 6 threads and declines steadily after. Figure 4 shows that memcached cpu usage will increase steadily with the number threads until we reach 6 threads at which point the CPU usage remains steady.
 
 #### Analysis
-The results outlined above are consistent with a memcached recommendation to run memacached with the number of threads equal to the number of CPU cores. Indeed, our test server has only 6 cores and from the benchmarks it can be seen that the overhead of larger number of threads than cpu cores actually decreases performance.
+The results outlined above are consistent with a memcached recommendation to run memacached with the number of threads equal to the number of CPU cores. Indeed, our test server has only 6 cores and from the benchmarks it can be seen that the overhead of larger number of threads than cpu cores actually decreases performance. Furthermore, Figure 4 also illustrates that memcached is networking heavy, all of the CPU capacity beyond application requirements are spent in the network stack and interrupt handling.
+
+
+### Scaling memcached instances
 
 
