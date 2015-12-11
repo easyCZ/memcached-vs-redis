@@ -1,7 +1,8 @@
 
-DIR=single-instance
+DIR=multiple-threads
 
-for i in {1..50}
+echo "ops/s, hits/s, miss/s, latency, KB/s" > $DIR/totals.csv
+for i in {1..100}
 do
-    cat $DIR/$i/totals.csv >> $DIR/totals.csv
+    sed -n '2p' < $DIR/$i/totals.csv >> $DIR/totals.csv
 done

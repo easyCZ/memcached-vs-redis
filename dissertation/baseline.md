@@ -41,7 +41,7 @@ The highest throughput occurs with mean latency of 0.668ms at 474936 operations 
 
 The mean throughput below 1ms is 404391 operations per second with a mean latency of 0.563ms.
 
-Moving forward, we can use 16 connections with 4 threads each as a reasonable baseline.
+Moving forward, we can use 16 connections with 4 threads each as a reasonable client configuration.
 
 
 ## Scaling threads
