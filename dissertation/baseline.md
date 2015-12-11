@@ -32,7 +32,7 @@ The clients use the following configuration (rest in default configuration):
 
 where *n* is being varied from 1 to 40 with linear increments of 1.
 
-### Latency vs Throughput
+## Latency vs Throughput
 ![SingleInstance](./single-instance-baseline.png)
 
 From the figure above, we can see that as we increase the load on the server, the mean latency increases steadily until we get close to 400 000 operations and start seeing a sharp increase in mean latency without significant improvement in throughput. This is the saturation point at which the cache latency stops scaling linearly with load.
@@ -44,6 +44,28 @@ The mean throughput below 1ms is 404391 operations per second with a mean latenc
 Moving forward, we can use 16 connections with 4 threads each as a reasonable client configuration.
 
 
-## Scaling threads
-A way to improve performance of memcached is provisioning more threads to handle load.
+## Scaling memcached
+Firstly, memcached is scaled in terms of threads in order to understand the impact of multi-threading on the system. Secondly, multiple memcached instances are studied.
+
+### Scaling memcached with threads
+Memcached provides a configuration flag to configure the number of threads memcached is using. In the previous study, we focused on increasing the load while in this section the load will be kept constant and the number of threads will be varied. By default, memcached runs with four threads and it is also the configuration used in the previous benchmark.
+
+#### Configuration
+The client configuration used is at follows:
+* Number of connections: 16
+* Number of threads per connection: 4
+* Memcached binary protocol: true
+* Generate random data
+* Key range: 100 - 10000 (min - max)
+
+Server configuration:
+* Memory usage: 6GB
+* Number of threads: *n*
+
+Where n ranges between 1 and 100 in linear increments of size 1.
+
+#### Results
+![MultipleThreadsLatency](./multiple-threads-latency.png)
+![MultipleThreadsOperations](./multiple-threads-operations.png)
+![MultipleThreadsCPU](./multiple-threads-cpu.png)
 
