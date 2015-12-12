@@ -2,7 +2,7 @@
 
 DIR=multiple-instances
 
-for i in {1..33}
+for i in {1..5}
 do
     python ../../../benchmark/main.py \
         -type=memcached \
