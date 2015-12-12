@@ -1,10 +1,10 @@
 #!/bin/bash
 
-LABEL=multiple-instances
+LABEL=multiple-instances-1thread
 
 mkdir $LABEL
 
-for i in {1..5}
+for i in {1..7}
 do
     echo "-s nsl200
 -p 11120
