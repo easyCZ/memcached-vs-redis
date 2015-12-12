@@ -4,15 +4,23 @@ LABEL=multiple-instances
 
 mkdir $LABEL
 
-for i in {1..36}
+COUNT=1
+
+for i in {1..4}
 do
-    echo "-s nsl200
+    FROM=$(( (16 / $i) + 1))
+    for j in $(seq $FROM 16)
+    do
+        echo "-s nsl200
 -p 11120
 --test-time=30
--c $(( (16 / $i) + 1))
--t 4
+-c $j
+-t $i
 -P memcache_binary
 --random-data
 --key-minimum=100
---key-maximum=10000" > $LABEL/memtier.memcached.$i.conf
+--key-maximum=10000" > $LABEL/memtier.memcached.$COUNT.conf
+
+        COUNT=$(($COUNT + 1))
+    done
 done

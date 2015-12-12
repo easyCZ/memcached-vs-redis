@@ -2,7 +2,7 @@
 DIR=multiple-instances
 
 echo "ops/s, hits/s, miss/s, latency, KB/s" > $DIR/totals.csv
-for i in {1..12}
+for i in {1..100}
 do
     sed -n '2p' < $DIR/$i/totals.csv >> $DIR/totals.csv
 done
