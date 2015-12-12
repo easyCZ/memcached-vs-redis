@@ -1,6 +1,6 @@
 #!/bin/bash
 
-LABEL=multiple-instances-1thread
+LABEL=multiple-instances-2threads
 
 mkdir $LABEL
 
@@ -8,7 +8,7 @@ for i in {1..7}
 do
     echo "-s nsl200
 -p 11120
---test-time=30
+--test-time=60
 -c $i
 -t 4
 -P memcache_binary

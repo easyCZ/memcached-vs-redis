@@ -1,6 +1,6 @@
 #!/bin/bash
 
-LABEL=multiple-instances-1thread
+LABEL=multiple-instances-2threads
 
 mkdir $LABEL
 
@@ -9,5 +9,5 @@ do
     echo "-d
 -p 11120
 -m $(( 6144 / $i))
--t 1" > $LABEL/memcached.$i.conf
+-t 2" > $LABEL/memcached.$i.conf
 done

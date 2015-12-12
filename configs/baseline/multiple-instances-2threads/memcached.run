@@ -1,0 +1,18 @@
+#!/bin/bash
+
+DIR=multiple-instances-2threads
+
+INSTANCES=1
+
+for i in {1..7}
+do
+    python ../../../benchmark/main.py \
+        -type=memcached \
+        -server-conf=./memcached.$i.conf \
+        -memtier-conf=./memtier.memcached.$i.conf \
+        -output=../../../results/baseline/$DIR/$i/ \
+        -base-port=11120 \
+        -instances=$INSTANCES \
+        -duration=60
+    INSTANCES=$(($INSTANCES * 2))
+done
