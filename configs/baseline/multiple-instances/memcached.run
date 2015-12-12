@@ -2,6 +2,8 @@
 
 DIR=multiple-instances
 
+INSTANCES=1
+
 for i in {1..5}
 do
     python ../../../benchmark/main.py \
@@ -10,6 +12,7 @@ do
         -memtier-conf=./memtier.memcached.$i.conf \
         -output=../../../results/baseline/$DIR/$i/ \
         -base-port=11120 \
-        -instances=$i \
+        -instances=$INSTANCES \
         -duration=30
+    INSTANCES=$((INSTANCES * 2))
 done
