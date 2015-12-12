@@ -4,7 +4,7 @@ LABEL=multiple-instances
 
 mkdir $LABEL
 
-COUNT=1
+COUNT=33
 
 for i in {1..4}
 do
@@ -21,6 +21,6 @@ do
 --key-minimum=100
 --key-maximum=10000" > $LABEL/memtier.memcached.$COUNT.conf
 
-        COUNT=$(($COUNT + 1))
+        COUNT=$(($COUNT - 1))
     done
 done
