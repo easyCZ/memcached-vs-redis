@@ -27,7 +27,7 @@ def run(type, server_conf, memtier_conf, output_dir, base_port=11120, instances=
     server = Server(type, server_conf, base_port, instances)
     clients = Clients(type, memtier_conf, base_port, instances)
 
-    server.start_cache()
+    # server.start_cache()
     server_cpu = server.log_cpu(duration + 3)
 
     cpu_parser = CPUParser()
