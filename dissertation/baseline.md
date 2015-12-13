@@ -85,8 +85,12 @@ An alternative approach to inprove performance is to increase the number of inst
 
 ![MultipleInstances-1thread](./multiple-instances-1thread.png)
 (Figure 5 - Each instance with 1 thread)
+
+
 ![MultipleInstances-2threads](./multiple-instances-2threads.png)
 (Figure 6 - Each instance with 2 threads)
+
+
 ![MultipleInstances-6threads](./multiple-instances-6threads.png)
 (Figure 7 - Each instance with 6 threads)
 
