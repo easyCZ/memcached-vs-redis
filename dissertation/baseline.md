@@ -84,10 +84,13 @@ The results outlined above are consistent with a memcached recommendation to run
 An alternative approach to inprove performance is to increase the number of instances (processes) run on the server. In order to examine the the performance of memcached under multiple instances, we consider the case of average latency across *n* instances with a constant load generated from the clients. Each client host runs *n* memtier benchmarks with the constant load of each host divided equally across the n instances.
 
 ![MultipleInstances-1thread](./multiple-instances-1thread.png)
+
 (Figure 5 - Each instance with 1 thread)
 ![MultipleInstances-2threads](./multiple-instances-2threads.png)
+
 (Figure 6 - Each instance with 2 threads)
 ![MultipleInstances-6threads](./multiple-instances-2threads.png)
+
 (Figure 7 - Each instance with 6 threads)
 
 
