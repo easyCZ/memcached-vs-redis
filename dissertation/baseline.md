@@ -45,6 +45,9 @@ The mean throughput below 1ms is 404391 operations per second with a mean latenc
 Moving forward, we can use 16 connections with 4 threads each as a reasonable client configuration.
 
 
+## Receive Packet Steering
+
+
 ## Scaling memcached
 Firstly, memcached is scaled in terms of threads in order to understand the impact of multi-threading on the system. Secondly, multiple memcached instances are studied.
 
@@ -93,5 +96,10 @@ An alternative approach to inprove performance is to increase the number of inst
 
 ![MultipleInstances-6threads](./multiple-instances-6threads.png)
 (Figure 7 - Each instance with 6 threads)
+
+#### Analysis
+TODO - I'm not sure why the curves look the way they do
+
+###
 
 
