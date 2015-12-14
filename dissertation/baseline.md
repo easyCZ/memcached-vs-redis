@@ -46,6 +46,15 @@ Moving forward, we can use 16 connections with 4 threads each as a reasonable cl
 
 
 ## Receive Packet Steering
+In order to examine how Receive Packet Steering (RPS) affects performance, CPUs 0 and 1 are set to process all six receive queues while memcached cpu affinity is set to CPUs 2-5. The configuration of memcached and memtier remains the same as in the previous section.
+
+![SingleInstance-RPS2](./single-instance-rps.png)
+
+There are appears to be no significant improvement in latency over non RPS enabled configuration.
+
+![SingleInstance-RPS2](./single-instance-rps-throughput.png)
+
+Similarly, the throughput remains similar to the baseline with RPS disabled.
 
 
 ## Scaling memcached
