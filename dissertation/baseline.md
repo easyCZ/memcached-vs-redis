@@ -51,6 +51,7 @@ In order to examine how Receive Packet Steering (RPS) affects performance, we lo
 Memcached threads are pinned to cores 2-5 while cores 0-1 are responsible for processing receive queues 0-5.
 
 ### Mean Latency
+### Mean Latency
 ![SingleInstance-RPS2](./single-instance-rps-latency-comparison.png)
 First, in both scenarios the mean latency of the baseline is higher than when threads are pinned and when Rx queue is configured. Second, with RPS disabled (yellow), the mean latency is lower. Third, the mean latency with processing all receive queues with the spare cores not assigned to memcached is very closely aligned to the case when queues are not assigned specific CPUs. **TODO: WHY?**
 
@@ -64,12 +65,16 @@ Given the results, it appears that the latency improvements come from improving 
 
 
 ## IRQ
+### Mean Latency
 ![SingleInstance-IRQ-Latency](./single-instance-irq-latency.png)
 With IRQ set to all CPUs and memcached running 4 threads, there is no significant improvement in terms of mean latency.
 
 ### 99th Percentile Latency
 ![SingleInstance-IRQ-99th](./single-instance-irq-99th.png)
 Similarly for tail latency, with IRQ set the 99th percentile latency remains close to the baseline.
+
+### Throughput
+![SingleInstance-IRQ-Throughput](./single-instance-irq-throughput.png)
 
 ### Analysis
 Given the results, it appears that the latency improvements come from improving tail latency through thread pinning.
