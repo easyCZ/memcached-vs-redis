@@ -45,16 +45,13 @@ The mean throughput below 1ms is 404391 operations per second with a mean latenc
 Moving forward, we can use 16 connections with 4 threads each as a reasonable client configuration.
 
 
-## Receive Packet Steering
-In order to examine how Receive Packet Steering (RPS) affects performance, CPUs 0 and 1 are set to process all six receive queues while memcached cpu affinity is set to CPUs 2-5. The configuration of memcached and memtier remains the same as in the previous section.
+## Receive Packet Steering and Thread Pinning
+In order to examine how Receive Packet Steering (RPS) affects performance, we look at the performance of the cache under scenarios where threads running memcached are pinned to specific CPU cores and also when this setting is combined with explicitly specifying which Receive Queue is processed by which CPU. We compare these results against the baseline obtained above.
 
-![SingleInstance-RPS2](./single-instance-rps.png)
+Memcached threads are pinned to cores 2-5 while cores 0-1 are responsible for processing receive queues 0-5.
 
-There are appears to be no significant improvement in latency over non RPS enabled configuration.
-
-![SingleInstance-RPS2](./single-instance-rps-throughput.png)
-
-Similarly, the throughput remains similar to the baseline with RPS disabled.
+![SingleInstance-RPS2](./single-instance-rps-latency-comparison.png)
+First, in both scenarios the mean latency of the baseline is higher than when threads are pinned and when Rx queue is configured. Second, with RPS disabled (yellow), the mean latency is lower. Third, the mean latency with processing all receive queues with the spare cores not assigned to memcached is very closely aligned to the case when queues are not assigned specific CPUs. **TODO: WHY?**
 
 
 ## Scaling memcached
