@@ -1,4 +1,4 @@
-DIR=single-instance
+DIR=single-instance-irq
 
 echo "ops/s, hits/s, miss/s, latency, KB/s" > $DIR/totals.csv
 for i in {1..100}

@@ -1,13 +1,15 @@
 #!/bin/bash
 
-LABEL=multiple-instances-2threads
+LABEL=single-instance-groups
 
 mkdir $LABEL
+BUCKET=20
 
-for i in {1..7}
+for i in {1..16}
 do
     echo "-d
 -p 11120
--m $(( 6144 / $i))
--t 2" > $LABEL/memcached.$i.conf
+-m 6144
+-R $BUCKET" > $LABEL/memcached.$i.conf
+    BUCKET=$(($BUCKET + 20))
 done

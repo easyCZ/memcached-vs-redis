@@ -63,6 +63,17 @@ In the case of tail latency, we can see that pinning threads provides tail laten
 Given the results, it appears that the latency improvements come from improving tail latency through thread pinning.
 
 
+## IRQ
+![SingleInstance-IRQ-Latency](./single-instance-irq-latency.png)
+With IRQ set to all CPUs and memcached running 4 threads, there is no significant improvement in terms of mean latency.
+
+### 99th Percentile Latency
+![SingleInstance-IRQ-99th](./single-instance-irq-99th.png)
+Similarly for tail latency, with IRQ set the 99th percentile latency remains close to the baseline.
+
+### Analysis
+Given the results, it appears that the latency improvements come from improving tail latency through thread pinning.
+
 ## Scaling memcached
 Firstly, memcached is scaled in terms of threads in order to understand the impact of multi-threading on the system. Secondly, multiple memcached instances are studied.
 
