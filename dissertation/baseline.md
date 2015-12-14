@@ -76,6 +76,11 @@ Similarly for tail latency, with IRQ set the 99th percentile latency remains clo
 ### Throughput
 ![SingleInstance-IRQ-Throughput](./single-instance-irq-throughput.png)
 
+
+## Group Size
+As per [Where does the time go?](http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=7095781), it is suggested that changing the group size through the *-R* flag should improve performance due to locality.
+![SingleInstance-IRQ-Throughput](./single-instance-groups.png)
+
 ### Analysis
 Given the results, it appears that the latency improvements come from improving tail latency through thread pinning.
 
