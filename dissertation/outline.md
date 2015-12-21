@@ -22,16 +22,16 @@
     * What are we interested in
     * Discuss error conditions and repeatability
 
-4 Memcached
+5 Memcached
     * Outline
     * Implementation and implications
 
 
-4.1 Memcached Throughput under QoS
+5.1 Memcached Throughput under QoS
     * Latency vs Throughput
     * CPU vs QoS
 
-4.2 Memcached thread scalability
+5.2 Memcached thread scalability
     * # of threads vs QoS
     * Thread pinning
     * Rx/Tx queues
