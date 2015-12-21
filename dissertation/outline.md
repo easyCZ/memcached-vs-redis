@@ -22,7 +22,7 @@
     * What are we interested in
     * Discuss error conditions and repeatability
 
-4. Memcached
+4 Memcached
     * Outline
     * Implementation and implications
 
