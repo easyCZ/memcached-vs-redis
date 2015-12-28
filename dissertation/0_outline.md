@@ -13,26 +13,29 @@
     * Current State of caches & Usage in industry
 
 4. Testing Methodology
-    * Quality of Service (99th < 1ms?)
+    * Define Quality of Service (99th < 1ms?)
+    * What are we interested in (in terms of stats)
     * Testing setup
     * Comparison to testbeds in other papers
     * Memtier & comparison to others
-    * Justify Memtier
+    * Memtier
+        - Justify why memtier
+        - Outline how memtier works
     * Open loop vs closed loop
-    * What are we interested in
     * Discuss error conditions and repeatability
 
-5 Memcached
+5. Memcached
     * Outline
-    * Implementation and implications
-
-
-5.1 Memcached Throughput under QoS
-    * Latency vs Throughput
-    * CPU vs QoS
-
-5.2 Memcached thread scalability
-    * # of threads vs QoS
-    * Thread pinning
-    * Rx/Tx queues
+    * Design decisions
+        - Multi-threaded
+        - Locks
+        - Memory allocation
+    * Important configuration options and defaults
+    * Memcached Throughput under QoS
+        - Latency vs Throughput
+        - CPU vs QoS
+    * Memcached thread scalability
+        - # of threads vs QoS
+        - Thread pinning
+        - Rx/Tx queues
 
