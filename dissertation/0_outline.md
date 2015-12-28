@@ -52,4 +52,30 @@
         - Summarize performance
 
 6. Redis
+    * Outline
+        - What it is
+        - What does it do - feature set
+        - Who would/does use it
+        - Why would someone choose it over other object caches
+        - How does a typical redis deployment look like
+    * Redis design
+        - Philosophy
+            + Simple is better
+            + Easier to reason about
+        - Single threaded/lock-free
+        - Persistence
+        - No default sharding
+    * Setup and configuration options
+    * Benchmarks and results
+        - TODO: Similar benchmarks as with memcached
+
+7. Evaluation
+    * M vs R in terms of latency under QoS
+    * M vs R in terms of throughput under QoS
+    * M vs R in terms of total throughput outside QoS (?)
+
+
+
+        
+        
 
