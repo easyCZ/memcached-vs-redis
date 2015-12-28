@@ -26,6 +26,10 @@
 
 5. Memcached
     * Outline
+        - What memcached is
+        - Who/where it is used
+        - How would a typical memcached setup look like
+        - Link with paper on FB memcached setup and workloads
     * Design decisions
         - Multi-threaded
         - Locks
@@ -38,4 +42,14 @@
         - # of threads vs QoS
         - Thread pinning
         - Rx/Tx queues
+    * Memcached process scalability
+        - # of processes vs QoS
+    * Memcached and Group Size
+        - based on [Where does the time go?](http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=7095781)
+    * Summary
+        - Maximum throughput under QoS with threads/processes/Rx/Tx configs
+        - Cross-link with literature and justify numbers
+        - Summarize performance
+
+6. Redis
 
