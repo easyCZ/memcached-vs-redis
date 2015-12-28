@@ -17,6 +17,6 @@ The performance benchmarks are run on 8 machines with the following configuratio
 
 All the hosts are connected to a Pica8 P-3297 [2] switch with 48 1Gbps ports with a star as the network topology. A single host is used to run an object cache system while the remaining seven are used to generate workloads against the server.
 
-[1] Reconciling High Server Utilization
+* [1] Reconciling High Server Utilization
 and Sub-millisecond Quality-of-Service
-[2] [Pica8 Datasheet](http://www.pica8.com/wp-content/uploads/2015/09/pica8-datasheet-48x1gbe-p3297.pdf)
+* [2] [Pica8 Datasheet](http://www.pica8.com/wp-content/uploads/2015/09/pica8-datasheet-48x1gbe-p3297.pdf)
