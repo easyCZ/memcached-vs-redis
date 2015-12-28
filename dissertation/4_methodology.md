@@ -19,4 +19,5 @@ All the hosts are connected to a Pica8 P-3297 [2] switch with 48 1Gbps ports wit
 
 * [1] Reconciling High Server Utilization
 and Sub-millisecond Quality-of-Service
-* [2] [Pica8 Datasheet](http://www.pica8.com/wp-content/uploads/2015/09/pica8-datasheet-48x1gbe-p3297.pdf)
+* [2] [Intel(R) Xeon(R) E5-2603](http://ark.intel.com/products/64592/Intel-Xeon-Processor-E5-2603-10M-Cache-1_80-GHz-6_40-GTs-Intel-QPI)
+* [3] [Pica8 Datasheet](http://www.pica8.com/wp-content/uploads/2015/09/pica8-datasheet-48x1gbe-p3297.pdf)
