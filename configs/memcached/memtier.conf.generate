@@ -1,16 +1,16 @@
 #!/bin/bash
 
-LABEL=baseline-throughput
+LABEL=baseline-throughput2
 
 mkdir $LABEL
 
-for i in {1..40}
+for i in {1..20}
 do
     echo "-s nsl200
 -p 11120
---test-time=60
+--test-time=30
 -c $i
--t 4
+-t 2
 -P memcache_binary
 --random-data
 --key-minimum=100
