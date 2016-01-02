@@ -1,0 +1,19 @@
+#!/bin/bash
+
+LABEL=baseline-throughput
+
+mkdir $LABEL
+
+for i in {1..40}
+do
+    echo "-s nsl200
+-p 11120
+--test-time=60
+-c $i
+-t 4
+-P memcache_binary
+--random-data
+--key-minimum=100
+--key-maximum=10000" > $LABEL/memtier.memcached.$i.conf
+
+done
