@@ -20,6 +20,8 @@ All the hosts are connected to a Pica8 P-3297 [3] switch with 48 1Gbps ports wit
 ## Workload generation
 Workload for the cache server is generated using Memtier Benchmark [4]. The Memtier Benchmark provides a configurable parallel workload generation for both Memcached and Redis. Additionally, it allows for a high level of configrability. 
 
+## Open loop vs Closed loop
+
 * [1] Reconciling High Server Utilization
 and Sub-millisecond Quality-of-Service
 * [2] [Intel(R) Xeon(R) E5-2603](http://ark.intel.com/products/64592/Intel-Xeon-Processor-E5-2603-10M-Cache-1_80-GHz-6_40-GTs-Intel-QPI)
