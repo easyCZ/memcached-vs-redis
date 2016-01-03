@@ -19,8 +19,6 @@ To illustrate the importance and also the size of a memcached deployment, a work
 
 ![Facebook Pools Operations](./res/5_facebook_pool_ops.png)
 
-
-
 ## Design decisions
 From the early development stages, memcached has been designed in a client-server architecture. Therefore, a memcached applications receives a command based on its API, executes the command and returns a reply to the client. Memcached is deliberetly designed as a standalone application rather than being integrated into a particular system/framework in order to be able to act as a general purpose cache and allow decoupling of responsibilities in an system architecture.
 
