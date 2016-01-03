@@ -7,9 +7,9 @@ class Client(object):
 
     MEMTIER_CMD = 'ulimit -n 65555; %s %s' % (settings.MEMTIER, '%s')
 
-    def __init__(self, cache_type):
+    def __init__(self, cache_type, client_count=7):
         self.cache_type = cache_type
-        self.hosts = settings.CLIENTS
+        self.hosts = settings.CLIENTS[:client_count]
         self.connections = self._make_connections()
 
     def _make_connections(self):
@@ -27,7 +27,8 @@ class Client(object):
 
 class Clients(object):
 
-    def __init__(self, cache_type, config, base_port, instances=1):
+    def __init__(self, cache_type, config, base_port, instances=1, client_count=7):
+        self.client_count = client_count
         self.instances = instances
         self.base_port = base_port
         self.cache_type = cache_type
@@ -52,4 +53,4 @@ class Clients(object):
         return output
 
     def _make_connections(self):
-        return [Client(self.cache_type) for i in range(self.instances)]
+        return [Client(self.cache_type, self.client_count) for i in range(self.instances)]
