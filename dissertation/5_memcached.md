@@ -11,10 +11,20 @@ In the simplest memcached deployment, an instance of memcached can be run alongs
 
 More complicated deployments generally utilize a memcached instance running on a seperate host with all instances of, for example, web servers communicating with a single memcached host. The advantage of such a setup is decreased coupling and increased potential for scalability by adding more instances of both web server and memcached.
 
+In the largest scenarios, such as Facebook, a large number of client applications are talking to a number of memcached clusters responsible for a given type of information. Effectively creating a data layer where any client application can request information from any pool increasing modularity and interoperability of the infrastructure. [Ref?] 
+
+(Diagram to illustrate deployments here?)
+
+To illustrate the importance and also the size of a memcached deployment, a workload charasterization from Facebook will be used [7]. 
+
+![Facebook Pools Operations](./res/5_facebook_pool_ops.png)
+
+
+
 ## Design decisions
 From the early development stages, memcached has been designed in a client-server architecture. Therefore, a memcached applications receives a command based on its API, executes the command and returns a reply to the client. Memcached is deliberetly designed as a standalone application rather than being integrated into a particular system/framework in order to be able to act as a general purpose cache and allow decoupling of responsibilities in an system architecture.
 
-Memcached implements its distributed protocol through consistent hashing on the client side. Therefore, keeping logic on the server side minimal and allowing the clients to figure out which instance to talk to. In order to further improve horizontal scaling properties of memcached, solutions such as Twemproxy [7] exist to support scalability of an individual shard of a distributed memcached deployment.
+Memcached implements its distributed protocol through consistent hashing on the client side. Therefore, keeping logic on the server side minimal and allowing the clients to figure out which instance to talk to. In order to further improve horizontal scaling properties of memcached, solutions such as Twemproxy [8] exist to support scalability of an individual shard of a distributed memcached deployment.
 
 
 
@@ -29,4 +39,5 @@ Memcached implements its distributed protocol through consistent hashing on the 
 * [4] [Scaling memcached at Facebook](https://www.facebook.com/notes/facebook-engineering/scaling-memcached-at-facebook/39391378919/)
 * [5] 
 * [6] [Amazon ElastiCache](http://aws.amazon.com/elasticache/)
-* [7] [Twemproxy](https://github.com/twitter/twemproxy)
+* [7] Workload Analysis of a Large-Scale Key-Value Store, Berk Atikoglu, Yuehai Xu, Eitan Frachtenberg, Song Jiang, Mike Paleczny
+* [8] [Twemproxy](https://github.com/twitter/twemproxy)
