@@ -20,7 +20,18 @@ All the hosts are connected to a Pica8 P-3297 [3] switch with 48 1Gbps ports wit
 ## Workload generation
 Workload for the cache server is generated using Memtier Benchmark [4]. The Memtier Benchmark provides a configurable parallel workload generation for both Memcached and Redis. Additionally, it allows for a high level of configrability. 
 
+### Memtier Benchmark Behavior
+Memtier Benchmark provides various paramters allowing for a variable configuration. As part of the configration, the user is allowed to specify the number of threads and the number of connections per each thread memtier should make. The standard lifecycle of each thread is as follows:
+
+1. Set up n connection configurations
+2. For each connection configuration, initiate the connection over the desired protocol (default: TCP)
+3. Make a request
+4. Tear down the connection
+5. Repeat iterations
+
 ## Open loop vs Closed loop
+Memtier Benchmark, in its default configuration initiates a connection to the server
+For the purposes of this papare, workload generation will focus on a closed loop system. Therefore, the workload generation will not take into consideration the load of the server or the behavior of other clients generating requests. 
 
 * [1] Reconciling High Server Utilization
 and Sub-millisecond Quality-of-Service
