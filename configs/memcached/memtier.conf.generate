@@ -1,6 +1,6 @@
 #!/bin/bash
 
-LABEL=baseline-throughput3
+LABEL=baseline-throughput-pipeline
 
 mkdir $LABEL
 
@@ -10,9 +10,10 @@ do
 -p 11120
 --test-time=30
 -c $i
--t 3
+-t 2
 -P memcache_binary
 --random-data
+--pipeline=8
 --key-minimum=100
 --key-maximum=10000" > $LABEL/memtier.memcached.$i.conf
 
