@@ -42,8 +42,11 @@ Memcached is a multi-threaded application which introduces the requirement to lo
 Given the outline above, we can see that steps 5. to 7. transform the parallel nature of processing a request into a serial process. Optimizations to the critical section have been well studied but it should be noted that memcahed suffers from overheads related to global lock acquizition and release.
 
 
-
 ## Configuration options
+Memcached provides a convenient command line configration options to tweak the performance of memcached through various parameters, the most important ones are:
+* *-d* runs application in daemon mode
+* *-p <port>* binds application to a port (18080 by default)
+
 
 ## Throughput under QoS
  
