@@ -48,7 +48,7 @@ Memcached provides a convenient command line configration options to tweak the p
 * *-p <port>* binds application to a port (18080 by default)
 * *-m <memory>* defines how much memory to allocate to memcached.
 
-Throughout this paper, mostly th options above will be utilized. Where applicabl, further settings will be explained.
+Given the host hardware has 8GB memory, 6GB will be allocated to memcached to leave some memory for the underlying operating system. Throughout this paper, mostly options outlined above will be utilized. Where applicable, further settings will be explained.
 
 
 ## Throughput under QoS
