@@ -26,7 +26,19 @@ Memcached implements its distributed protocol through consistent hashing on the 
 
 The memory requirements of memcached are specified as a configration option before the memcached application is started. Knowing an upper bound on the amount of memory memcached can use allows memcached to claim the required memory and handle memory management itself rather than using *malloc, free or realloc*. *Slabs* are structured to be blocks of memory with 1MB allocated to them. Each slab belogns to a *slab group* which determines the size of each chunk inside the slab. By default, the minimum chunk size is 80 bytes with a hard maximum of 1MB. The growth factor between different slab groups is 1.25. Within each slab group, a Least Recently Used (LRU) eviction policy is employed effectively evicting entries least recently used within a similar memory requirement first.
 
-Slabs are designed to be groups of sizes under which Initially, the memory is partitioned into slabs of increasing size each containing one or more pages where entries can be stored. Within each slab group
+Private networks are the intended target of memcached where applications designed to be publicly exposed access memcached on behalf of the requestor rather than exposing the cache directly. By default, memcached provides access to all entries of the cache for all clients but there is also an option to be used with a Simple Authentication and Security Layer (SASL) option.
+
+Memcached is a multi-threaded application which introduces the requirement to lock resources during critical sections in order to prevent race conditions. The main reason for designing multi-threaded applications is improve performance. Parsing a request and understanding the nature of a request can be in parallel with data retrieval from memory while a response is being constructed, all in their own respective threads. However, in order to achieve the apprearance of operation atomicity, a mutual exclusion lock is required. A request lifecycle is as follows [10]:
+    1. Requests are received by the Network Interface Controller (NIC) and queued
+    2. *Libevent* receives the request and delivers it to the memcached application
+    3. A worker thread receives a request, parses it and determines the command required
+    4. The *key* in the request is used to calculate a hash value to access the memory location in *O(1)*
+    5. Cache lock is acquired *(entering critical section)*
+    6. Command is processed and LRU policy is enforced
+    7. Cache lock is released *(leaving critical section)*
+    8. Response is constructed and transmitted
+
+Given the outline above, we can see that steps 5. to 7. transform the parallel nature of processing a request into a serial process. Optimizations to the critical section have been well studied but it should be noted that memcahed suffers from overheads related to global lock acquizition and release.
 
 
 
@@ -44,3 +56,4 @@ Slabs are designed to be groups of sizes under which Initially, the memory is pa
 * [7] Workload Analysis of a Large-Scale Key-Value Store, Berk Atikoglu, Yuehai Xu, Eitan Frachtenberg, Song Jiang, Mike Paleczny
 * [8] http://investor.fb.com/releasedetail.cfm?ReleaseID=908022
 * [9] [Twemproxy](https://github.com/twitter/twemproxy)
+* [10] [Enhancing the Scalability of Memcached](https://software.intel.com/sites/default/files/m/0/b/6/1/d/45675-memcached_05172012.pdf)
