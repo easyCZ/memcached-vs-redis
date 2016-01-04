@@ -57,7 +57,11 @@ Firstly, to establish a baseline it is essential to understand memcached behavio
 ![Memcached Default Configuration Baseline](./res/5_baseline_latency_vs_ops.png)
 *Throughput vs mean and 99th perecentile latency*
 
+From the figure above, we can see that both the mean latency and the 99th perecentile latency increases linearly until we reach a saturation point at which point each increase in throughput is met with a much larger increase in latency. 
 
+![Memcached Default Configuration Baseline CPU vs Latency](./res/5_baseline_cpu_vs_ops.png)
+
+![Memcached Default Configuration Baseline Connections vs Ops](./res/5_baseline_connections_vs_ops.png)
  
 
 * [1] [memcached.org](http://memcached.org/)
