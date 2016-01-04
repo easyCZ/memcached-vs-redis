@@ -46,6 +46,7 @@ Given the outline above, we can see that steps 5. to 7. transform the parallel n
 Memcached provides a convenient command line configration options to tweak the performance of memcached through various parameters, the most important ones are:
 * *-d* runs application in daemon mode
 * *-p <port>* binds application to a port (18080 by default)
+* *-m <memory>* defines how much memory to allocate to memcached 
 
 
 ## Throughput under QoS
