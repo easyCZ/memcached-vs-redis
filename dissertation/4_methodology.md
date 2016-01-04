@@ -29,9 +29,11 @@ Memtier Benchmark provides various paramters allowing for a variable configurati
 4. Tear down the connection
 5. Repeat iterations
 
-## Open loop vs Closed loop
-Memtier Benchmark, in its default configuration initiates a connection to the server
-For the purposes of this papare, workload generation will focus on a closed loop system. Therefore, the workload generation will not take into consideration the load of the server or the behavior of other clients generating requests. 
+### Open loop vs Closed loop
+Memtier is closed loop
+
+
+
 
 * [1] Reconciling High Server Utilization
 and Sub-millisecond Quality-of-Service
