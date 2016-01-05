@@ -61,13 +61,7 @@ From the figure above, we can see that both the mean latency and the 99th perece
 
 ![Memcached Default Configuration Baseline Connections vs Ops](./res/5_baseline_connections_vs_ops.png)
 
-
-In order to further understand the impact of an increase in the number of connections, consider the figure above comparing the number of connections with the number of operations executed. 
-
-
-
-
-![Memcached Default Configuration Baseline CPU vs Latency](./res/5_baseline_cpu_vs_ops.png)
+In order to further understand the impact of an increase in the number of connections, consider the figure above comparing the number of connections with the number of operations executed. We can see that memcached scales well until we reach a saturation point at around 84 connections (highlighted). A further increase in the number of connections is met with 
 
  
 
