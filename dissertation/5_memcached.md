@@ -57,7 +57,7 @@ Firstly, to establish a baseline it is essential to understand memcached behavio
 ![Memcached Default Configuration Baseline](./res/5_baseline_latency_vs_ops.png)
 *Throughput vs mean and 99th perecentile latency*
 
-From the figure above, we can see that both the mean latency and the 99th perecentile latency increases linearly until we reach a saturation point at which point each increase in throughput is met with a much larger increase in latency. 
+From the figure above, we can see that both the mean latency and the 99th perecentile latency increases linearly until we reach a saturation point at which point each increase in throughput is met with a much larger increase in latency. Additionally, we can see that the highest throughput achieved with 99th percentile under 1ms is 375k operations per second. This corresponds to 84 simultaneous connections, or 12 connections per each client. This is similar to benchmarks used in the literature [11]. Twelve connections per client may seem low, however, memtier connection lifecycle only lasts for a single requests therefore the connections are dropped and re-created, effectively resulting in 31000 connections per second from each client.
 
 ![Memcached Default Configuration Baseline CPU vs Latency](./res/5_baseline_cpu_vs_ops.png)
 
@@ -74,3 +74,4 @@ From the figure above, we can see that both the mean latency and the 99th perece
 * [8] http://investor.fb.com/releasedetail.cfm?ReleaseID=908022
 * [9] [Twemproxy](https://github.com/twitter/twemproxy)
 * [10] [Enhancing the Scalability of Memcached](https://software.intel.com/sites/default/files/m/0/b/6/1/d/45675-memcached_05172012.pdf)
+* [11] Thin Servers with Smart Pipes: Designing SoC Accelerators for Memcached - Kevin Lim, David Meisner, Ali G. Saidi, Parthasarathy Ranganathan, Thomas F. Wenisch
