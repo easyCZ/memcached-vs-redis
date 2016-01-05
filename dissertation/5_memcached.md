@@ -57,11 +57,18 @@ Firstly, to establish a baseline it is essential to understand memcached behavio
 ![Memcached Default Configuration Baseline](./res/5_baseline_latency_vs_ops.png)
 *Throughput vs mean and 99th perecentile latency*
 
-From the figure above, we can see that both the mean latency and the 99th perecentile latency increases linearly until we reach a saturation point at which point each increase in throughput is met with a much larger increase in latency. Additionally, we can see that the highest throughput achieved with 99th percentile under 1ms is 375k operations per second. This corresponds to 84 simultaneous connections, or 12 connections per each client. This is similar to benchmarks used in the literature [11]. Twelve connections per client may seem low, however, memtier connection lifecycle only lasts for a single requests and the connections are dropped and re-created, effectively resulting in the order of 31000 connections per second from each client.
+From the figure above, we can see that both the mean latency and the 99th perecentile latency increases linearly until we reach a saturation point at which point each increase in throughput is met with a much larger increase in latency. Additionally, we can see that the highest throughput achieved with 99th percentile under 1ms is 375k operations per second. This corresponds to 84 simultaneous connections, or 12 connections per each client. This is similar to benchmarks used in the literature [11]. Twelve connections per client may seem low, however, memtier connection lifecycle only lasts for a single requests and the connections are dropped and re-created, effectively resulting in the order of 31000 connections per second per client.
+
+![Memcached Default Configuration Baseline Connections vs Ops](./res/5_baseline_connections_vs_ops.png)
+
+
+In order to further understand the impact of an increase in the number of connections, consider the figure above comparing the number of connections with the number of operations executed. 
+
+
+
 
 ![Memcached Default Configuration Baseline CPU vs Latency](./res/5_baseline_cpu_vs_ops.png)
 
-![Memcached Default Configuration Baseline Connections vs Ops](./res/5_baseline_connections_vs_ops.png)
  
 
 * [1] [memcached.org](http://memcached.org/)
