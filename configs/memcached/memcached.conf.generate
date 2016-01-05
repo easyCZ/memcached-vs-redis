@@ -1,6 +1,6 @@
 #!/bin/bash
 
-LABEL=baseline-throughput
+LABEL=baseline-throughput-lower-mem
 
 mkdir $LABEL
 
@@ -8,5 +8,5 @@ for i in {1..40}
 do
     echo "-d
 -p 11120
--m 6144" > $LABEL/memcached.$i.conf
+-m 4096" > $LABEL/memcached.$i.conf
 done
