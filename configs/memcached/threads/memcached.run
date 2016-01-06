@@ -2,7 +2,7 @@
 
 DIR=threads2
 
-for i in {1..50}
+for i in {1..24}
 do
     python ../../../benchmark/main.py \
         -type=memcached \
@@ -11,5 +11,5 @@ do
         -output=../../../results/memcached/$DIR/$i/ \
         -base-port=11120 \
         -instances=1 \
-        -duration=30
+        -duration=60
 done
