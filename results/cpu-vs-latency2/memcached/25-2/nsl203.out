@@ -1,173 +1,0 @@
-[RUN #1] Preparing benchmark client...
-[RUN #1] Launching threads now...
-[RUN #1 3%,   0 secs]  2 threads:       67436 ops,       0 (avg:       0) ops/sec, 0.00KB/sec (avg: 0.00KB/sec),  0.00 (avg:  0.00) msec latency[RUN #1 7%,   1 secs]  2 threads:      138446 ops,   71001 (avg:   69228) ops/sec, 2.68MB/sec (avg: 2.61MB/sec),  0.70 (avg:  0.72) msec latency[RUN #1 10%,   2 secs]  2 threads:      212731 ops,   74276 (avg:   70911) ops/sec, 2.80MB/sec (avg: 2.67MB/sec),  0.67 (avg:  0.70) msec latency[RUN #1 13%,   4 secs]  2 threads:      282221 ops,   69481 (avg:   70553) ops/sec, 2.62MB/sec (avg: 2.66MB/sec),  0.72 (avg:  0.71) msec latency[RUN #1 17%,   5 secs]  2 threads:      354414 ops,   72184 (avg:   70880) ops/sec, 2.72MB/sec (avg: 2.67MB/sec),  0.69 (avg:  0.70) msec latency[RUN #1 20%,   6 secs]  2 threads:      425292 ops,   70868 (avg:   70878) ops/sec, 2.67MB/sec (avg: 2.67MB/sec),  0.70 (avg:  0.70) msec latency[RUN #1 23%,   7 secs]  2 threads:      500213 ops,   74913 (avg:   71454) ops/sec, 2.83MB/sec (avg: 2.69MB/sec),  0.67 (avg:  0.70) msec latency[RUN #1 27%,   8 secs]  2 threads:      573061 ops,   72839 (avg:   71627) ops/sec, 2.75MB/sec (avg: 2.70MB/sec),  0.68 (avg:  0.70) msec latency[RUN #1 30%,   9 secs]  2 threads:      640940 ops,   67869 (avg:   71210) ops/sec, 2.56MB/sec (avg: 2.69MB/sec),  0.73 (avg:  0.70) msec latency[RUN #1 33%,  10 secs]  2 threads:      708950 ops,   68001 (avg:   70889) ops/sec, 2.56MB/sec (avg: 2.67MB/sec),  0.73 (avg:  0.70) msec latency[RUN #1 37%,  11 secs]  2 threads:      777268 ops,   68310 (avg:   70654) ops/sec, 2.58MB/sec (avg: 2.66MB/sec),  0.73 (avg:  0.71) msec latency[RUN #1 40%,  12 secs]  2 threads:      851966 ops,   74689 (avg:   70990) ops/sec, 2.82MB/sec (avg: 2.68MB/sec),  0.67 (avg:  0.70) msec latency[RUN #1 43%,  13 secs]  2 threads:      933342 ops,   81364 (avg:   71788) ops/sec, 3.07MB/sec (avg: 2.71MB/sec),  0.61 (avg:  0.69) msec latency[RUN #1 47%,  14 secs]  2 threads:     1015073 ops,   81720 (avg:   72498) ops/sec, 3.08MB/sec (avg: 2.73MB/sec),  0.61 (avg:  0.69) msec latency[RUN #1 50%,  15 secs]  2 threads:     1093809 ops,   78725 (avg:   72913) ops/sec, 2.97MB/sec (avg: 2.75MB/sec),  0.63 (avg:  0.68) msec latency[RUN #1 53%,  16 secs]  2 threads:     1175586 ops,   81766 (avg:   73466) ops/sec, 3.08MB/sec (avg: 2.77MB/sec),  0.61 (avg:  0.68) msec latency[RUN #1 57%,  17 secs]  2 threads:     1257367 ops,   81770 (avg:   73955) ops/sec, 3.08MB/sec (avg: 2.79MB/sec),  0.61 (avg:  0.67) msec latency[RUN #1 60%,  18 secs]  2 threads:     1338857 ops,   81482 (avg:   74373) ops/sec, 3.07MB/sec (avg: 2.80MB/sec),  0.61 (avg:  0.67) msec latency[RUN #1 63%,  19 secs]  2 threads:     1420822 ops,   81955 (avg:   74772) ops/sec, 3.09MB/sec (avg: 2.82MB/sec),  0.61 (avg:  0.67) msec latency[RUN #1 67%,  20 secs]  2 threads:     1502375 ops,   81545 (avg:   75111) ops/sec, 3.08MB/sec (avg: 2.83MB/sec),  0.61 (avg:  0.66) msec latency[RUN #1 70%,  21 secs]  2 threads:     1585820 ops,   83435 (avg:   75507) ops/sec, 3.15MB/sec (avg: 2.85MB/sec),  0.60 (avg:  0.66) msec latency[RUN #1 73%,  22 secs]  2 threads:     1668394 ops,   82565 (avg:   75828) ops/sec, 3.11MB/sec (avg: 2.86MB/sec),  0.60 (avg:  0.66) msec latency[RUN #1 77%,  23 secs]  2 threads:     1752515 ops,   84110 (avg:   76188) ops/sec, 3.17MB/sec (avg: 2.87MB/sec),  0.59 (avg:  0.65) msec latency[RUN #1 80%,  24 secs]  2 threads:     1834308 ops,   81782 (avg:   76421) ops/sec, 3.08MB/sec (avg: 2.88MB/sec),  0.61 (avg:  0.65) msec latency[RUN #1 83%,  25 secs]  2 threads:     1914188 ops,   79870 (avg:   76559) ops/sec, 3.01MB/sec (avg: 2.89MB/sec),  0.62 (avg:  0.65) msec latency[RUN #1 87%,  26 secs]  2 threads:     1998180 ops,   83984 (avg:   76845) ops/sec, 3.17MB/sec (avg: 2.90MB/sec),  0.59 (avg:  0.65) msec latency[RUN #1 90%,  27 secs]  2 threads:     2081203 ops,   83013 (avg:   77073) ops/sec, 3.13MB/sec (avg: 2.91MB/sec),  0.60 (avg:  0.65) msec latency[RUN #1 93%,  28 secs]  2 threads:     2161491 ops,   80278 (avg:   77188) ops/sec, 3.03MB/sec (avg: 2.91MB/sec),  0.62 (avg:  0.65) msec latency[RUN #1 97%,  29 secs]  2 threads:     2245273 ops,   83773 (avg:   77415) ops/sec, 3.16MB/sec (avg: 2.92MB/sec),  0.59 (avg:  0.64) msec latency[RUN #1 100%,  30 secs]  0 threads:     2332278 ops,   83773 (avg:   77742) ops/sec, 3.16MB/sec (avg: 2.93MB/sec),  0.59 (avg:  0.64) msec latency
-
-2         Threads
-25        Connections per thread
-30        Seconds
-Type        Ops/sec     Hits/sec   Misses/sec      Latency       KB/sec
-------------------------------------------------------------------------
-Sets        7068.27          ---          ---      0.64400       523.95
-Gets       70674.03     20715.82     49958.21      0.64000      2478.22
-Totals     77742.31     20715.82     49958.21      0.64000      3002.17
-
-
-Request Latency Distribution
-Type     <= msec         Percent
-------------------------------------------------------------------------
-SET       1.000     97.46191
-SET       2.000     99.49917
-SET       3.000     99.71988
-SET       4.000     99.99104
-SET       5.000     99.99387
-SET       6.000     99.99434
-SET      11.000     99.99481
-SET      13.000     99.99528
-SET      15.000     99.99576
-SET      17.000     99.99623
-SET      19.000     99.99670
-SET      21.000     99.99717
-SET      23.000     99.99764
-SET      25.000     99.99811
-SET      27.000     99.99859
-SET      30.000     99.99906
-SET      32.000     99.99953
-SET      34.000    100.00000
----
-GET       0.095      0.00009
-GET       0.100      0.00014
-GET       0.110      0.00052
-GET       0.120      0.00080
-GET       0.130      0.00245
-GET       0.140      0.00472
-GET       0.150      0.00929
-GET       0.160      0.01523
-GET       0.170      0.02929
-GET       0.180      0.05334
-GET       0.190      0.09923
-GET       0.200      0.18220
-GET       0.210      0.31091
-GET       0.220      0.52268
-GET       0.230      0.87410
-GET       0.240      1.46305
-GET       0.250      2.33097
-GET       0.260      3.52533
-GET       0.270      5.11912
-GET       0.280      7.28016
-GET       0.290     10.26771
-GET       0.300     13.68083
-GET       0.310     17.13070
-GET       0.320     20.44892
-GET       0.330     23.55750
-GET       0.340     26.50973
-GET       0.350     28.89716
-GET       0.360     30.61004
-GET       0.370     31.82095
-GET       0.380     32.65987
-GET       0.390     33.26443
-GET       0.400     33.73117
-GET       0.410     34.15291
-GET       0.420     34.61305
-GET       0.430     35.15021
-GET       0.440     35.81679
-GET       0.450     36.64066
-GET       0.460     37.62471
-GET       0.470     38.75652
-GET       0.480     40.05388
-GET       0.490     41.47726
-GET       0.500     42.98073
-GET       0.510     44.49543
-GET       0.520     46.03243
-GET       0.530     47.62061
-GET       0.540     49.26723
-GET       0.550     50.93096
-GET       0.560     52.62304
-GET       0.570     54.36323
-GET       0.580     56.17304
-GET       0.590     58.04755
-GET       0.600     59.95126
-GET       0.610     61.86214
-GET       0.620     63.77443
-GET       0.630     65.60197
-GET       0.640     67.35084
-GET       0.650     68.92930
-GET       0.660     70.32707
-GET       0.670     71.50897
-GET       0.680     72.51023
-GET       0.690     73.34373
-GET       0.700     74.01771
-GET       0.710     74.57760
-GET       0.720     75.06024
-GET       0.730     75.50359
-GET       0.740     75.93085
-GET       0.750     76.35062
-GET       0.760     76.76859
-GET       0.770     77.21312
-GET       0.780     77.66642
-GET       0.790     78.12562
-GET       0.800     78.58552
-GET       0.810     79.03382
-GET       0.820     79.46274
-GET       0.830     79.87213
-GET       0.840     80.26444
-GET       0.850     80.61884
-GET       0.860     80.93890
-GET       0.870     81.23689
-GET       0.880     81.50771
-GET       0.890     81.77051
-GET       0.900     82.03067
-GET       0.910     82.28413
-GET       0.920     82.54179
-GET       0.930     82.81304
-GET       0.940     83.10131
-GET       0.950     83.40443
-GET       0.960     83.72412
-GET       0.970     84.05776
-GET       0.980     84.39711
-GET       0.990     84.75712
-GET       1.000     86.96499
-GET       1.100     91.82631
-GET       1.200     94.99370
-GET       1.300     95.77970
-GET       1.400     95.97751
-GET       1.500     96.28144
-GET       1.600     96.70050
-GET       1.700     96.88439
-GET       1.800     97.01381
-GET       1.900     97.32024
-GET       2.000     97.82509
-GET       2.100     98.40239
-GET       2.200     98.92332
-GET       2.300     99.27904
-GET       2.400     99.44275
-GET       2.500     99.49548
-GET       2.600     99.50703
-GET       2.700     99.50920
-GET       2.800     99.51038
-GET       2.900     99.51076
-GET       3.000     99.51109
-GET       3.100     99.51142
-GET       3.200     99.51170
-GET       3.300     99.51279
-GET       3.400     99.51491
-GET       3.500     99.52170
-GET       3.600     99.53802
-GET       3.700     99.56953
-GET       3.800     99.62297
-GET       3.900     99.69088
-GET       4.000     99.77418
-GET       4.100     99.84346
-GET       4.200     99.90072
-GET       4.300     99.94515
-GET       4.400     99.97217
-GET       4.500     99.98835
-GET       4.600     99.99519
-GET       4.700     99.99859
-GET       4.800     99.99934
-GET       4.900     99.99958
-GET       5.000     99.99962
-GET       5.100     99.99972
-GET       5.200     99.99981
-GET       5.300     99.99986
-GET       5.400     99.99995
-GET       5.500    100.00000
