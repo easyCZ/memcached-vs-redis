@@ -66,7 +66,15 @@ In order to further understand the impact of an increase in the number of connec
 ## Memcached Thread Scalability
 Memcached is designed to process requests in parallel and therefore a reasonable first step in scaling memcached is to provision more threads for the application. Considering that the benchmarking setup has a six-core processor, it is reasonable to expect the best performance when running memcached with six threads.
 
-Utilizing findings from the previous section, configuration with 84 connections can be used to generate consistent load while the number of threads provisioned for memcached is increased. Therefore, each client is setup as follows: `memtier -s nsl200 -p 11120 --test-time=30 -c 6 -t 2 -P memcache_binary --random-data --key-minimum=100 --key-maximum=10000` and the server is configured with `memcached -d -p 11120 -m 6144 -t <threads>` where `<threads>` varies between 1 and 50.
+Utilizing findings from the previous section, configuration with 84 connections can be used to generate consistent load while the number of threads provisioned for memcached is increased. Therefore, each client is setup as follows: `memtier -s nsl200 -p 11120 --test-time=30 -c 6 -t 2 -P memcache_binary --random-data --key-minimum=100 --key-maximum=10000` and the server is configured with `memcached -d -p 11120 -m 6144 -t <threads>` where `<threads>` varies between 1 and 35.
+
+![Memcached Thread Scaling](./res/5_threads_latency.png)
+
+The figure above shows mean and 99th percentile latency against the number of threads. The lowest mean latency occurs when running 6 threads of memcached. This corresponds to the expectation of best performance of using *n* threads with *n* CPU cores. Additionally, less than 6 threads exhibits higher latency than when using 6 cores. A constant load created against the server and the number of threads less than the number of CPUs creates a bottleneck where network requests targeted for a given core are attempted to be processed only by a given core to avoid an expensive data transfer and a context switch. Consequently, the queue of requests builds up and overall latency decreases. An increase in the number of threads allows for a higher throughput due to reduced bottleneck on request processing. Furthermore, latency increases with the number of threads as a context switch is required between contexts in each thread therefore putting additional strain on the operating system resources.
+
+The 99th percentile lantecy.
+
+
 
  
 
