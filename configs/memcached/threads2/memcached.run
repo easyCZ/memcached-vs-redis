@@ -1,8 +1,8 @@
 #!/bin/bash
 
-DIR=threads
+DIR=threads2
 
-for i in {1..24}
+for i in {1..50}
 do
     python ../../../benchmark/main.py \
         -type=memcached \
