@@ -76,6 +76,10 @@ The 99th percentile lantecy behaves similarly to the mean latency. We can observ
 
 ![Memcached Thread Scaling](./res/5_threads_total_ops.png)
 
+Similarly to latency behavior, throughput is the highest when when running 6 threads - close to 450k operations per second. This is in accordance with our expectation as resources are being utilized fully and overhead from context switching is limited. Additionally, we can see that throughput incrases drastically between 1 and 6 threads, that is, from 120k to 450k. A further increase in the number of threads beyond 6 threads only results in a reduction in overall throughput caused by context switching overheads and operating system resource requirements. 
+
+
+
 
 
  
