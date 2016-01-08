@@ -51,7 +51,6 @@ In order to examine how Receive Packet Steering (RPS) affects performance, we lo
 Memcached threads are pinned to cores 2-5 while cores 0-1 are responsible for processing receive queues 0-5.
 
 ### Mean Latency
-### Mean Latency
 ![SingleInstance-RPS2](./single-instance-rps-latency-comparison.png)
 First, in both scenarios the mean latency of the baseline is higher than when threads are pinned and when Rx queue is configured. Second, with RPS disabled (yellow), the mean latency is lower. Third, the mean latency with processing all receive queues with the spare cores not assigned to memcached is very closely aligned to the case when queues are not assigned specific CPUs. **TODO: WHY?**
 
