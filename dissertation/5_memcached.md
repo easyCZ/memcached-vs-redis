@@ -88,6 +88,10 @@ Thread pinning is the process of assigning a *set_irq_affinity* to each individu
 "A Memcache instance started with n threads will spawn n + 1 threads of which the first n are worker threads and the last is a maintenance thread used for hash table expansion under high load factor." [14]. We can discover memcached threads used for request processing using 
 `ps -p <memcache-process-id> -o tid= -L | sort -n | tail -n +2 | head -n -1` [14] and further set their processor affinity using `taskset -pc <cpu-id> <tid>` where *<tid>* is the thread id discovered previously [14].
 
+Given the best performance under QoS constraints of 1ms found in the previous section is memcached with 6 threads, the following benchmark will be using this best configuration in order the analyze the impact of thread pinning.
+
+
+
 
 
 
