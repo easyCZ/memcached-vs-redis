@@ -13,3 +13,12 @@ do
         -instances=1 \
         -duration=30
 done
+
+# python ../../../benchmark/main.py \
+#         -type=memcached \
+#         -server-conf=./memcached.conf \
+#         -memtier-conf=./memtier.memcached.4.conf \
+#         -output=../../../results/memcached/pinning/4/ \
+#         -base-port=11120 \
+#         -instances=1 \
+#         -duration=30
