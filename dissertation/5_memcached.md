@@ -85,8 +85,8 @@ Analysing the CPU usage as we increase the number of threads, we can observe tha
 ## Thread pinning
 Thread pinning is the process of assigning a *set_irq_affinity* to each individual thread. As suggested by Leverich and Kozyrakis, "pinning memcached threads to distinct cores greatly improves load balance, consequently improving tail latency." [13] and therefore the reasonable next step in optimizing memcached performance is to attempt thread pinning and analyse the results obtained.
 
-"A Memcache instance started with n threads will spawn n + 1 threads of which the first n are worker threads and the last is a maintenance thread used for hash table expansion under high load factor." [14]. Therefore, we can discover memcached threads used for request processing using 
-`ps -p <memcache-process-id> -o tid= -L | sort -n | tail -n +2 | head -n -1` [14]
+"A Memcache instance started with n threads will spawn n + 1 threads of which the first n are worker threads and the last is a maintenance thread used for hash table expansion under high load factor." [14]. We can discover memcached threads used for request processing using 
+`ps -p <memcache-process-id> -o tid= -L | sort -n | tail -n +2 | head -n -1` [14] and further set their processor affinity using `taskset -pc <cpu-id> <tid>` where *<tid>* is the thread id discovered previously [14].
 
 
 
