@@ -2,7 +2,7 @@
 
 DIR=pinning-baseline
 
-for i in {1..10}
+for i in {10..20}
 do
     python ../../../benchmark/main.py \
         -type=memcached \
