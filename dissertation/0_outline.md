@@ -1,3 +1,20 @@
+---
+title: The Document Title
+author:
+    - Your Name
+    - Co Author
+date: \today{}
+geometry: margin=2cm
+header-includes:
+    - \usepackage{setspace}
+    - \doublespacing
+---
+
+
+
+
+
+
 1. Abstract
 2. Introduction
     * Motivation
