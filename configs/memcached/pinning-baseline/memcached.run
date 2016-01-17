@@ -2,7 +2,7 @@
 
 DIR=pinning-baseline
 
-for i in {10..20}
+for i in {1..20}
 do
     python ../../../benchmark/main.py \
         -type=memcached \
@@ -13,12 +13,3 @@ do
         -instances=1 \
         -duration=30
 done
-
-python ../../../benchmark/main.py \
-        -type=memcached \
-        -server-conf=./memcached.conf \
-        -memtier-conf=./memtier.memcached.8.conf \
-        -output=../../../results/memcached/pinning-baseline/8/ \
-        -base-port=11120 \
-        -instances=1 \
-        -duration=30
