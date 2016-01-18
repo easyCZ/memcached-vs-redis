@@ -1,8 +1,16 @@
 \documentclass{article}
 
+\usepackage[margin=3cm]{geometry}
+\usepackage{setspace}
+    \doublespacing
+\usepackage{listings}
+\usepackage{graphicx}
+
 \title{Memcached vs Redis: Benchmarking In-memory Object Caches}
 \date{2016-01-18}
 \author{Milan Pavlik}
+
+
 
 \begin{document}
   \pagenumbering{gobble}
@@ -11,19 +19,27 @@
   \pagenumbering{arabic}
 
   \input{abstract.tex}
+  \newpage
 
   \input{motivation.tex}
+  \newpage
 
   \input{object_caches.tex}
+  \newpage
 
   \input{methodology.tex}
+  \newpage
 
   \input{memcached.tex}
+  \newpage
 
   \input{redis.tex}
+  \newpage
 
   \input{evaluation.tex}
+  \newpage
 
   \input{conclusion.tex}
+  \newpage
 
 \end{document}
