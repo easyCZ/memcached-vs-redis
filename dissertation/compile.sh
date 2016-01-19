@@ -2,4 +2,4 @@ pdflatex dissertation.tex
 bibtex dissertation.aux
 pdflatex dissertation.tex
 
-open report.pdf
+open dissertation.pdf
