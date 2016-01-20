@@ -40,7 +40,11 @@ In the case of \textit{Memcached}, multi-threaded approach is utilized in order 
 
 
 \subsection{Performance metrics}
-The primary metrics reflecting performance of an in memory object cache are \textit{mean latency}, \textit{99th percentile latency} and \textit{throughput}. Both latency statistics are reflective of the quality of service the cache is delivering to it's clients. Throughput is indicative of the overall load the cache is capable of supporting, however, throughput is tightly related to latency and on it's own is not indicative of the real cache performance under quality constraints.
+Firstly, the primary metrics reflecting performance of an in memory object cache are \textit{mean latency}, \textit{99th percentile latency} and \textit{throughput}. Both latency statistics are reflective of the quality of service the cache is delivering to it's clients. Throughput is indicative of the overall load the cache is capable of supporting, however, throughput is tightly related to latency and on it's own is not indicative of the real cache performance under quality constraints.
+
+Secondly, being a high performance application with potentially network, understanding the proportion of CPU time spent inside the cache application compared to time spent processing network requests and handling operating system calls becomes important. Having an insight into the CPU time breakdown allows us to better understand bottlenecks of the application.
+
+Finally, the \textit{hit} and \textit{miss} rate of the cache can be used as a metric, particularly when evaluating a cache eviction policy, however, the hit and miss rate is tightly correlated with the type of application and the application context and therefore it is not a suitable metric for evaluating performance alone.
 
 
 \subsection{Current State of caches and Usage in industry}
@@ -49,6 +53,41 @@ TODO
 
 \subsection{Memcached}
 
+Memcached is a ``high-performance, distributed memory object caching system, generic in nature, but intended for use in speeding up dynamic web applications by alleviating database load.'' \cite{interactive2006memcached} Despite the official description aimed at dynamic web applications, memcached is also used as a generic key value store to locate servers and services \cite{atikoglu2012workload}.
+
+\subsubsection{Memcached API}
+Memcached provides a simple communication protocol. It implements the following core operations:
+
+\begin{itemize}
+    \item \texttt{get key1 [key2..N]} - Retrieve one or more values for given keys,
+    \item \texttt{set key value [flag] [expiration] [size]} - Insert \textit{key} into the cache with a \textit{value}. Overwrites current item.
+    \item \texttt{delete key} - Delete a given key.
+\end{itemize}
+
+Memcached further implements additional useful operations such as \texttt{incr/decr} which increments or decrements a value and \texttt{append/prepend} which append or prepend a given key.
+
+\subsubsection{Implementation}
+Firstly, Memcached is implemented as a multi-threaded application. ``Memcache instance started with n threads will spawn n + 1 threads of which the first n are worker threads and the last
+is a maintenance thread used for hash table expansion under high load factor.'' \cite{solarflarememcached}
+
+Secondly, in order to provide performance as well as  portability, memcached is implemented on top of \textit{libevent} \cite{libevent}. ``The libevent API provides a mechanism to execute a callback function when a specific event occurs on a file descriptor or after a timeout has been reached. Furthermore, libevent also support callbacks due to signals or regular timeouts.'' \cite{libevent}
+
+Thirdly, Memcached provides guarantees on the order of actions performed. Therefore, consecutive writes of the same key will result in the last incoming request being the retained by memcached. Consequently, all actions performed are internally atomic.
+
+As a result, memcached employs a locking mechanism in order to be able to guarantee order of writes as well as execute concurrently. Internally, the process of handling a request is as follows:
+
+\begin{enumerate}
+    \item Requests are received by the Network Interface Controller (NIC) and queued
+    \item \emph{Libevent} receives the request and delivers it to the memcached application
+    \item A worker thread receives a request, parses it and determines the command required
+    \item The \emph{key} in the request is used to calculate a hash value to access the memory location in \emph{O(1)}
+    \item Cache lock is acquired \emph{(entering critical section)}
+    \item Command is processed and LRU policy is enforced
+    \item Cache lock is released \emph{(leaving critical section)}
+    \item Response is constructed and transmitted \cite{wiggins2012enhancing}
+\end{enumerate}
+
+We can observe that steps \textit{1-4} and \textit{8} can be parallelized without the need for resource locking. However, the critical section in steps \textit{5-7} is executed with the acquisition of a global lock. Therefore, at this stage execute is not being performed in parallel.
 
 % \subsection{Memcached}
 % From the early development stages, memcached has been designed in a client-server architecture. Therefore, a memcached applications receives a command based on its API, executes the command and returns a reply to the client. Memcached is deliberetly designed as a standalone application rather than being integrated into a particular system/framework in order to be able to act as a general purpose cache and allow decoupling of responsibilities in an system architecture.
