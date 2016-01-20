@@ -1,6 +1,16 @@
 \section{Memory Object Caches}
 
+Traditionally, a cache is a data structure in either hardware or software capable of storage and retrieval of data. Generally, a \textit{value} of a computation is stored in the data structure with a given \textit{key}. A cache is generally used to speed up data retrieval. Often, a pattern of execution is to first attempt to retrieve a \textit{value} from the cache by it's \textit{key}. If the \textit{key} is present in the cache, \textit{value} is returned which is called a \textit{hit}. Otherwise, a failed retrieval is indicated and the attempt to access the cache is called a \textit{miss}. If a miss occurs, data is frequently computed or retrieved elsewhere and stored in the cache to speed up the next execution cycle.
+
+Caches are a heavily used across hardware and software systems. For example, the CPU uses multiple levels of caches in order to speed up memory access. Another example of a cache is in database servers to cache queries and reduce computation time. Efficient use of caching can drastically improve time required to retrieve data.
+
 \subsection{Purpose}
+
+
+
+
+
+
 In the traditional sense of way, a cache is a data structure which stores the results of a computation for later retrieval. Generally, a result of a computation is stored against a *key* with a *value* representing the computed result. When retrieving data from the cache, we say there is a *hit* if the key can be found in the cache and a *miss* otherwise. Caching is widely used across the hardware and software stack. For example, modern processors utilize a CPU cache to increase the speed of memory lookup. Similarly, a cache can also be found inside a web server to speed up retrieval of results from the server.
 
 An object cache is a general purpose cache, generally designed as a standalone application, which provides an interface to cache any type of object - for example, an object cache can store large text documents, small tweets or binary data such as images.
