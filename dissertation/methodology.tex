@@ -18,31 +18,33 @@ All the hosts are connected to a \textit{Pica8 P-3297} switch with 48 1Gbps port
 \subsection{Workload generation}
 Workload for the cache server is generated using Memtier Benchmark developed by Redis Labs \cite{memtier}. Memtier has been choosen as the benchmark for this study due to it's high level of configurability as well as ability to benchmark both \textit{memcached} and \textit{redis}. Utilizing the same benchmark client for both caches allows for a decreased variability in results when a comparison is made.
 
-\subsubsection{Memtier Benchmark Behavior}
-Memtier Benchmark provides various paramters allowing for a variable configuration. As part of the configration, the user is allowed to specify the number of threads and the number of connections per each thread memtier should make. The standard lifecycle of each thread is as follows:
+In order to create a more realistic simulation of a given workload, 7 servers all running \textit{memtier} simultanesouly are used. A simple parallel ssh utility is used to start, stop and collect statistics from the load generating clients.
 
-1. Set up n connection configurations
-2. For each connection configuration, initiate the connection over the desired protocol (default: TCP)
-3. Make a request
-4. Tear down the connection
-5. Repeat iterations
+\subsubsection{Memtier}
+Memtier benchmar is ``a command line utility developed by Redis Labs for load generation and bechmarking NoSQL key-value databases'' \cite{memtier}. It provides a high level of configurability allowing for example to specify patterns of \textit{sets} and \textit{gets} as well as generation of key-value pairs according to various distributions, including Gaussian and pseudo-random.
 
-\subsubsection{Open loop vs Closed loop}
-Memtier is closed loop
+Memtier is a threaded application built on top of \texttt{libevent} \cite{libevent}, allowing the user to configure the number of threads as well as the number of connections per each thread which can be used to control the server load. Additionally, memtier collects benchmark statistics including latency distribution, throughput and mean latency. The statistics reported are used to draw conclusions on the performance under a given load.
+
+Memtier execution model is based on the number of threads and connections configured. For each thread \texttt{t}, there are \texttt{c} connections created. The execution pattern within each thread is as follows:
+
+\begin{enumerate}
+    \item Initiate \texttt{c} connections
+    \item For each connection
+        \begin{enumerate}
+            \item Make a request to the cache server
+            \item Provide a \textit{libevent} callback to handle response outside of the main event loop
+        \end{enumerate}
+    \item Tear down \texttt{c} connections
+\end{enumerate}
+
+By offloading response handling to a callback inside libevent, memtier is able to process a large number of requests without blocking the main event loop until a response from the network request is returned while maintaining the ability to collect statistics effectively.
+
+Connections created with the target server are only destroyed at the end of the benchmark. This is a realistic scenario as in a large distributed environment the cache clients will maintain open connections to the cache to reduce the overhead of establishing a connection.
 
 
+\subsubsection{Open-loop vs Closed-loop}
+A load tester can be constructed with different architecture in mind. The main two types of load testers are \textit{open-loop} and \textit{closed-loop}. Closed-loop load testers frequently construct and send a new request only when the previous request has received a response. On the other hand, open-loop principle aims to send requests in timed intervals regardless of the response from the previous requests.
 
-% * Quality of Service (99th < 1ms?)
-% * Testing setup
-% * Comparison to testbeds in other papers
-% * Memtier and comparison to others
-% * Justify Memtier
-% * Open loop vs closed loop
-% * What are we interested in
-% * Discuss error conditions and repeatability
+The consequence of a closed-loop load tester is potentially reduced queuing on the server side and therefore observed latency distribution may be lower than when server side queuing is observed.
 
-% * [1] Reconciling High Server Utilization
-% and Sub-millisecond Quality-of-Service
-% * [2] [Intel(R) Xeon(R) E5-2603](http://ark.intel.com/products/64592/Intel-Xeon-Processor-E5-2603-10M-Cache-1_80-GHz-6_40-GTs-Intel-QPI)
-% * [3] [Pica8 Datasheet](http://www.pica8.com/wp-content/uploads/2015/09/pica8-datasheet-48x1gbe-p3297.pdf)
-% * [4] [Memtier Benchmark](https://github.com/RedisLabs/memtier_benchmark)
+Memtier falls in the category of closed loop testers when considering a single thread of memtier. However, memtier threads are independent of each other and therefore requests for another connection are made even if the previous request has not responded. Furthermore, by running memtier on multiple hosts simultaneously, the closed loop implications are alleviated and the server observes queuing delay in the network stack.
