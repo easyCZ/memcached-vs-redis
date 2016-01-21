@@ -16,12 +16,12 @@ Performance benchmarks executed in this study will be run on 8 distinct machines
 All the hosts are connected to a \textit{Pica8 P-3297} switch with 48 1Gbps ports arranged in a star topology. A single host is used to run an object cache system while the remaining seven are used to generate workloads against the server.
 
 \subsection{Workload generation}
-Workload for the cache server is generated using Memtier Benchmark developed by Redis Labs \cite{memtier}. Memtier has been choosen as the benchmark for this study due to it's high level of configurability as well as ability to benchmark both \textit{memcached} and \textit{redis}. Utilizing the same benchmark client for both caches allows for a decreased variability in results when a comparison is made.
+Workload for the cache server is generated using Memtier Benchmark developed by Redis Labs \cite{memtier}. Memtier has been chosen as the benchmark for this study due to it's high level of configurability as well as ability to benchmark both \textit{Memcached} and \textit{Redis}. Utilizing the same benchmark client for both caches allows for a decreased variability in results when a comparison is made.
 
-In order to create a more realistic simulation of a given workload, 7 servers all running \textit{memtier} simultanesouly are used. A simple parallel ssh utility is used to start, stop and collect statistics from the load generating clients.
+In order to create a more realistic simulation of a given workload, 7 servers all running \textit{memtier} simultaneously are used. A simple parallel ssh utility is used to start, stop and collect statistics from the load generating clients.
 
 \subsubsection{Memtier}
-Memtier benchmar is ``a command line utility developed by Redis Labs for load generation and bechmarking NoSQL key-value databases'' \cite{memtier}. It provides a high level of configurability allowing for example to specify patterns of \textit{sets} and \textit{gets} as well as generation of key-value pairs according to various distributions, including Gaussian and pseudo-random.
+Memtier benchmark is ``a command line utility developed by Redis Labs for load generation and benchmarking NoSQL key-value databases'' \cite{memtier}. It provides a high level of configurability allowing for example to specify patterns of \textit{sets} and \textit{gets} as well as generation of key-value pairs according to various distributions, including Gaussian and pseudo-random.
 
 Memtier is a threaded application built on top of \texttt{libevent} \cite{libevent}, allowing the user to configure the number of threads as well as the number of connections per each thread which can be used to control the server load. Additionally, memtier collects benchmark statistics including latency distribution, throughput and mean latency. The statistics reported are used to draw conclusions on the performance under a given load.
 
