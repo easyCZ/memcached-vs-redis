@@ -89,6 +89,10 @@ As a result, memcached employs a locking mechanism in order to be able to guaran
 
 We can observe that steps \textit{1-4} and \textit{8} can be parallelized without the need for resource locking. However, the critical section in steps \textit{5-7} is executed with the acquisition of a global lock. Therefore, at this stage execute is not being performed in parallel.
 
+
+\subsubsection{Production deployments}
+TODO: Facebook deployment?
+
 % \subsection{Memcached}
 % From the early development stages, memcached has been designed in a client-server architecture. Therefore, a memcached applications receives a command based on its API, executes the command and returns a reply to the client. Memcached is deliberetly designed as a standalone application rather than being integrated into a particular system/framework in order to be able to act as a general purpose cache and allow decoupling of responsibilities in an system architecture.
 

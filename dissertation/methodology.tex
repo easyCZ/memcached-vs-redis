@@ -1,19 +1,17 @@
 \section{Methodology}
 
-* Quality of Service (99th < 1ms?)
-* Testing setup
-* Comparison to testbeds in other papers
-* Memtier and comparison to others
-* Justify Memtier
-* Open loop vs closed loop
-* What are we interested in
-* Discuss error conditions and repeatability
+In order to effectively benchmark the performance of both types of caches in question, it is essential to be able to stress the cache server sufficiently to experience queuing delay and saturate the server. This study is concerned with the performance of the cache server rather than performance of the underlying network and therefore it is essential to utilize a sufficient number of clients in order to saturate the server while maintaining low congestion on the underlying network.
+
+The benchmarking methodology is heavily influenced by similar studies and benchmarks in the literature. This allows for a comparison of observed results and allows for a better correlation with related research.
+
 
 \subsection{Quality of Service}
-Firstly, it is important to define an acceptale quality of service (QoS) for an object cache in question. Distributed systems are increasingly more popular with responses to requests being a composition of smaller responses from respective sub-systems. Given all sub-systems must return a response before the complete response is serviced to the requestor, the slowest of all smaller responses will determine the overall response time. Frequently, the QoS aimed for is sub-1ms latency. Similar target is used by Leverich and Kozyrakis [1]. Therefore, in this study the aim will be to achieve tail latency under 1ms, that is in 99% of cases.
+Firstly, it is important the desired quality of service we are looking to benchmark for. Frequently, distributed systems are designed to work in parallel, each component responsible for a piece of computation which is then ultimately assembled into a larger piece of response before being shipped to the client. For example, an e-commerce store may choose to compute suggested products as well as brand new products separately only to assemble individual responses into an HTML page. Therefore, the slowest of all individual components will determine the overall time required to render a response.
 
-\subsection{Testing setup}
-The performance benchmarks are run on 8 machines with the following configuration: 6 core Intel(R) Xeon(R) CPU E5-2603 v3 @ 1.60GHz [2], 8 GB RAM and 1Gb/s Network Interface Controller (NIC).
+Let us define the quality of service (QoS) target of this study. For our benchmarking purposes, a sufficient QoS will be the \textit{99th percentile} tail latency of a system under 1 \textit{millisecond}. This is a reasonable target as the mean latency will generally (based on latency distribution) be significantly smaller. Furthermore, it is a similar latency target used in related research \cite{leverich2014reconciling}.
+
+\subsection{Hardware}
+Performance benchmarks executed in this study will be run on 8 distinct machines with the following configuration: \textit{6 core Intel(R) Xeon(R) CPU E5-2603 v3 @ 1.60GHz}, 8 GB RAM and 1Gb/s Network Interface Controller (NIC).
 
 All the hosts are connected to a Pica8 P-3297 [3] switch with 48 1Gbps ports with a star as the network topology. A single host is used to run an object cache system while the remaining seven are used to generate workloads against the server.
 
@@ -34,6 +32,14 @@ Memtier is closed loop
 
 
 
+% * Quality of Service (99th < 1ms?)
+% * Testing setup
+% * Comparison to testbeds in other papers
+% * Memtier and comparison to others
+% * Justify Memtier
+% * Open loop vs closed loop
+% * What are we interested in
+% * Discuss error conditions and repeatability
 
 % * [1] Reconciling High Server Utilization
 % and Sub-millisecond Quality-of-Service
