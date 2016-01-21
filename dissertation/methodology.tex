@@ -11,12 +11,12 @@ Firstly, it is important the desired quality of service we are looking to benchm
 Let us define the quality of service (QoS) target of this study. For our benchmarking purposes, a sufficient QoS will be the \textit{99th percentile} tail latency of a system under 1 \textit{millisecond}. This is a reasonable target as the mean latency will generally (based on latency distribution) be significantly smaller. Furthermore, it is a similar latency target used in related research \cite{leverich2014reconciling}.
 
 \subsection{Hardware}
-Performance benchmarks executed in this study will be run on 8 distinct machines with the following configuration: \textit{6 core Intel(R) Xeon(R) CPU E5-2603 v3 @ 1.60GHz}, 8 GB RAM and 1Gb/s Network Interface Controller (NIC).
+Performance benchmarks executed in this study will be run on 8 distinct machines with the following configuration: \textit{6 core Intel(R) Xeon(R) CPU E5-2603 v3 @ 1.60GHz}, \textit{8 GB RAM} and \textit{1Gb/s Network Interface Controller} (NIC).
 
-All the hosts are connected to a Pica8 P-3297 [3] switch with 48 1Gbps ports with a star as the network topology. A single host is used to run an object cache system while the remaining seven are used to generate workloads against the server.
+All the hosts are connected to a \textit{Pica8 P-3297} switch with 48 1Gbps ports arranged in a star topology. A single host is used to run an object cache system while the remaining seven are used to generate workloads against the server.
 
 \subsection{Workload generation}
-Workload for the cache server is generated using Memtier Benchmark [4]. The Memtier Benchmark provides a configurable parallel workload generation for both Memcached and Redis. Additionally, it allows for a high level of configrability.
+Workload for the cache server is generated using Memtier Benchmark developed by Redis Labs \cite{memtier}. Memtier has been choosen as the benchmark for this study due to it's high level of configurability as well as ability to benchmark both \textit{memcached} and \textit{redis}. Utilizing the same benchmark client for both caches allows for a decreased variability in results when a comparison is made.
 
 \subsubsection{Memtier Benchmark Behavior}
 Memtier Benchmark provides various paramters allowing for a variable configuration. As part of the configration, the user is allowed to specify the number of threads and the number of connections per each thread memtier should make. The standard lifecycle of each thread is as follows:
