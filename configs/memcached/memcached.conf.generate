@@ -9,7 +9,7 @@ for i in {1..16}
 do
     echo "-d
 -p 11123
--m 4096
+-m 6144
 -c 8096
 -R $(($GROUP_SIZE * $i))
 -t 6" > $LABEL/memcached.$i.conf
