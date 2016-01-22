@@ -125,6 +125,7 @@ Comparing results obtain from thread scalability with the results from the defau
 
 
 \subsection{Thread pinning}
+\label{sec:thread-pinning}
 Thread pinning is the process of assigning a \textit{set\_irq\_affinity} to each individual thread. As suggested by Leverich and Kozyrakis, "pinning memcached threads to distinct cores greatly improves load balance, consequently improving tail latency." \cite{leverich2014reconciling} and therefore the reasonable next step in optimizing memcached performance is to attempt thread pinning and analyse the results obtained.
 
 By default, when a new process is started, its affinity is set to all available CPUs. We can discover a given process affinity by executing the following command where \textit{pid} is the process identifier.
@@ -163,7 +164,7 @@ The reason for a significant improvement in the tail latency is reduced contenti
 \subsection{Group Size}
 Memcached provides a configuration option \textit{-R} to set the group size used inside memcached. The group size defines the ``Maximum number of requests per event, limits the number of requests process for a given connection to prevent starvation (default: 20)'' \cite{interactive2006memcached}. This in effect means the number of requests that will be processed from a single connection before memcached switches to a different connection to achieve a fair policy.
 
-In order to benchmark the effects of an increased group size, we
+In order to benchmark the effects of an increased group size, we consider a benchmark scenario where the group size is progressively increased while maintaining a consistent load on the cache. The load used will be the one explored in Section \ref{sec:thread-pinning} - Thread Pinning. All clients will be setup with 2 threads and 9 connections each which corresponds to the best performance under QoS so far. The memcached server will be setup with the \textit{-R} flag set to 20 initially and increased by 20 for each iteration until a maximum (enforced by memcached) of 320 is reached.
 
 \begin{figure}[h]
     \includegraphics[width=\textwidth]{./res/5_memcached_group_size.png}
@@ -172,3 +173,15 @@ In order to benchmark the effects of an increased group size, we
 \end{figure}
 
 Figure \ref{fig:memcached_group_size} shows the relationship between throughput, mean latency and 99th percentile latency.
+
+Firstly, we can observe that the throughput achieved fluctuates heavily around 540k requests per second. Secondly, the mean latency remains constant as the group size is increased. Finally, the 99th percentile latency experiences a decreasing trend as group size is increased while staying under the required QoS constraints of 1ms.
+
+By setting \textit{group size} to 320, we have been able to reduce both 99th percentile latency as well as increase the total throughput from 520k to 540k requests per second. Additionally, we have been able to show that the context switching required to achieve a fairness policy of processing only 20 requests from a single connection caused a decrease in performance. Similar results have been obtained by Blake and Saidi \cite{blake54does}. On the other hand, the results observed are dependent on the distributed system model and the expected request rate. In a production environment, benchmarking of a particular workload would show the best configuration in respect to group size.
+
+\subsection{Receive \& Transmit Queues fixing}
+TODO: Haven't been able to obtain any improvements in terms of performance (both throughput and latency), not sure if the topic should still be discussed in detail.
+
+
+\subsection{Multiple Memcached Processes}
+
+In this section, we will examine the impact multiple memcached processed have on the overall performance of the caches as a whole. In some applications, it is important to be able to partition the system in such a way systems interact with different instances of memcached. Additionally, this information will also serve as a useful benchmark comparison for Redis performance.
