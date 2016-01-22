@@ -13,3 +13,12 @@ do
         -instances=1 \
         -duration=30
 done
+
+python ../../../benchmark/main.py \
+        -type=memcached \
+        -server-conf=./memcached.12.conf \
+        -memtier-conf=./memtier.conf \
+        -output=../../../results/memcached/group-size/12/ \
+        -base-port=11120 \
+        -instances=1 \
+        -duration=30

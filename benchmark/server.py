@@ -65,7 +65,7 @@ class Server(object):
         return [self.execute_single(command) for command in commands]
 
     def pin(self):
-        command = 'memcached_pid=($(ps -ef | grep [m]emcached | awk \'{ print $2 }\')); memcached_tids=$(ps -p $memcached_pid -o tid= -L | sort -n | tail -n +2 | head -n -1); for i in {0..5}; do taskset -pc $i ${myarr[$i]} ; done'
+        command = 'memcached_pid=($(ps -ef | grep [m]emcached | awk \'{ print $2 }\')); memcached_tids=$(ps -p $memcached_pid -o tid= -L | sort -n | tail -n +2 | head -n -1); for i in {0..5}; do taskset -pc $i ${memcached_tids[$i]} ; done'
         return self.execute_single(command)
 
     def log_cpu(self, duration=30):
