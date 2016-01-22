@@ -1,16 +1,15 @@
 #!/bin/bash
 
-LABEL=group-size
+LABEL=processes
 
 mkdir $LABEL
-GROUP_SIZE=20
 
-for i in {1..16}
+for i in {1..5}
 do
     echo "-d
 -p 11123
--m 6144
+-m $((6114 / $i))
 -c 8096
--R $(($GROUP_SIZE * $i))
+-R 320
 -t 6" > $LABEL/memcached.$i.conf
 done
