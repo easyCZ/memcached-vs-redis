@@ -163,8 +163,12 @@ The reason for a significant improvement in the tail latency is reduced contenti
 \subsection{Group Size}
 Memcached provides a configuration option \textit{-R} to set the group size used inside memcached. The group size defines the ``Maximum number of requests per event, limits the number of requests process for a given connection to prevent starvation (default: 20)'' \cite{interactive2006memcached}. This in effect means the number of requests that will be processed from a single connection before memcached switches to a different connection to achieve a fair policy.
 
+In order to benchmark the effects of an increased group size, we
+
 \begin{figure}[h]
     \includegraphics[width=\textwidth]{./res/5_memcached_group_size.png}
     \caption{Memcached Latency, 99th percentile latency and throughput against group size}
     \label{fig:memcached_group_size}
 \end{figure}
+
+Figure \ref{fig:memcached_group_size} shows the relationship between throughput, mean latency and 99th percentile latency.
