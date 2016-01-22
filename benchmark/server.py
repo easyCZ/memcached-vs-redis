@@ -59,7 +59,7 @@ class Server(object):
             config = parser.set_port(self.port + port_offset)
             configs.append(config)
 
-        base_command = '%s; %s %s; %s' % (self.ULIMIT_CMD, settings.CACHES[self.cache_type], '%s')
+        base_command = '%s; %s %s' % (self.ULIMIT_CMD, settings.CACHES[self.cache_type], '%s')
         commands = [base_command % config for config in configs]
 
         return [self.execute_single(command) for command in commands]
