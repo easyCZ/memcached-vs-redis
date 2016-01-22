@@ -120,39 +120,39 @@ Indeed, as expected we have been able to obtain the highest throughput and achie
 Analyzing the CPU usage in Figure \ref{fig:memcached-threads-cpu} as we increase the number of threads, we can observe that initially a large portion of the CPU time is spent servicing hardware interrupts (\textit{irq}). Therefore, the OS is handling incoming traffic interrupts from the NIC. As the number of threads increases, an increasingly larger portion of CPU time is spent processing system calls and context switching (\textit{sys}). This is reasonable as a larger number of threads will require context switching and concurrency management provided by the operating system. We can see that time spent processing hardware interrupts (\textit{irq}) decreases which has the effect of increasing latency as packets remained queued up in the NIC for longer before the OS manages to schedule the interrupt to be serviced. Furthermore, we can observe that software interrupts (\textit{soft}) CPU time progressively increases until we reach 6 threads and remains stable as the number of threads grows further. The initial increase is reasonable as we are demanding more threads to processed simultaneously, past this point the percentage remains stable as we have reached a saturation point in terms of scalability and server performance. Finally, memcached (\textit{guest}) follows a similar pattern as software interrupts. Usage increases until 6 threads are used and saturates further. This is further indicative of the inability to efficiently scale the number of threads past the point at which memcached uses the same number of threads as CPU cores.
 
 \subsubsection{Thread evaluation}
+Comparing results obtain from thread scalability with the results from the default configuration of memcached, we have been able to increase throughput from 375k to 450k requests per second while maintaining the desired QoS under 1ms.
 
 
 
+\subsection{Thread pinning}
+Thread pinning is the process of assigning a \textit{set\_irq\_affinity} to each individual thread. As suggested by Leverich and Kozyrakis, "pinning memcached threads to distinct cores greatly improves load balance, consequently improving tail latency." \cite{leverich2014reconciling} and therefore the reasonable next step in optimizing memcached performance is to attempt thread pinning and analyse the results obtained.
+
+By default, when a new process is started, its affinity is set to all available CPUs. We can discover a given process affinity by executing the following command where \textit{pid} is the process identifier.
+
+\begin{lstlisting}
+    taskset -p <pid>
+\end{lstlisting}
 
 
-% % \subsection{Thread pinning}
-% % Thread pinning is the process of assigning a \emph{set_irq_affinity} to each individual thread. As suggested by Leverich and Kozyrakis, "pinning memcached threads to distinct cores greatly improves load balance, consequently improving tail latency." [13] and therefore the reasonable next step in optimizing memcached performance is to attempt thread pinning and analyse the results obtained.
+"A Memcache instance started with n threads will spawn n + 1 threads of which the first n are worker threads and the last is a maintenance thread used for hash table expansion under high load factor." \cite{solarflarememcached}. We can discover memcached threads used for request processing using the following command where \textit{tid} is the thread id discovered previously \cite{solarflarememcached}.
+\begin{lstlisting}
+    ps -p <memcache-pid> -o tid= -L | sort -n | tail -n +2 | head -n -1
+\end{lstlisting}
 
-% % By default, when a new process is started, its affinity is set to all available CPUs. We can discover a given process affinity by executing \verb{taskset -p (pid) } where \verb{pid} is the process identifier.
+Given the best performance under QoS constraints of 1ms found in the previous section is memcached with 6 threads, the following benchmark will be using this best configuration in order the analyze the impact of thread pinning.
 
-% % "A Memcache instance started with n threads will spawn n + 1 threads of which the first n are worker threads and the last is a maintenance thread used for hash table expansion under high load factor." [14]. We can discover memcached threads used for request processing using
-% % \verb{ps -p (memcache-process-id) -o tid= -L | sort -n | tail -n +2 | head -n -1} [14] and further set their processor affinity using \verb{taskset -pc (cpu-id) (tid)} where *tid* is the thread id discovered previously [14].
+\subsubsection{Throughput vs Latency}
 
-% % Given the best performance under QoS constraints of 1ms found in the previous section is memcached with 6 threads, the following benchmark will be using this best configuration in order the analyze the impact of thread pinning.
+\begin{figure}[h]
+    \includegraphics[width=\textwidth]{./res/5_threads_pinned.png}
+    \caption{Memcached Pinned Threads vs Unpinned}
+    \label{fig:memcached-threads-pinned}
+\end{figure}
 
-% % \begin{figure}[h]
-% %     \includegraphics[width=\textwidth]{./res/5_threads_pinned_vs_default.png}
-% %     \caption{Memcached Pinned Threads vs Unpinned}
-% %     \label{fig:memcached-threads-pinned-vs-default}
-% % \end{figure}
+Figure \ref{fig:memcached-threads-pinned} shows the impact thread pinning has on mean and 99th percentile latency against throughput.
 
+Firstly, the mean latency of both pinned and unpinned benchmarks remains very similar as throughput increases.
 
-% % % % % * [1] [memcached.org](http://memcached.org/)
-% % % % % * [2] An FPGA-based in-line accelerator for Memcached, Maysam Lavasani, Hari Angepat, and Derek Chiou
-% % % % % * [3] [New Commands, Memcached.org](https://code.google.com/p/memcached/wiki/NewCommands)
-% % % % % * [4] [Scaling memcached at Facebook](https://www.facebook.com/notes/facebook-engineering/scaling-memcached-at-facebook/39391378919/)
-% % % % % * [5]
-% % % % % * [6] [Amazon ElastiCache](http://aws.amazon.com/elasticache/)
-% % % % % * [7] Workload Analysis of a Large-Scale Key-Value Store, Berk Atikoglu, Yuehai Xu, Eitan Frachtenberg, Song Jiang, Mike Paleczny
-% % % % % * [8] http://investor.fb.com/releasedetail.cfm?ReleaseID=908022
-% % % % % * [9] [Twemproxy](https://github.com/twitter/twemproxy)
-% % % % % * [10] [Enhancing the Scalability of Memcached](https://software.intel.com/sites/default/files/m/0/b/6/1/d/45675-memcached_05172012.pdf)
-% % % % % * [11] Thin Servers with Smart Pipes: Designing SoC Accelerators for Memcached - Kevin Lim, David Meisner, Ali G. Saidi, Parthasarathy Ranganathan, Thomas F. Wenisch
-% % % % % * [12] MICA: A Holistic Approach to Fast In-Memory Key-Value Storage
-% % % % % * [13] Reconciling High Server Utilization and Sub-millisecond Quality-of-Service, Jacob Leverich Christos Kozyrakis
-% % % % % * [14] Filling The Pipe: A Guide To Optimising Memcache Performance On Solarflare Hardware
+Secondly, the 99th percentile latency is lower in the case of pinned threads than unpinned. The pattern holds as throughput increases up until the required QoS boundary.
+
+Furthermore, the throughput has also increased reaching 520k requests per second compared to 475k requests per second in the case of unpinned threads. This pattern is further confirmed by  Leverich and Kozyrakis \cite{leverich2014reconciling}.
