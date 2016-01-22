@@ -33,7 +33,7 @@ Firstly, we are interested in the relationship between throughput and latency sh
 
 
 \subsubsection{Effect of Connections}
-Secondly, to be better understand the effect of a large number of connections on the cache performance, Figure \ref{fig:memcached-default_connections} shows the effect an increase in the total number of connections has on throughput, mean latency and the 99th percentile latency. The figure deliberately shows the behavior outside of the requires QoS requirements in order to better illustrate the impact on the cache under high load.
+To understand the effect of a large number of connections on the cache performance, Figure \ref{fig:memcached-default_connections} shows the effect an increase in the total number of connections has on throughput, mean latency and the 99th percentile latency. The figure deliberately shows the behavior outside of the requires QoS requirements in order to better illustrate the impact on the cache under high load.
 
 \begin{figure}[h]
     \includegraphics[width=\textwidth]{./res/5_default_connections.png}
@@ -70,31 +70,41 @@ Finally, software interrupt footprint (\texttt{soft}) remains relatively stable 
 From the breakdown in Figure \ref{fig:memcached-default-cpu}, we can conclude that memcached is not CPU heavy on its own. The large CPU footprint of running memcached under high load is tightly linked to performance of the network stack and the underlying hardware processing network requests rather than the application itself. This observation is consistent with findings in MICA \cite{lim2014mica}.
 
 
+\subsection{Memcached Thread Scalability}
+Memcached, as a high performance object cache, is designed to be executed on a parallel architecture. It implements scalability through the use multiple threads allowing memcached to utilize many core architectures. Therefore, the next step in scaling a memcached deployment is to provision a larger number of threads for the application.
 
+Memcached execution model is capable of processing incoming and outgoing requests in parallel, however, operations executed require a global application lock to be acquired. Therefore, the expected number of threads maximising throughput while minimizing latency can be expected to be achieved when memcached is provisioned with the same number of threads as hardware CPU cores which is also suggested by Leverich and Kozyrakis \cite{leverich2014reconciling}.
 
-% % In order to further understand the impact of an increase in the number of connections, consider the figure above comparing the number of connections with the number of operations executed. We can see that memcached scales well until we reach a saturation point at around 84 connections (highlighted). A further increase in the number of connections is met with a much lower increase in the total number of operations performed. The shaded segments under the curve represent the portion of CPU time spent processing memcached (blue) and in the system (red). Furthermore, we can see that when we reach the saturation point, memcached CPU usage remains consistent while all the remaining time is spent in the system. The system requires a large number of resources to process the incoming network requests and to process the outgoing requests from memcached. Finally, the diagram also demonstrates that memcached performance is tightly linked with the performance of the network stack and the underlying hardware responsible for handling incoming and outgoing communication. This is consistent with findings in other papers [12].
+Utilizing findings from the previous section, a configuration with 84 connections can be used to generate a consistent load while the number of threads provisioned for memcached can be varied. Therefore, we can set up each benchmark client as follows:
 
-% \subsection{Memcached Thread Scalability}
-% Memcached, as a high performance object cache, is designed to be executed on a parallel architecture. It implements scalability through the use multiple threads allowing memcached to utilize many core architectures. Therefore, the next step in scaling a memcached deployment is to provision a larger number of threads for the application.
+\begin{lstlisting}
+  memtier -s nsl200 -p 11120 -c 6 -t 2 -P memcache_binary
+    --random-data
+    --key-minimum=100
+    --key-maximum=10000
+\end{lstlisting}
 
-% Memcached execution model is capable of processing incoming and outgoing requests in parallel, however, operations executed require a global application lock to be acquired. Therefore, the expected number of threads maximising throughput while minimizing latency can be expected to be achieved when memcached is provisioned with the same number of threads as hardware CPU cores.
+The server in turn is configured as follows:
+\begin{lstlisting}
+  memcached -d -p 11120 -m 6144 -t <thread_count>
+\end{lstlisting}
 
-% Utilizing findings from the previous section, a configuration with 84 connections can be used to generate a consistent load while the number of threads provisioned for memcached can be varied. Therefore, we can set up each benchmark client as follows:
+Where the number of threads is progressively increased.
 
-% \begin{lstlisting}
-% memtier -s nsl200 -p 11120 -c 6 -t 2 -P memcache_binary
-%     --test-time=30
-%     --random-data
-%     --key-minimum=100 --key-maximum=10000
-% \end{lstlisting}
+\subsubsection{Throughput \& Latency}
 
-% Therefore, each client is setup as follows: *memtier -s nsl200 -p 11120 --test-time=30 -c 6 -t 2 -P memcache_binary --random-data --key-minimum=100 --key-maximum=10000* and the server is configured with *memcached -d -p 11120 -m 6144 -t (threads)* where \emph{threads} varies between 1 and 35.
+Figure \ref{fig:memcached-threads} shows the relationship between throughput, mean latency and 99th percentile latency in relation to the number of threads used by a memcached application.
 
-% % \begin{figure}[h]
-% %     \includegraphics[width=\textwidth]{./res/5_threads_latency.png}
-% %     \caption{Memcached Thread Scaling}
-% %     \label{fig:memcached-threads}
-% % \end{figure}
+\begin{figure}[h]
+    \includegraphics[width=\textwidth]{./res/5_memcached_threads.png}
+    \caption{Memcached Thread Scaling}
+    \label{fig:memcached-threads}
+\end{figure}
+
+Firstly, we can observe that throughput increases as thread count increases until we reach 6 threads where it peaks. As we increase thread count further, throughput decreases. This behavior corresponds with our expectation that performance is maximized when there are as many threads as CPU cores.
+
+Secondly,
+
 
 % % The figure above shows mean and 99th percentile latency against the number of threads. The lowest mean latency occurs when running 6 threads of memcached. This corresponds to the expectation of best performance of using *n* threads with *n* CPU cores. Additionally, less than 6 threads exhibits higher latency than when using 6 cores. A constant load created against the server and the number of threads less than the number of CPUs creates a bottleneck where network requests targeted for a given core are attempted to be processed only by a given core to avoid an expensive data transfer and a context switch. Consequently, the queue of requests builds up and overall latency decreases. An increase in the number of threads allows for a higher throughput due to reduced bottleneck on request processing. Furthermore, latency increases with the number of threads as a context switch is required between contexts in each thread therefore putting additional strain on the operating system resources.
 
