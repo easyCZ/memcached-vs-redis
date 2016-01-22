@@ -1,13 +1,16 @@
 #!/bin/bash
 
-LABEL=pinning-baseline
+LABEL=group-size
 
 mkdir $LABEL
+GROUP_SIZE=20
 
-for i in {1..20}
+for i in {1..16}
 do
     echo "-d
--p 11120
--m 6144
--t $i" > $LABEL/memcached.$i.conf
+-p 11123
+-m 4096
+-c 8096
+-R $(($GROUP_SIZE * $i))
+-t 6" > $LABEL/memcached.$i.conf
 done

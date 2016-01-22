@@ -59,7 +59,7 @@ class Server(object):
             config = parser.set_port(self.port + port_offset)
             configs.append(config)
 
-        base_command = '%s; %s %s' % (self.ULIMIT_CMD, settings.CACHES[self.cache_type], '%s')
+        base_command = '%s; %s %s; %s' % (self.ULIMIT_CMD, settings.CACHES[self.cache_type], '%s', 'memcached_pid=($(ps -ef | grep [m]emcached | awk \'{ print $2 }\')); memcached_tids=($(ps -p $memcached_pid -o tid= -L | sort -n | tail -n +2 | head -n -1)); for i in {0..5}; do taskset -pc $i ${myarr[$i]} ; done')
         commands = [base_command % config for config in configs]
 
         return [self.execute_single(command) for command in commands]
