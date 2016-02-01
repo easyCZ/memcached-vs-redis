@@ -22,6 +22,12 @@ def write(headers, content, path):
         f.write(', '.join(map(str, content)))
         f.write('\n')
 
+def write_simple(content, path):
+    if not os.path.exists(os.path.dirname(path)):
+            os.makedirs(os.path.dirname(path))
+    with open(path, 'w') as f:
+        f.write(content)
+
 
 def run(type, server_conf, memtier_conf, output_dir, base_port=11120, instances=1, duration=30):
     server = Server(type, server_conf, base_port, instances)
@@ -40,7 +46,7 @@ def run(type, server_conf, memtier_conf, output_dir, base_port=11120, instances=
     memtier_parser.read()
 
     # print(memtier_parser.content)
-    write('', str(memtier_parser.content), '%s/stats.out' % output_dir)
+    write_simple(str(memtier_parser.content), '%s/stats.out' % output_dir)
 
     # write results
     write(
