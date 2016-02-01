@@ -30,6 +30,7 @@ def write_stats(content, path):
             with open(path + '/%s.%d.out' % (key, i), 'w') as f:
                 for line in instance:
                     f.write(line)
+                    f.write('\n')
 
 
 def run(type, server_conf, memtier_conf, output_dir, base_port=11120, instances=1, duration=30):
