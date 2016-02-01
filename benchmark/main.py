@@ -26,8 +26,9 @@ def write_stats(content, path):
     if not os.path.exists(os.path.dirname(path)):
             os.makedirs(os.path.dirname(path))
     for key, values in content.iteritems():
-        with open(path + '/%s.out' % key, 'w') as f:
-            f.write(str(values))
+        for i, instance in enumerate(values):
+            with open(path + '/%s.%d.out' % (key, i), 'w') as f:
+                f.write(str(values))
 
 
 def run(type, server_conf, memtier_conf, output_dir, base_port=11120, instances=1, duration=30):
