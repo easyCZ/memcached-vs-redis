@@ -39,7 +39,8 @@ def run(type, server_conf, memtier_conf, output_dir, base_port=11120, instances=
 
     memtier_parser.read()
 
-    print(memtier_parser.content)
+    # print(memtier_parser.content)
+    write('', str(memtier_parser.content), '%s/stats.out' % output_dir)
 
     # write results
     write(
