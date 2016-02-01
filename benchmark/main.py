@@ -28,7 +28,8 @@ def write_stats(content, path):
     for key, values in content.iteritems():
         for i, instance in enumerate(values):
             with open(path + '/%s.%d.out' % (key, i), 'w') as f:
-                f.write(str(values))
+                for line in instance:
+                    f.write(line)
 
 
 def run(type, server_conf, memtier_conf, output_dir, base_port=11120, instances=1, duration=30):
