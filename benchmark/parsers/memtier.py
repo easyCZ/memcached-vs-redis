@@ -106,7 +106,6 @@ class MemtierResultsParser(object):
         averages = {}
         for hostname, results in content.iteritems():
             matrix = [self._get_99th(rows) for rows in results]
-            print matrix
             averages[hostname] = sum(matrix) / float(len(matrix))
 
         # aggregate across hosts
