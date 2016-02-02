@@ -6,6 +6,7 @@ mkdir $LABEL
 
 for i in {1..4}
 do
+    MAX_CONN=$((10000 / $CONNCETIONS))
     echo "-s nsl200
 -p 11120
 --test-time=30
@@ -14,7 +15,7 @@ do
 -P memcache_binary
 --random-data
 --key-minimum=100
---key-maximum=10000" > $LABEL/memtier.memcached.$(($i + 1)).conf
+--key-maximum=$MAX_CONN" > $LABEL/memtier.memcached.$(($i + 1)).conf
     CONNCETIONS=$((CONNCETIONS / 2))
 
 done

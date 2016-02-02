@@ -1,0 +1,19 @@
+#!/bin/bash
+echo "ops/s" > ops.csv
+for i in {1..5}
+do
+    grep Totals ./$i/*.out | awk '{ sum += $2 } END { print sum }' >> ops.csv
+done
+
+echo "mean latency" > latency.csv
+for i in {1..5}
+do
+    grep Totals ./$i/*.out | awk '{ sum += $5; n++ } END { if (n > 0) print sum / n; }' >> latency.csv
+done
+
+echo "99th latency" > 99th.csv
+python ./get_99th.py < ./1/*.out >> 99th.csv
+python ./get_99th.py < ./2/*.out >> 99th.csv
+python ./get_99th.py < ./3/*.out >> 99th.csv
+python ./get_99th.py < ./4/*.out >> 99th.csv
+python ./get_99th.py < ./5/*.out >> 99th.csv

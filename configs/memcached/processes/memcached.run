@@ -15,3 +15,12 @@ do
         -duration=30
     INSTANCES=$((INSTANCES * 2))
 done
+
+python ../../../benchmark/main.py \
+        -type=memcached \
+        -server-conf=./memcached.2.conf \
+        -memtier-conf=./memtier.memcached.2.conf \
+        -output=../../../results/memcached/processes/2/ \
+        -base-port=11120 \
+        -instances=2 \
+        -duration=30
