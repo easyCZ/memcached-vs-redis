@@ -152,9 +152,13 @@ def main(argv):
     parser.add_argument('-instances', type=int, dest='instances', default=1)
     parser.add_argument('-duration', type=int, dest='duration', default=30)
 
+
     args = parser.parse_args()
     server_conf = parse_config(args.server_conf)
     memtier_conf = parse_config(args.memtier_conf)
+
+    print('Server conf:', server_conf)
+
     run(
         args.type,
         server_conf,

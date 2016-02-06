@@ -5,7 +5,6 @@ class ServerConfigParser(object):
 
     def __init__(self, config, type):
         self.config = config
-        print('[ServerConfigParser] {}'.format(config))
         self.config_tokens = config.split()
         self.type = type
 
