@@ -71,6 +71,8 @@ def run(type, server_conf, memtier_conf, output_dir, base_port=11120, instances=
         '%s/cpu.csv' % output_dir
     )
 
+    print('Average 99th:', memtier_parser.get_average_99th())
+
 
     #
     #
