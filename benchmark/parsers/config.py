@@ -13,7 +13,6 @@ class ServerConfigParser(object):
 
     def _get_port_index(self):
         flag = self._get_port_arg()
-        print('flag', flag)
         return self.config_tokens.index(flag) + 1
 
     def get_port(self):
