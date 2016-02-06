@@ -9,7 +9,7 @@ class ServerConfigParser(object):
         self.type = type
 
     def _get_port_arg(self):
-        return '--port' if self.type == settings.CACHES['redis'] else '-p'
+        return '--port' if self.type == 'redis' else '-p'
 
     def _get_port_index(self):
         flag = self._get_port_arg()
