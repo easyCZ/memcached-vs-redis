@@ -1,0 +1,11 @@
+#!/bin/bash
+
+LABEL=default
+mkdir $LABEL
+
+for i in {1..20}
+do
+    echo "--p 11120
+--deamonize yes" > $LABEL/redis.$(($i + 1)).conf
+
+done
