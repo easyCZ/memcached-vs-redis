@@ -10,7 +10,7 @@ do
 --test-time=30
 -c $i
 -t 2
--P memcache_binary
+-P redis
 --random-data
 --key-minimum=100
 --key-maximum=10000" > $LABEL/memtier.redis.$i.conf
