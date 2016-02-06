@@ -97,8 +97,6 @@ def main(argv):
     server_conf = parse_config(args.server_conf)
     memtier_conf = parse_config(args.memtier_conf)
 
-    print('Server conf:', server_conf)
-
     run(
         args.type,
         server_conf,
