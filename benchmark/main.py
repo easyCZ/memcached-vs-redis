@@ -73,68 +73,6 @@ def run(type, server_conf, memtier_conf, output_dir, base_port=11120, instances=
 
     print('Average 99th:', memtier_parser.get_average_99th())
 
-
-    #
-    #
-    # avg_latencies = []
-    # last_percentiles = []
-    #
-    # for hostname, res in results.iteritems():
-    #
-    #     filename = '%s/%s.out' % (output_dir, hostname)
-    #     if not os.path.exists(os.path.dirname(filename)):
-    #         os.makedirs(os.path.dirname(filename))
-    #
-    #     content = [line for line in res['stdout']]
-    #     latency_parser = LatencyParser(content)
-    #
-    #     avg_latency = latency_parser.get_average_latency()
-    #     last_percentile = latency_parser.get_99th_latency()
-    #
-    #     avg_latencies.append(avg_latency)
-    #     last_percentiles.append(last_percentile)
-    #
-    #     with open(filename, 'w') as f:
-    #         for line in content:
-    #             f.write(line)
-    #             f.write('\n')
-    #
-    #     print("[Main] Wrote results for %s" % hostname)
-
-
-    # cpu_average = 0
-    # for hostname, res in cpu.iteritems():
-    #
-    #     content = [line for line in res['stdout']]
-    #     cpu_average, usr_cpu, sys_cpu = CPUParser(content).get_average()
-    #     print("[Main] CPU Average: " + str(cpu_average))
-    #
-    # # Aggregate latencies
-    # with open('%s/cpu-vs-latencies.out' % output_dir, 'w') as f:
-    #     f.write(str(cpu_average))
-    #     f.write(', ')
-    #     f.write(str(usr_cpu))
-    #     f.write(', ')
-    #     f.write(str(sys_cpu))
-    #     f.write(', ')
-    #
-    #     f.write(str(avg(avg_latencies)))
-    #     f.write(', ')
-    #     f.write(str(avg(last_percentiles)))
-    #     f.write('\n')
-
-
-    # print("[Main] Writing CPU results")
-    # for hostname, res in cpu.iteritems():
-    #
-    #     content = [line for line in res['stdout']]
-    #     cpu_average = CPUParser(content).get_average()
-    #
-    #     with open('%s/%s.cpu.log' % (output_dir, hostname), 'w') as f:
-    #         f.write(str(cpu_average))
-    #         f.write('\n')
-    #     print("[Main] CPU Average: " + str(cpu_average))
-
     # Clean up
     server.kill_cache()
 
