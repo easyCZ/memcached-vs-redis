@@ -1,18 +1,18 @@
 #!/bin/bash
 
-LABEL=multiple-instances2
-
+LABEL=default
 mkdir $LABEL
 
 for i in {1..20}
 do
     echo "-s nsl200
--p 11123
+-p 11120
 --test-time=30
--c 40
--t 4
+-c $i
+-t 2
 -P memcache_binary
 --random-data
 --key-minimum=100
---key-maximum=10000" > $LABEL/memtier.memcached.$i.conf
+--key-maximum=10000" > $LABEL/memtier.redis.$(($i + 1)).conf
+
 done
