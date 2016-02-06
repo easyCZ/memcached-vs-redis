@@ -4,7 +4,7 @@ CLIENTS = ['nsl201', 'nsl202', 'nsl203', 'nsl204', 'nsl205', 'nsl206', 'nsl207']
 
 CACHES = {
     'memcached': '~/memcached-1.4.24/memcached',
-    'redis': '~/redis-stable/src/redis-server'
+    'redis': '~/redis-stable/src/redis-server ~/redis-stable/redis.conf'
 }
 
 CACHE_CONFIGS = {
