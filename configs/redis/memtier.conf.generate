@@ -1,6 +1,6 @@
 #!/bin/bash
 
-LABEL=instances
+LABEL=instances2
 mkdir $LABEL
 KEY_MAX=10000
 
@@ -9,7 +9,7 @@ do
     echo "-s nsl200
 -p 11120
 --test-time=30
--c 6
+-c 4
 -t 2
 -P redis
 --random-data
