@@ -1,10 +1,10 @@
 #!/bin/bash
 
-LABEL=instances-higher
+LABEL=instances-36
 mkdir $LABEL
 KEY_MAX=10000
 
-for i in {1..10}
+for i in {1..8}
 do
     echo "-s nsl200
 -p 11120
