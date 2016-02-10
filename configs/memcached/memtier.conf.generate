@@ -1,21 +1,18 @@
 #!/bin/bash
 
-LABEL=processes
-CONNCETIONS=8
+LABEL=processes-1thread
 mkdir $LABEL
 
-for i in {1..4}
+for i in {1..10}
 do
-    MAX_CONN=$((10000 / $CONNCETIONS))
     echo "-s nsl200
 -p 11120
 --test-time=30
--c $CONNCETIONS
+-c 8
 -t 1
 -P memcache_binary
 --random-data
 --key-minimum=100
---key-maximum=$MAX_CONN" > $LABEL/memtier.memcached.$(($i + 1)).conf
-    CONNCETIONS=$((CONNCETIONS / 2))
+--key-maximum=10000" > $LABEL/memtier.memcached.$(($i + 1)).conf
 
 done
