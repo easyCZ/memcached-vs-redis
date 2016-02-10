@@ -13,6 +13,6 @@ do
 -P memcache_binary
 --random-data
 --key-minimum=100
---key-maximum=10000" > $LABEL/memtier.memcached.$(($i + 1)).conf
+--key-maximum=10000" > $LABEL/memtier.memcached.$i.conf
 
 done
