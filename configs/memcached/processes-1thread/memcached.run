@@ -10,6 +10,6 @@ do
         -memtier-conf=./memtier.memcached.$i.conf \
         -output=../../../results/memcached/$DIR/$i/ \
         -base-port=11120 \
-        -instances=$INSTANCES \
+        -instances=$i \
         -duration=30
 done
