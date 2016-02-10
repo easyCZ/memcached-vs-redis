@@ -1,0 +1,15 @@
+#!/bin/bash
+
+DIR=processes-1thread
+
+for i in {1..10}
+do
+    python ../../../benchmark/main.py \
+        -type=memcached \
+        -server-conf=./memcached.$i.conf \
+        -memtier-conf=./memtier.memcached.$i.conf \
+        -output=../../../results/memcached/$DIR/$i/ \
+        -base-port=11120 \
+        -instances=$INSTANCES \
+        -duration=30
+done
