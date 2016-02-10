@@ -1,4 +1,4 @@
-DIR=processes-1thread
+DIR=processes-2threads
 
 echo "ops/s, hits/s, miss/s, latency, KB/s" > $DIR/totals.csv
 for i in {1..100}
