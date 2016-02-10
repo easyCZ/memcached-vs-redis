@@ -1,6 +1,6 @@
 #!/bin/bash
 
-LABEL=processes-1thread
+LABEL=processes-2threads
 
 mkdir $LABEL
 
@@ -11,5 +11,5 @@ do
 -m $((6114 / $i))
 -c 8096
 -R 320
--t 1" > $LABEL/memcached.$i.conf
+-t 2" > $LABEL/memcached.$i.conf
 done

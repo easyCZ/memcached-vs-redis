@@ -1,9 +1,9 @@
 #!/bin/bash
 
-LABEL=processes-1thread
+LABEL=processes-2threads
 mkdir $LABEL
 
-for i in {1..10}
+for i in {1..5}
 do
     echo "-s nsl200
 -p 11120
