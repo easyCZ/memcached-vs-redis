@@ -13,7 +13,7 @@ do
 -t 2
 -P redis
 --random-data
---pipeline=32
+--pipeline=16
 --key-minimum=100
 --key-maximum=10000
 " > $LABEL/memtier.redis.$i.conf
