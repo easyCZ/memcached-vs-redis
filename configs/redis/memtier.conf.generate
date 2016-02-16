@@ -1,19 +1,21 @@
 #!/bin/bash
 
-LABEL=instances-36
+LABEL=default-pipeline
 mkdir $LABEL
 KEY_MAX=10000
 
-for i in {1..8}
+for i in {1..20}
 do
     echo "-s nsl200
 -p 11120
 --test-time=30
--c $((6 / $i))
+-c $i
 -t 2
 -P redis
 --random-data
+--pipeline=32
 --key-minimum=100
---key-maximum=$(($KEY_MAX / $i))" > $LABEL/memtier.redis.$i.conf
+--key-maximum=10000
+" > $LABEL/memtier.redis.$i.conf
 
 done
