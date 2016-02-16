@@ -19,6 +19,10 @@ memtier -s nsl200 -p 11120 -c <connection_count> -t 2 -P redis
 --key-maximum=10000
 \end{lstlisting}
 
+/subsubsection{Latency vs Throughput}
+
+Firstly, let us consider the relationship between latency and throughput.
+
 \begin{figure}[h]
     \includegraphics[width=\textwidth]{./res/6_default_latency_ops.png}
     \caption{Redis: Throughput vs Mean and 99th percentile latency}
@@ -26,3 +30,20 @@ memtier -s nsl200 -p 11120 -c <connection_count> -t 2 -P redis
 \end{figure}
 
 Figure \ref{fig:redis-default-latency-ops} shows the relationship between mean and 99th percentile latency on the vertical axis and the number of operations per second on the horizontal axis. The graph has been trimmed to show only data which satisfies the QoS requirements. We can observe that the number of operations Redis processes increases steadily until it reaches 119k requests per second at which point a further increase in throughput comes at a disproportionately grater cost in latency. The peak throughput observed under the QoS requirements is 125,000 requests per second.
+
+/subsubsection{CPU Utilization}
+
+Secondly, analyzing CPU utilization of Redis provides insights into the relative requirements of the system in relation to the underlying operating system.
+
+\begin{figure}[h]
+    \includegraphics[width=\textwidth]{./res/6_default_cpu.png}
+    \caption{Redis: CPU Utilization}
+    \label{fig:redis-default-cpu}
+\end{figure}
+
+Figure \ref{fig:redis-default-cpu} outlines CPU utilization in terms of time spent in various regions. We can observe that servicing hardware interrupts (irq) takes up majority - 83 percent - of the total time. This is due to processing interrupts from the network card. The system requires around 10 percent of time while Redis itself only requires around 2 percent. Remaining time is spent handling software interrupts - about 3 percent. From the data above, Redis is not CPU intensive on its own, rather it is network intensive and spends most time receiving and dispatching network requests.
+
+
+Redis, with default configuration, is capable of delivering around 125k requests per second and operates under heavy usage of the underlying network protocol.
+
+
