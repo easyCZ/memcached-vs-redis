@@ -65,7 +65,7 @@ class Server(object):
         return [self.execute_single(command) for command in commands]
 
     def pin(self):
-        command = '''
+        memcached = '''
 memcached_pids=($(ps -ef | grep [./m]emcached | awk '{ print $2 }'));
 for pid in "${memcached_pids[@]}"
 do
@@ -78,7 +78,20 @@ do
     done
 done
         '''
-        return self.execute_single(command)
+
+        redis = '''
+redis_pids=($(ps -ef | grep [./r]edis | awk '{ print $2 }'));
+i=0
+for pid in "${redis_pids[@]}"
+do
+    taskset -pc $i $pid
+    i=$((i + 1))
+done
+        '''
+        if self.cache_type == 'redis':
+            return self.execute_single(redis)
+
+        return self.execute_single(memcached)
 
     def log_cpu(self, duration=30):
         return self.execute_single(self.MPSTAT_CMD % duration)
