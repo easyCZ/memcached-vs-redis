@@ -31,6 +31,11 @@ class MemtierConfigParser(object):
         self.config = config
         self.config_tokens = config.split()
 
+        index = self._get_key_index(key)
+        token = tokens[index]
+        key, value = token.split('=')
+        self.max_key = value
+
     def _get_port_index(self):
         return 1 + self.config_tokens.index('-p')
 

@@ -36,11 +36,12 @@ class Clients(object):
         self.clients = self._make_connections()
 
     def generate_configs(self, zipf=False):
-        step = 10000 / 7
-
         configs = []
         for i in range(self.instances):
             parser = MemtierConfigParser(self.config)
+
+            max_key = parser.max_key
+            step = max_key / 7
 
             parser.set_port(self.base_port + i)
 
