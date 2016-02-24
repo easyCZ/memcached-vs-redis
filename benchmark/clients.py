@@ -40,7 +40,9 @@ class Clients(object):
 
         configs = []
         for i in range(self.instances):
-            parser = MemtierConfigParser(self.config).set_port(self.base_port + i)
+            parser = MemtierConfigParser(self.config)
+
+            parser.set_port(self.base_port + i)
 
             if zipf:
                 lower = max(1, step * i)
