@@ -57,7 +57,7 @@ class MemtierConfigParser(object):
         key, value = token.split('=')
         value = key_value
 
-        tokens[index] = '='.join([key, value])
+        tokens[index] = '='.join([str(key), str(value)])
 
     def set_key_min(self, key_min):
         return self._set_key('--key-minimum=', key_min)
