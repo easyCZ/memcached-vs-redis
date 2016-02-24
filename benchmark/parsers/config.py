@@ -36,6 +36,7 @@ class MemtierConfigParser(object):
 
     def _get_key_index(self, key):
         for (i, token) in enumerate(self.config_tokens):
+            print(i, token)
             if token.startswith(key):
                 return i
 
