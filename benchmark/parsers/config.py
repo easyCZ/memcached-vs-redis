@@ -32,7 +32,7 @@ class MemtierConfigParser(object):
         self.config_tokens = config.split()
 
         index = self._get_key_index('--key-maximum=')
-        token = tokens[index]
+        token = self.config_tokens[index]
         key, value = token.split('=')
         self.max_key = value
 
