@@ -36,7 +36,7 @@ class Clients(object):
         self.clients = self._make_connections()
 
     def generate_configs(self, zipf=False):
-        step = 10000 / self.instances
+        step = 10000 / 7
 
         configs = []
         for i in range(self.instances):

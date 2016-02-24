@@ -13,3 +13,13 @@ do
         -instances=$i \
         -duration=30
 done
+
+
+# python ../../../benchmark/main.py \
+#         -type=redis \
+#         -server-conf=./redis.conf \
+#         -memtier-conf=./memtier.redis.1.conf \
+#         -output=../../../results/redis/test/1/ \
+#         -base-port=11120 \
+#         -instances=1 \
+#         -duration=30
