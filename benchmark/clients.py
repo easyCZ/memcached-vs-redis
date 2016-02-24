@@ -45,7 +45,7 @@ class Clients(object):
             parser.set_port(self.base_port + i)
 
             if zipf:
-                lower = max(1, step * i)
+                lower = 1
                 upper = max(1, step * (i + 1))
                 parser.set_key_min(lower)
                 parser.set_key_max(upper)
