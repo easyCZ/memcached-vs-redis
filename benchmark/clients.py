@@ -35,15 +35,26 @@ class Clients(object):
 
         self.clients = self._make_connections()
 
-    def generate_configs(self):
+    def generate_configs(self, zipf=False):
+        step = 10000 / self.instances
+
         configs = []
         for i in range(self.instances):
-            config = MemtierConfigParser(self.config).set_port(self.base_port + i)
+            parser = MemtierConfigParser(self.config).set_port(self.base_port + i)
+
+            if zipf:
+                lower = max(1, step * i)
+                upper = max(1, step * (i + 1))
+                parser.set_key_min(lower)
+                parser.set_key_max(upper)
+
+
+            config = parser.get()
             configs.append(config)
         return configs
 
-    def run_memtier(self):
-        configs = self.generate_configs()
+    def run_memtier(self, zipf=False):
+        configs = self.generate_configs(zipf)
         output = []
         for client, config in zip(self.clients, configs):
             out = client.run_memtier(config)

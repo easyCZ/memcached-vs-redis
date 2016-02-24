@@ -34,10 +34,36 @@ class MemtierConfigParser(object):
     def _get_port_index(self):
         return 1 + self.config_tokens.index('-p')
 
+    def _get_key_index(self, key):
+        for (i, token) in enumerate(self.config_tokens):
+            if token.startswith(key):
+                return i
+
     def get_port(self):
         return self.config_tokens[self._get_port_index()]
 
     def set_port(self, port):
         tokens = list(self.config_tokens)
-        tokens[self._get_port_index()] = port
+        index = self._get_port_index()
+        tokens[index] = port
+        self.config_tokens[index] = port
         return ' '.join(map(str, tokens))
+
+
+    def _set_key(self, key, key_value):
+        tokens = list(self.config_tokens)
+        index = self._get_key_index(key)
+        token = tokens[index]
+        key, value = token.split('=')
+        value = key_value
+
+        tokens[index] = '='.join([key, value])
+
+    def set_key_min(self, key_min):
+        return self._set_key('--key-minimum=', key_min)
+
+    def set_key_max(self, key_max):
+        return self._set_key('--key-maximum=', key_max)
+
+    def get(self):
+        return ' '.join(map(str, self.config_tokens))
