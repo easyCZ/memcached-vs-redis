@@ -53,6 +53,8 @@ class Clients(object):
 
             config = parser.get()
             configs.append(config)
+
+        print('[Clients] Configs: ', configs)
         return configs
 
     def run_memtier(self, zipf=False):
