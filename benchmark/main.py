@@ -43,7 +43,7 @@ def run(type, server_conf, memtier_conf, output_dir, base_port=11120, instances=
 
     cpu_parser = CPUParser()
 
-    client_results = clients.run_memtier(zipf=True)
+    client_results = clients.run_memtier(False)
 
     memtier_parser = MemtierResultsParser(client_results)
 
