@@ -22,4 +22,5 @@ python ../../../benchmark/main.py \
     -output=../../../results/redis/zipf/6/ \
     -base-port=11120 \
     -instances=6 \
-    -duration=60
+    -duration=60 \
+    -zipf=true
