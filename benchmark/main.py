@@ -33,9 +33,9 @@ def write_stats(content, path):
                     f.write('\n')
 
 
-def run(type, server_conf, memtier_conf, output_dir, base_port=11120, instances=1, duration=30):
+def run(type, server_conf, memtier_conf, output_dir, base_port=11120, instances=1, duration=30, zipf=False):
     server = Server(type, server_conf, base_port, instances)
-    clients = Clients(type, memtier_conf, base_port, instances)
+    clients = Clients(type, memtier_conf, base_port, instances, zipf=zipf)
 
     server.start_cache()
     # server.pin()
@@ -91,6 +91,7 @@ def main(argv):
     parser.add_argument('-base-port', dest='base_port', default=1, type=int)
     parser.add_argument('-instances', type=int, dest='instances', default=1)
     parser.add_argument('-duration', type=int, dest='duration', default=30)
+    parser.add_argument('-zipf', type=bool, dest='zipf', default=False)
 
 
     args = parser.parse_args()
@@ -104,7 +105,8 @@ def main(argv):
         args.output,
         args.base_port,
         args.instances,
-        args.duration
+        args.duration,
+        zipf=args.zipf
     )
 
 if __name__ == "__main__":

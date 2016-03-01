@@ -13,3 +13,4 @@ CACHE_CONFIGS = {
 }
 
 MEMTIER = '~/memtier_fork/memtier_benchmark'
+MEMTIER_ZIPF = '~/memtier_zipf/memtier_benchmark'
