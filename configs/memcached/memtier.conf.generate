@@ -5,11 +5,11 @@ mkdir $LABEL
 
 DATA_SIZE=2
 
-for i in {1..20}
+for i in {1..19}
 do
     echo "-s nsl200
 -p 11120
--c 6
+-c 3
 -t 2
 -P memcache_binary
 --random-data

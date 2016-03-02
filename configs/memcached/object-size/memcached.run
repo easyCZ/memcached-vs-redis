@@ -2,7 +2,7 @@
 
 DIR=object-size
 
-for i in {1..20}
+for i in {1..19}
 do
     python ../../../benchmark/main.py \
         -type=memcached \
@@ -11,7 +11,8 @@ do
         -output=../../../results/memcached/$DIR/$i/ \
         -base-port=11120 \
         -instances=1 \
-        -duration=30
+        -duration=30 \
+        -pin=true
 done
 
 git add ../../../
