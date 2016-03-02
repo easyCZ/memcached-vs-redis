@@ -10,7 +10,7 @@ do
         -memtier-conf=./memtier.redis.$i.conf \
         -output=../../../results/redis/$DIR/$i/ \
         -base-port=11120 \
-        -instances=$i \
+        -instances=6 \
         -duration=30 \
         -pin=true
 done
