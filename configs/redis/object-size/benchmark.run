@@ -1,0 +1,20 @@
+#!/bin/bash
+
+DIR=object-size
+
+for i in {1..19}
+do
+    python ../../../benchmark/main.py \
+        -type=redis \
+        -server-conf=./redis.conf \
+        -memtier-conf=./memtier.redis.$i.conf \
+        -output=../../../results/redis/$DIR/$i/ \
+        -base-port=11120 \
+        -instances=$i \
+        -duration=30 \
+        -pin=true
+done
+
+git add ../../../
+git commit -m "Redis object size results"
+git push

@@ -1,21 +1,22 @@
 #!/bin/bash
 
-LABEL=default-pipeline
+LABEL=object-size
 mkdir $LABEL
-KEY_MAX=10000
 
-for i in {1..20}
+DATA_SIZE=2
+
+for i in {1..19}
 do
     echo "-s nsl200
 -p 11120
---test-time=30
--c $i
+-c 3
 -t 2
 -P redis
 --random-data
---pipeline=16
---key-minimum=100
---key-maximum=10000
-" > $LABEL/memtier.redis.$i.conf
+--test-time=30
+--data-size=$(($DATA_SIZE))
+--key-minimum=1
+--key-maximum=10000" > $LABEL/memtier.redis.$i.conf
+DATA_SIZE=$(($DATA_SIZE * 2))
 
 done
