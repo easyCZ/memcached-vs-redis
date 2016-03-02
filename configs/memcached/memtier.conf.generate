@@ -1,18 +1,22 @@
 #!/bin/bash
 
-LABEL=processes-2threads
+LABEL=object-size
 mkdir $LABEL
 
-for i in {1..5}
+DATA_SIZE=2
+
+for i in {1..20}
 do
     echo "-s nsl200
 -p 11120
---test-time=30
 -c 6
 -t 2
 -P memcache_binary
 --random-data
---key-minimum=100
+--test-time=30
+--data-size=$(($DATA_SIZE))
+--key-minimum=1
 --key-maximum=10000" > $LABEL/memtier.memcached.$i.conf
+DATA_SIZE=$(($DATA_SIZE * 2))
 
 done
