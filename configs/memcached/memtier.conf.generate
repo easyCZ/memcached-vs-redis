@@ -1,22 +1,21 @@
 #!/bin/bash
 
-LABEL=object-size
+LABEL=gauss-narrow
 mkdir $LABEL
 
-DATA_SIZE=2
 
-for i in {1..19}
+for i in {1..10}
 do
     echo "-s nsl200
 -p 11120
--c 3
+-c 6
 -t 2
 -P memcache_binary
 --random-data
 --test-time=30
---data-size=$(($DATA_SIZE))
+--data-size=512
 --key-minimum=1
---key-maximum=10000" > $LABEL/memtier.memcached.$i.conf
-DATA_SIZE=$(($DATA_SIZE * 2))
-
+--key-maximum=1500001
+--key-stddev=$((10000 * $i))
+--key-pattern=G:G" > $LABEL/memtier.memcached.$i.conf
 done
