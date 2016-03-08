@@ -1,8 +1,6 @@
-\documentclass{article}
 
-\usepackage[margin=3cm]{geometry}
-\usepackage{setspace}
-    \doublespacing
+\documentclass[bsc,frontabs,twoside,singlespacing,parskip,deptreport]{infthesis}
+
 \usepackage{listings}
     \lstset{basicstyle=\ttfamily\small,
       showstringspaces=false,
@@ -12,46 +10,56 @@
 \usepackage{url}
 
 
+\begin{document}
+
 \title{Memcached vs Redis: Benchmarking In-memory Object Caches}
-\date{2016-01-18}
+
 \author{Milan Pavlik}
 
+\course{Computer Science}
+
+\project{4th Year Project Report}
+
+\date{\today}
+
+\abstract{\input{abstract.tex}}
+
+\maketitle
+
+\section*{Acknowledgements}
+\input{acknowledgements.tex}
+
+\tableofcontents
+
+%\pagenumbering{arabic}
 
 
-\begin{document}
-  \pagenumbering{gobble}
-  \maketitle
-  \newpage
-  \pagenumbering{arabic}
+\chapter{Introduction}
 
-  \input{abstract.tex}
-  \newpage
+\input{motivation.tex}
 
-  \tableofcontents
-  \newpage
+\chapter{Object Caches}
+\input{object_caches.tex}
 
-  \input{motivation.tex}
-  \newpage
+\chapter{Methodology}
+\input{methodology.tex}
 
-  \input{object_caches.tex}
-  \newpage
+\chapter{Memcached}
+\input{memcached.tex}
 
-  \input{methodology.tex}
-  \newpage
+\chapter{Redis}
+\input{redis.tex}
 
-  \input{memcached.tex}
-  \newpage
+\chapter{Evaluation}
+\input{evaluation.tex}
 
-  \input{redis.tex}
-  \newpage
+\chapter{Conclusion}
+\input{conclusion.tex}
 
-  \input{evaluation.tex}
-  \newpage
 
-  \input{conclusion.tex}
-  \newpage
 
-  \bibliographystyle{plain}
-  \bibliography{references}
+
+\bibliographystyle{plain}
+\bibliography{references}
 
 \end{document}
