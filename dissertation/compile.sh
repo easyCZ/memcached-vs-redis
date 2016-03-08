@@ -1,5 +1,5 @@
-pdflatex dissertation.tex
-bibtex dissertation.aux
-pdflatex dissertation.tex
+pdflatex dissertation2.tex
+bibtex dissertation2.aux
+pdflatex dissertation2.tex
 
-open dissertation.pdf
+open dissertation2.pdf
