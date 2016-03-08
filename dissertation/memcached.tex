@@ -1,9 +1,7 @@
-\section{Memcached}
-
 The purpose of this chapter is to benchmark and evaluate memcached performance. Firstly, we will examine performance under default configuration of both the server and the client. Secondly, threading will be explored in relation to latency and throughput. Thirdly, the effect of memcached's \texttt{group size} will be explored in relation to performance. Additionally, configuration of receive and transmit queues will be explored and finally, an execution model of multiple processes will be visited in order to establish a comparison baseline. Throughout the benchmarks, we will be focusing cache performance which meets desired the QoS.
 
 
-\subsection{Default Performance}
+\section{Default Performance}
 
 Firstly, it is essential to establish a performance baseline of \emph{memcached} under high utilization. In order to establish the baseline, a default configuration of memcached will be used with the exception of the amount of memory allocated for exclusive use by the application. The \emph{memcached} application will be started with
 \begin{lstlisting}
@@ -21,7 +19,7 @@ To find a saturation point, we can increase the number of connections linearly a
 The effect will be to generate random data with keys between the specified ranges and send requests to the server in two simultaneous threads.
 
 
-\subsubsection{Default Throughput vs Latency}
+\subsection{Default Throughput vs Latency}
 
 Firstly, we are interested in the relationship between throughput and latency shown in Figure \ref{fig:memcached-default-latency-vs-ops}. The mean latency and the 99th percentile latency are plotted against corresponding number of operations (throughput). We can observe that as the number of operations increases so does latency. Additionally, latency (both 99th percentile and mean) increase linearly until a saturation point is reached when a further increase in throughput is met with an exponentially larger increase in latency. The highest throughput achieved under quality of service restriction of 99th percentile latency under 1 millisecond is 375,000 operations per second. The highest level of throughput corresponds to 84 simultaneous connections, or 12 connections per each client which is similar to benchmarks used in the literature \cite{lim2013thin}.
 
@@ -32,7 +30,7 @@ Firstly, we are interested in the relationship between throughput and latency sh
 \end{figure}
 
 
-\subsubsection{Effect of Connections}
+\subsection{Effect of Connections}
 To understand the effect of a large number of connections on the cache performance, Figure \ref{fig:memcached-default_connections} shows the effect an increase in the total number of connections has on throughput, mean latency and the 99th percentile latency. The figure deliberately shows the behavior outside of the requires QoS requirements in order to better illustrate the impact on the cache under high load.
 
 \begin{figure}[h]
@@ -50,7 +48,7 @@ Thirdly, the 99th percentile latency increases linearly, with some fluctuations,
 We can observe that the server is capable of scaling much better until around 100 connections are reached. When the saturation point is surpassed, overall performance and quality of service degrades.
 
 
-\subsubsection{Server CPU}
+\subsection{Server CPU}
 In order to be better understand the impact of memcached on the system, specifically the CPU usage, we consider a breakdown of CPU time spent in various areas of the operating system in Figure \ref{fig:memcached-default-cpu}.
 
 \begin{figure}[h]
@@ -70,7 +68,7 @@ Finally, software interrupt footprint (\texttt{soft}) remains relatively stable 
 From the breakdown in Figure \ref{fig:memcached-default-cpu}, we can conclude that memcached is not CPU heavy on its own. The large CPU footprint of running memcached under high load is tightly linked to performance of the network stack and the underlying hardware processing network requests rather than the application itself. This observation is consistent with findings in MICA \cite{lim2014mica}.
 
 
-\subsection{Memcached Thread Scalability}
+\section{Memcached Thread Scalability}
 Memcached, as a high performance object cache, is designed to be executed on a parallel architecture. It implements scalability through the use multiple threads allowing memcached to utilize many core architectures. Therefore, the next step in scaling a memcached deployment is to provision a larger number of threads for the application.
 
 Memcached execution model is capable of processing incoming and outgoing requests in parallel, however, operations executed require a global application lock to be acquired. Therefore, the expected number of threads maximising throughput while minimizing latency can be expected to be achieved when memcached is provisioned with the same number of threads as hardware CPU cores which is also suggested by Leverich and Kozyrakis \cite{leverich2014reconciling}.
@@ -91,7 +89,7 @@ The server in turn is configured as follows:
 
 Where the number of threads is progressively increased.
 
-\subsubsection{Throughput \& Latency}
+\subsection{Throughput \& Latency}
 
 Figure \ref{fig:memcached-threads} shows the relationship between throughput, mean latency and 99th percentile latency in relation to the number of threads used by a memcached application.
 
@@ -109,7 +107,7 @@ Thirdly, the 99th percentile latency decreases as we increase the number of thre
 
 Indeed, as expected we have been able to obtain the highest throughput and achieve the quality of service requirements with 6 threads, as many as CPU cores on the host. Beyond 6 threads, the overhead of context switching between threads increases processing time and reduces throughput.
 
-\subsubsection{CPU Time}
+\subsection{CPU Time}
 
 \begin{figure}[h]
     \includegraphics[width=\textwidth]{./res/5_threads_cpu.png}
@@ -119,12 +117,12 @@ Indeed, as expected we have been able to obtain the highest throughput and achie
 
 Analyzing the CPU usage in Figure \ref{fig:memcached-threads-cpu} as we increase the number of threads, we can observe that initially a large portion of the CPU time is spent servicing hardware interrupts (\textit{irq}). Therefore, the OS is handling incoming traffic interrupts from the NIC. As the number of threads increases, an increasingly larger portion of CPU time is spent processing system calls and context switching (\textit{sys}). This is reasonable as a larger number of threads will require context switching and concurrency management provided by the operating system. We can see that time spent processing hardware interrupts (\textit{irq}) decreases which has the effect of increasing latency as packets remained queued up in the NIC for longer before the OS manages to schedule the interrupt to be serviced. Furthermore, we can observe that software interrupts (\textit{soft}) CPU time progressively increases until we reach 6 threads and remains stable as the number of threads grows further. The initial increase is reasonable as we are demanding more threads to processed simultaneously, past this point the percentage remains stable as we have reached a saturation point in terms of scalability and server performance. Finally, memcached (\textit{guest}) follows a similar pattern as software interrupts. Usage increases until 6 threads are used and saturates further. This is further indicative of the inability to efficiently scale the number of threads past the point at which memcached uses the same number of threads as CPU cores.
 
-\subsubsection{Thread evaluation}
+\subsection{Thread evaluation}
 Comparing results obtain from thread scalability with the results from the default configuration of memcached, we have been able to increase throughput from 375k to 450k requests per second while maintaining the desired QoS under 1ms.
 
 
 
-\subsection{Thread pinning}
+\section{Thread pinning}
 \label{sec:thread-pinning}
 Thread pinning is the process of assigning a \textit{set\_irq\_affinity} to each individual thread. As suggested by Leverich and Kozyrakis, "pinning memcached threads to distinct cores greatly improves load balance, consequently improving tail latency." \cite{leverich2014reconciling} and therefore the reasonable next step in optimizing memcached performance is to attempt thread pinning and analyse the results obtained.
 
@@ -142,7 +140,7 @@ By default, when a new process is started, its affinity is set to all available 
 
 Given the best performance under QoS constraints of 1ms found in the previous section is memcached with 6 threads, the following benchmark will be using this best configuration in order the analyze the impact of thread pinning.
 
-\subsubsection{Throughput vs Latency}
+\subsection{Throughput vs Latency}
 
 \begin{figure}[h]
     \includegraphics[width=\textwidth]{./res/5_threads_pinned.png}
@@ -161,7 +159,7 @@ Furthermore, the throughput has also increased reaching 520k requests per second
 The reason for a significant improvement in the tail latency is reduced contention for access to receive and transmission queues in the network stack. Given memcached's design of running \textit{t} threads for request processing and \textit{1} thread for hash table expansion under high load, the result may be two or more request processing threads scheduled on the same CPU core while the hash table expansion thread is scheduled to run alone on a core. Pinning threads prevents this scenario from occurring as well as creates a direct mapping between each receive and transmission queue in the network stack to the memcached thread, reducing need for context switching.
 
 
-\subsection{Group Size}
+\section{Group Size}
 Memcached provides a configuration option \textit{-R} to set the group size used inside memcached. The group size defines the ``Maximum number of requests per event, limits the number of requests process for a given connection to prevent starvation (default: 20)'' \cite{interactive2006memcached}. This in effect means the number of requests that will be processed from a single connection before memcached switches to a different connection to achieve a fair policy.
 
 In order to benchmark the effects of an increased group size, we consider a benchmark scenario where the group size is progressively increased while maintaining a consistent load on the cache. The load used will be the one explored in Section \ref{sec:thread-pinning} - Thread Pinning. All clients will be setup with 2 threads and 9 connections each which corresponds to the best performance under QoS so far. The memcached server will be setup with the \textit{-R} flag set to 20 initially and increased by 20 for each iteration until a maximum (enforced by memcached) of 320 is reached.
@@ -178,10 +176,10 @@ Firstly, we can observe that the throughput achieved fluctuates heavily around 5
 
 By setting \textit{group size} to 320, we have been able to reduce both 99th percentile latency as well as increase the total throughput from 520k to 540k requests per second. Additionally, we have been able to show that the context switching required to achieve a fairness policy of processing only 20 requests from a single connection caused a decrease in performance. Similar results have been obtained by Blake and Saidi \cite{blake54does}. On the other hand, the results observed are dependent on the distributed system model and the expected request rate. In a production environment, benchmarking of a particular workload would show the best configuration in respect to group size.
 
-\subsection{Receive \& Transmit Queues fixing}
+\section{Receive \& Transmit Queues fixing}
 TODO: Haven't been able to obtain any improvements in terms of performance (both throughput and latency), not sure if the topic should still be discussed in detail.
 
 
-\subsection{Multiple Memcached Processes}
+\section{Multiple Memcached Processes}
 
 In this section, we will examine the impact multiple memcached processed have on the overall performance of the caches as a whole. In some applications, it is important to be able to partition the system in such a way systems interact with different instances of memcached. Additionally, this information will also serve as a useful benchmark comparison for Redis performance.
