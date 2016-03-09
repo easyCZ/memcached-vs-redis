@@ -4,6 +4,7 @@ Unless otherwise stated, all benchmarks are performed to target the required Qua
 
 
 \section{Out of the Box Performance}
+\label{sec:redis-default}
 Firstly, in order to understand the baseline performance of Redis we consider the default configuration of Redis. A Redis deployment can be started with the following command:
 \begin{lstlisting}
 redis redis.conf --port 11120
@@ -11,9 +12,7 @@ redis redis.conf --port 11120
 
 By default, a Redis deployment comes with a default configuration file \texttt{redis.conf}\cite{RedisConfiguration}. Any options specified in the configuration file can be overridden from the command line by prefixing them with \texttt{--}, in our case we are overriding the port number and setting it to 11120. All other configuration options remain unmodified.
 
-In order to understand the default Redis performance, we design the benchmark to exert an increasing level of load on the Redis server. Initially, we start with 2 threads and 1 connection per each thread on all workload generating clients, there are 7 such clients in our setup. Additionally, by default Redis allows memory requirements to grow unconstrained, swapping data onto disk when running out of memory. In our workload, we define the key space to be up to 200 million keys with an object size of 64 bytes yielding around 12.8 GB of data while the memory capacity of the server is only 8GB.
-
-The clients are setup in order to produce an increasing load on Redis. In order to do this, we increase the number of connections each client will utilize to send requests to the Redis server. The number of connections is increased at a constant rate of 1. Note that we utilize the \texttt{-P} argument to specify we are interested in benchmarking Redis.
+In order to understand the default Redis performance, we design the benchmark to exert an increasing level of load on the Redis server. Initially, we start with 2 threads and 1 connection per each thread on all workload generating clients, there are 7 such clients in our setup.  In our workload, we define the key space to be up to 100 million keys with an object size of 64 bytes yielding around 6.4 GB of data while the memory capacity of the server is 8GB and therefore data should not be swapped out of main memory. The workload generating clients are executed with the following command:
 
 \begin{lstlisting}
 memtier -s nsl200 -p 11120
@@ -21,11 +20,13 @@ memtier -s nsl200 -p 11120
     -P redis
     --random-data --data-size=64
     --key-minimum=1 --key-maximum=100000000
+    --test-time=400
 \end{lstlisting}
 
-\subsection{Latency vs Throughput}
+The number of connections per each thread is increased linearly in each subsequent benchmark run. Each workload is executed over the course of 400 seconds and the data is randomly generated with keys drawn from a uniform distribution between 1 and 100 million.
 
-Firstly, let us consider the relationship between latency and throughput.
+
+\subsection{Latency vs Throughput}
 
 \begin{figure}[h]
     \includegraphics[width=\textwidth]{./res/6_default_latency_ops.png}
@@ -33,11 +34,12 @@ Firstly, let us consider the relationship between latency and throughput.
     \label{fig:redis-default-latency-ops}
 \end{figure}
 
-Figure \ref{fig:redis-default-latency-ops} shows the relationship between mean and 99th percentile latency on the vertical axis and the number of operations per second on the horizontal axis. The graph has been trimmed to show only data which satisfies the QoS requirements. We can observe that the number of operations Redis processes increases steadily until it reaches 119k requests per second at which point a further increase in throughput comes at a disproportionately grater cost in latency. The peak throughput observed under the QoS requirements is 125,000 requests per second.
+Figure \ref{fig:redis-default-latency-ops} plots the relationship between mean latency and the 99th percentile latency on the vertical axis and the number of operations per second on the horizontal axis. The graph has been trimmed to show only data which satisfies the QoS requirements.
 
-/subsubsection{CPU Utilization}
+We can observe that the number of operations Redis processes increases steadily until it reaches 119k requests per second at which point a further increase in throughput comes at a disproportionately grater cost in both mean and 99th percentile latency. The peak throughput observed under the QoS requirements is around 123k requests per second.
 
-Secondly, analyzing CPU utilization of Redis provides insights into the relative requirements of the system in relation to the underlying operating system.
+
+\subsection{CPU Utilization}
 
 \begin{figure}[h]
     \includegraphics[width=\textwidth]{./res/6_default_cpu.png}
@@ -45,24 +47,38 @@ Secondly, analyzing CPU utilization of Redis provides insights into the relative
     \label{fig:redis-default-cpu}
 \end{figure}
 
-Figure \ref{fig:redis-default-cpu} outlines CPU utilization in terms of time spent in various regions. We can observe that servicing hardware interrupts (irq) takes up majority - 83 percent - of the total time. This is due to processing interrupts from the network card. The system requires around 10 percent of time while Redis itself only requires around 2 percent. Remaining time is spent handling software interrupts - about 3 percent. From the data above, Redis is not CPU intensive on its own, rather it is network intensive and spends most time receiving and dispatching network requests.
+Figure \ref{fig:redis-default-cpu} outlines the CPU utilization in terms of time spent processing system calls (sys), servicing hardware interrupts (irq), handling software interrupts (soft) and processing related to Redis (guest).
 
+We can observe that servicing hardware interrupts consumes the majority of the processing time - 83 percent. This is the result of receiving and dispatching a large number of requests through the NIC. The amount of CPU time devoted to processing system calls is about 10 percent while processing software interrupts accounts for 3 percent. Redis itself requires only about 2 percent of the overall CPU time.
 
-Redis, with default configuration, is capable of delivering around 125k requests per second and operates under heavy usage of the underlying network protocol.
+Redis appears to be network constrained rather than CPU constrained in the workload examined above. This is reasonable as Redis is executing within one main event loop therefore it does not require locking and does not generate heavy load on the CPU when looking values up in the cache.
 
 
 \section{Multiple Redis Instances}
 \label{sec:multiple-redis-instances}
-Redis is a single threaded application, in order to increase performance, we can run multiple Redis instances simultaneously to increase the number of CPU cores utilized.
+
+As seen in section \ref{sec:redis-default}, Redis cannot increase overall throughput of the system with only a single instance as only a single core is capable of processing requests and becomes the bottleneck. An immediate solution to this problem is to provision a larger number of instances on a multi-core system in order to better utilize the hardware resources.
+
+In this benchmark, we examine the effects increased number of Redis instances with respect to latency, 99th percentile latency and overall throughput of the system. Additionally, we examine the effect of multiple instances on the CPU usage.
+
+Firstly, multiple instances of Redis can be spawned easily on the server by binding them to distinct port numbers. Out of the box, Redis does not provide the capability to proxy multiple instances of Redis through a single port in order to load balance the instances. There is the option to configure a Redis cluster, however, the intended use case is primarily for resiliency and fail over. In this benchmark, we consider a simpler scenario where each instance is isolated from each other and acts as an independent cache. This is a simplification of a real world scenario, however, a large deployment of Redis could be designed to partition the key space and utilize multiple independent instances similarly. The Redis application can be spawned with the following script:
+
+\begin{lstlisting}
+for i in [1..n]
+    redis-server redis.conf --port (11120 + i) --maxmemory (6 / i)gb
+\end{lstlisting}
+
+Note that we are explicitly specifying the maximum amount of memory each instance will be allocated. In our case, we partition 6 GB of memory space evenly between the individual instances.
+
+Secondly, in order to obtain comparable results, the load exerted on the Redis cache must remain constant. The load itself, however, needs to be partitioned across all of the instances of Redis evenly. In order to achieve this, each workload generating client spawns \texttt{i} instances of the benchmark and targets its respective Redis instance.
+
+
 
 The benchmark configuration for this section considers a scenario where a fixed load generated by clients is partitioned across an increasing number of Redis instances. In particular, the load exerted in the case of a single instance may not meet required QoS, however, it is required to be able to show the trend.
 
 In order to perform the benchmark, we can setup the \texttt{i} instances of Redis, each accepting connections on a distinct port. These instances are separate applications and do not operate under shared memory model. We can start the Redis servers with the following script to launch \texttt{i} instances of Redis on ports starting at 11120.
 
-\begin{lstlisting}
-for j in [1..i]
-    redis-server redis.conf --port (11120 + j)
-\end{lstlisting}
+
 
 When launching the benchmark clients, we need to take care maintain the level of load the same while spreading the load onto more instances. Let us assume that we can exert load \texttt{l} then if there \texttt{i} instances of Redis then for each benchmarking server (host), we need to exert \texttt{l / i} proportionate load per each Redis instance. Additionally, the key range should be reduced proportionately to the number of instances as in a real scenario running multiple instances would lead to a partitioned key space. Subsequently, as the load is partitioned, we spawn \texttt{i} instances of the Memtier benchmark on each benchmarking host. This results in maintaining a stable load while partitioning the server into multiple instances.
 
