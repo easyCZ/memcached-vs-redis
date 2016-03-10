@@ -38,6 +38,8 @@ Figure \ref{fig:redis-default-latency-ops} plots the relationship between mean l
 
 We can observe that the number of operations Redis processes increases steadily until it reaches 119k requests per second at which point a further increase in throughput comes at a disproportionately grater cost in both mean and 99th percentile latency. The peak throughput observed under the QoS requirements is around 123k requests per second.
 
+The performance degrades significantly with an increased workload beyond the peak shown at 123k requests per second. The throughput remains the same while the mean and the 99th percentile latency spikes heavily.
+
 
 \subsection{CPU Utilization}
 
@@ -85,10 +87,10 @@ for i in [1..n]
 
 Initially, we start with 16 connections and 1 thread. As we increase the number of instances, the number of connections goes down, however, a larger number of instances are deployed. Note that we are using a \texttt{round} function to ensure that the number of connections as well as the maximum key are integers. In order to smooth out load variance caused by integer divisibility, we consider two cases. One in which the \texttt{round} function is defined as the \texttt{ceiling} function and the other when it is defined as the \texttt{floor} function. The results of both types of the \texttt{round} function are then averaged. If a higher number of workload generating clients were available for the experimentation, the round approach would not be required.
 
-Furthermore, the generated dataset is 6.4GB (100 million keys * 64 bytes of data). This is by design and should lead to evictions in the cache as the size approached the maximum.
+Furthermore, the generated dataset is 6.4GB (100 million keys * 64 bytes of data). This is by design and leads to evictions in the cache as the size approaches the maximum.
 
 
-\subsection{Number of Instances vs Latency and Throughput}
+\subsection{Latency and Throughput}
 
 \begin{figure}[h]
     \includegraphics[width=\textwidth]{./res/6_instances_latency_ops.png}
@@ -96,11 +98,16 @@ Furthermore, the generated dataset is 6.4GB (100 million keys * 64 bytes of data
     \label{fig:redis-instances-latency-ops}
 \end{figure}
 
-Figure \ref{fig:redis-instances-latency-ops} plots the relationship between the number of Redis instances running simultaneously on the cache server against the mean and 99th percentile latency on the left vertical axis and the total number of operations per second on the right axis. The black line positioned at 1ms outlines the QoS target of the benchmark.
+Figure \ref{fig:redis-instances-latency-ops} plots the relationship between the number of Redis instances running simultaneously on the cache server against the mean and 99th percentile latency on the left vertical axis and the total number of operations per second on the right axis. The black line positioned at 1 ms outlines the QoS target of the benchmark.
 
-As the number of processes increases, both mean and 99th percentile latency decrease steadily. The 99th percentile latency reaches a minimum at 5 processes and rises as number of processes is increased further. The minimum 99th percentile latency achieved is around 0.345ms. The mean continues to decrease at a much slower pace beyond it's minimum at 6 processes.
+The mean latency (blue) decreases steadily as the number of Redis instances increases. At five Redis instances, the mean latency flattens out and remains stable as the number of instances is increased further.
 
-Additionally, as the number of instances increases, throughput increases. Throughput increases linearly until 6 instances are reached at which point the rate of increase decreases. Beyond 8 instances, the throughput begins to decrease. Between 6 and 8 instances, we are able to achieve close to 500k requests per second.
+The 99th percentile latency (red), on the other hand, experiences a sharp decrease as the number of instances is increased from 1 to 2 which brings the 99th percentile latency within the desired QoS constraints. As the number of instances increases further, the 99th percentile latency continues to decrease steadily. The minimum is reached at 5 instances with latency of 0.346 ms. A further increase in the number of instances results in higher 99th percentile latency.
+
+The total number of operations increases steadily as the number of instances increases, peaking at 517,000 requests per second with 7 and 8 instances. A further increase in the number of instances results in a decrease in the total number of operations.
+
+
+
 
 The QoS target is achieved in all but the 1 instance scenario. Furthermore, we can observe that Redis manages to scale quite well by increasing the number of instances until we reach 6 instances. Beyond 6 instances, the throughput degrades and the 99th percentile begins to climb again. The best balance of throughput and minimal 99th percentile latency is when running 6 instances, the same as the number of CPU cores available.
 
