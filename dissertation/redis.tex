@@ -205,3 +205,30 @@ Secondly, the 99th percentile follows the same pattern as the mean latency, howe
 Thirdly, the number of operations per second remains constant for object sizes under 256 bytes. An increase in object size decreases the number of operations per second. This is a reasonable result as an increase in the object size leads to higher bandwidth requirements and therefore leads to a lower number of operations per second.
 
 Overall, Redis appears to be capable to scale well with object sizes up to 512 bytes. Larger object sizes put additional strain on the cache and require buffering which leads to increased latency of the average, and therefore 99th percentile, request. Primarily, Redis is not designed to store large (1KB+) values. It is, however, possible to partition large values into smaller ones and perform assembly/disassembly of the value on the client side.
+
+\subsection{CPU Utilization}
+\begin{figure}[h]
+    \includegraphics[width=\textwidth]{./res/6_object_size_cpu.png}
+    \caption{Redis Object Size: CPU Usage}
+    \label{fig:6_object_size_cpu.png}
+\end{figure}
+
+Figure \ref{fig:6_object_size_cpu.png} displays the relationship between object size and CPU usage on the Redis server.
+
+Firstly, as object size increases up to 1 KB, the operating system (sys) requires about 47 percent of the total time to process the incoming requests and dispatch them to the relevant applications. As object size increases further, the time required decreases as the number of operations decreases.
+
+Secondly, the Redis applications (guest) require 27 percent of the total time when processing requests under 1 KB, with requests larger the direct cost of running Redis decreases as there are less requests to process. A similar pattern holds for the software interrupts (soft), as there are less requests coming.
+
+Finally, the time allocated to servicing hardware interrupts (irq) remains at 12 percent below 1KB, with object size increases beyond 1 KB, there is significant increase in the time required to service hardware interrupts. This is due to buffering of large objects and is effectively the cause of high mean and 99th percentile latency as well as low throughput.
+
+
+Overall, Redis is designed to work well with objects sizes below 1 KB. As the object size increases, the cache experiences a degraded performance due to network buffering.
+
+\section{Key Distributions}
+TODO
+
+\subsection{Gaussian distribution}
+TODO
+
+\subsection{Zipf distribution}
+TODO
