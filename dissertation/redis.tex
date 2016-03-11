@@ -106,13 +106,14 @@ The 99th percentile latency (red), on the other hand, experiences a sharp decrea
 
 The total number of operations increases steadily as the number of instances increases, peaking at 517,000 requests per second with 7 and 8 instances. A further increase in the number of instances results in a decrease in the total number of operations.
 
+The QoS target is achieved in all but the 1 instance scenario. This is due to significantly larger load exerted on a single instance which in the subsequent multi-instance benchmarks gets distributed across the larger number of instances and therefore satisfies the QoS constraints.
+
+Additionally, Redis manages to scale quite well as the number of instances increases up to 6. At this point, there are as many instances as there are CPU cores on the Redis server. Consequently, at 6 instances we achieve near minimum 99th percentile latency while also achieving near maximum throughput.
+
+Furthermore, at 6 instances the 99th percentile latency is at around one third of the accepted QoS constraint. In real world deployment, it should be possible to utilize this gap to increase the throughput further. In our benchmarks, we have not been able to exert a load which would both increase throughput as well as increase the 99th percentile underutilization. This is due to a limited number of client benchmarking hosts to effectively tune the load to the required level.
 
 
-
-The QoS target is achieved in all but the 1 instance scenario. Furthermore, we can observe that Redis manages to scale quite well by increasing the number of instances until we reach 6 instances. Beyond 6 instances, the throughput degrades and the 99th percentile begins to climb again. The best balance of throughput and minimal 99th percentile latency is when running 6 instances, the same as the number of CPU cores available.
-
-\subsection{CPU Utilization vs Instance Count}
-Let us now explore the impact of running multiple Redis instances simultaneously on the CPU utilization.
+\subsection{CPU Utilization}
 
 \begin{figure}[h]
     \includegraphics[width=\textwidth]{./res/6_instances_cpu.png}
@@ -120,22 +121,36 @@ Let us now explore the impact of running multiple Redis instances simultaneously
     \label{fig:6_instances_cpu.png}
 \end{figure}
 
-From \ref{fig:6_instances_cpu.png} we can see that as we increase the number of instances, the CPU usage of Redis (\textit{guest}) increases until we reach 6 instances at which point it flattens out. Similarly, the resources required by OS (\textit{sys}) to support the increasing number of instances grows until 6 processes, further increase in the number of instances does not result in increased resource usage. The amount of context switching (soft) required increases as the number of instances increases and remains constant beyond 6 instances. Conversely, the time spent processing hardware interrupts from the network decrease, this is due to batching at the network layer as the number of instances increases.
+Figure \ref{fig:6_instances_cpu.png} presents the relationship between the number of instances and the CPU utilization.
 
-Despite the increased resource requirements by Redis, it still only accounts for about 27 percent CPU usage at 6 processes with majority of the CPU time spent in the operating system and or networking.
+Firstly, the CPU usage of Redis (green), \textit{guest}, increases as the number of instances provisioned increases steadily. At 6 instances and more, the overall CPU usage remains fairly constant accounting for 27 percent of the total CPU utilization. This is due to the server having 6 CPU cores, requiring context switching between applications rather than parallel processing.
+
+Secondly, the CPU dedicated to software interrupts (yellow), \textit{soft}, follows a similar pattern to Redis. As the number of instances increases, so does the CPU usage dedicated to software interrupts. At 6 instances or more, the CPU utilization remains stable, accounting for 10 percent of the total usage. Software interrupts are inherently correlated to the software applications running on the server and therefore it is reasonable to observe a similar pattern between software interrupts and the application itself.
+
+Thirdly, the CPU usage required by the operating system (blue), \textit{sys}, grows steadily as the number of Redis instances increases. At 6 instances or more, the operating system CPU usage peaks and remains stable at 48 percent.
+
+Finally, the portion of the CPU time dedicated to processing hardware interrupts (red), \textit{irq}, decreases steadily as the number of Redis instances increases. This is due to batching of requests at the network interface card. At 6 or more instances, hardware interrupt servicing takes up about 11 percent of the total CPU usage.
+
+Despite the increased resource requirements by Redis, it still only accounts for about 27 percent CPU usage at 6 processes with majority of the CPU time spent in the operating system and or networking. The observation from the single instance benchmark in the previous section therefore extends to a multi instance setup. Redis appears to be network intensive rather than CPU intensive.
 
 
-By spawning multiple instances of Redis, we have been able to dramatically increase the overall performance of the server. The peak throughput observed is at 500k requests per second while the mean and 99th percentile latency remains within the QoS restrictions.
+By spawning multiple instances of Redis, we have been able to significantly increase the overall performance of the server cache. Running multiple simultaneous instances, however, requires the key space to be partitioned.
 
 
 \section{Pinned Redis Instances}
 
-In the previous section we have observed that the performance of a Redis server can be greatly increased by spawning multiple Redis instances simultaneously. Pinning processes to distinct cores is suggested to improve tail latency \cite{leverich2014reconciling}. In this section, we examine the effect process pinning has on the performance of Redis. A Redis thread can be pinned to a unique core through the use of \texttt{taskset} utility as follows:
+In the previous section we have observed that the performance of a Redis server can be greatly improved by provisioning multiple Redis instances simultaneously. Pinning processes to distinct cores is suggested to improve tail latency \cite{leverich2014reconciling}. In this section, we examine the effect process pinning has on the performance of Redis. We consider exactly the same workload as in the previous section as well as exactly the same server setup with the exception of pinning the Redis processes.
+
+A Redis process can be pinned to a unique core through the use of the \texttt{taskset} utility as follows:
 
 \begin{lstlisting}
 taskset -pc <redis_pid> <core_id>
 \end{lstlisting}
 
+The Redis processes identified as \texttt{redis pid} is pinned to the CPU core identified by \texttt{core id}. We can identify the process id of a Redis application through the \texttt{ps} command. When running more Redis applications than there are CPUs, we assign it to the \textit{n}th index of the application modulo the total number of cores, which is 6.
+
+
+\subsection{Pinned Latency and Throughput}
 The Redis and benchmark configuration used is the same in section \ref{sec:multiple-redis-instances}, that is, the number of Redis processes is linearly increased while maintaining the same level load.
 
 \begin{figure}[h]
