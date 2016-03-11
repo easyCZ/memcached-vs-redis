@@ -76,7 +76,7 @@ Secondly, in order to obtain comparable results, the load exerted on the Redis c
 
 \begin{lstlisting}
 for i in [1..n]
-    memtier -s nsl200 -p 11120
+    memtier -s nsl200 -p <port>
         -c round(16 / i)
         -t 1
         -P redis
@@ -139,7 +139,7 @@ By spawning multiple instances of Redis, we have been able to significantly incr
 
 \section{Pinned Redis Instances}
 
-In the previous section we have observed that the performance of a Redis server can be greatly improved by provisioning multiple Redis instances simultaneously. Pinning processes to distinct cores is suggested to improve tail latency \cite{leverich2014reconciling}. In this section, we examine the effect process pinning has on the performance of Redis. We consider exactly the same workload as in the previous section as well as exactly the same server setup with the exception of pinning the Redis processes.
+In the previous section we have observed that the performance of a Redis server can be greatly improved by provisioning multiple Redis instances simultaneously. Pinning processes to distinct cores is suggested to improve tail latency \cite{leverich2014reconciling}. In this section, we examine the effect process pinning has on the performance of Redis. We consider exactly the same workload as in the previous section \ref{sec:multiple-redis-instances} as well as exactly the same server setup with the exception of pinning the Redis processes. That is, the workload is kept constant while it is partitioned across multiple instances.
 
 A Redis process can be pinned to a unique core through the use of the \texttt{taskset} utility as follows:
 
@@ -151,10 +151,47 @@ The Redis processes identified as \texttt{redis pid} is pinned to the CPU core i
 
 
 \subsection{Pinned Latency and Throughput}
-The Redis and benchmark configuration used is the same in section \ref{sec:multiple-redis-instances}, that is, the number of Redis processes is linearly increased while maintaining the same level load.
 
 \begin{figure}[h]
     \includegraphics[width=\textwidth]{./res/6_pinned.png}
     \caption{Redis Instance Pinning: Instances vs Latency and Throughput}
     \label{fig:6_pinned.png}
+\end{figure}
+
+Figure \ref{fig:6_pinned.png} plots the relationship between the number of instances on the horizontal axis, latency on the left vertical and throughput on the right vertical. Additionally, the performance obtained without pinning are plotted alongside the pinned results.
+
+We can observe that pinning  Redis processes results which strongly correlate to the results of the unpinned benchmark. Across mean latency, 99th percentile latency and throughput, there is very little variance in the performance observed.
+
+
+\subsection{Redis Persistence}
+TODO
+
+
+\section{Object Size}
+In this section, the impact of the size of the object stored in the cache is investigated. Redis imposes no restrictions on the size of objects stored in the cache.
+
+In order to investigate the impact of object size on the cache, we consider a benchmark with an increasing object size. The object size is increased in powers of two starting at 2 bytes and ranging to 512 KB. This allows us to capture the majority of important sizes commonly used when designing applications.
+
+The server configuration remains the same as the current best found configuration, the multi-instance configuration with 6 instances. The clients are configured as follows:
+
+\begin{lstlisting}
+for i in [1..19]
+    memtier -s nsl200 -p <port>
+        -c 3
+        -t 1
+        -P redis
+        --random-data --data-size=pow(2, i)
+        --key-minimum=1 --key-maximum=(1066666666 / pow(2, i))
+        --test-time=400
+\end{lstlisting}
+
+We run 19 iterations of the benchmark since 512 KB is equivalent to 2 to the power of 19 bytes. The \texttt{data-size} is configured to be increasing in powers of 2. The key range is defined as 6.4 GB split across 6 instances and further accounts for the increased size. Therefore, we arrive at \texttt{6.4 GB / (6 * data-size)} which is equivalent to \texttt{(1066666666 / pow(2, i))}.
+
+
+\subsection{Latency and Throughput}
+
+\begin{figure}[h]
+    \includegraphics[width=\textwidth]{./res/6_object_size_latency_ops.png}
+    \caption{Redis Object Size: Latency and Throughput}
+    \label{fig:6_object_size_latency_ops.png}
 \end{figure}
