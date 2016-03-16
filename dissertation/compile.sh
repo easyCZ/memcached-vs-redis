@@ -1,6 +1,8 @@
-pdflatex dissertation.tex
+pdflatex dissertation.tex -halt-on-error -no-file-line-error
 bibtex dissertation.aux
-pdflatex dissertation.tex
-pdflatex dissertation.tex
+pdflatex dissertation.tex -halt-on-error -no-file-line-error
+pdflatex dissertation.tex -halt-on-error -no-file-line-error
 
 open dissertation.pdf
+
+rm dissertation.aux dissertation.bbl disseratation.blg dissertation.log dissertation.toc

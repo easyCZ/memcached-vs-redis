@@ -1,30 +1,3 @@
 \section{Motivation}
 
-As the world's demand and reliance on the Internet and near instantaneous communication increases, so do the requirements of computer systems. Clock speed improvements in CPU architectures and shift to multiprocessing architectures are by themselves not sufficient to provide sufficient required computing power. With the improvement in commodity hardware and a shift to commodity computing, it has become increasingly important to design applications capable of utilizing both multiprocessing on a single machine as well as capable of exploiting distributed computing.
-
-Parallelization of work has also introduced an increased complexity system architectures as well as application architectures. The increased complexity is derived primarily from the effort to better utilize multiprocessing. As a result, coherence, scalability and resiliency becomes of great concern to system architects.
-
-The general approach to improving performance is to \textit{``(a) Work harder, (b) Work smarter, and (c) Get help.''} \cite{pfister1998search} Utilizing distributed computing aims to achieve \textit{c)}. An approach to work harder can be utilize parallel architectures better.  Additionally, a system cannot always be fully parallelized due to access to shared resources. Due to Amdahl's Law, such systems will not be able to fully utilize the potential speedup provided by advances in architectures alone. Conversely, thinking in the opposite direction in terms of \textit{b)} we can ask if a simpler and less complex architecture can perform better? And if so, what are the aspects of it's design that do make it more performant?
-
-As complexity increases, system architectures are dependent on the ability to perform effectively. Therefore, it is important to understand how a single server scalability is influenced by applications with single and multi threaded architectures.
-
-The motivation behind this study is to understand and evaluate two state of the art object caches with varying architectural decisions in terms of performance scalability on a commodity server. Firstly, we focus is on a well studied object cache called \emph{Memcached}, a high performance application designed with multi-threading as a core feature. Secondly, we focus on a younger cache - \emph{Redis} - a single threaded high performance cache. Finally, having analyzed the performance of two architecturally different object caches, we can evaluate their performance and gain a better insight into the effectiveness of each of their respective design.
-
-
-
-
-
-
-
-% The world is increasingly demanding better and faster access to information. With advances in commodity hardware, and the rise of commodity computing, it has provided means to address one of the ways to increase performance. The proposed ways are as follows - a) Word harder, b) Work smarter and c) Get help, as outlined in [G. Pfsiter, In Search of Clusters]. Commodity computing has been able to address how to get help, namely distribution of work across machines. Caches attempt to address how to work smarter, particularly how to perform less computation.
-
-% The increase of distributed computing has also introduced new challenges such as consistency and resiliency of the network under question. The same challenges are having to be addressed across the application stack, including the caching mechanism. With advances in hardware performance and also the size of networks, it will increasingly essential to be able to make caching systems as effective as possible. Inherently, multi-threded and distributed computing poses
-
-
-% With the increased usage of commodity computing [G. Pfister, In Search of Clusters, Prentice Hall PTR, 1998], it has become possible to utilize larger
-
-
-
-% 1. We need to be able to scale on a single server better
-% 2. We need to be able to scale across servers better
-% 3. We need to see if multi-threaded approach is better than single threaded with simpler system
+TODO

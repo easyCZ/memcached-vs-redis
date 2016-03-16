@@ -16,9 +16,24 @@ Performance benchmarks executed in this study will be run on 8 distinct machines
 All the hosts are connected to a \textit{Pica8 P-3297} switch with 48 1Gbps ports arranged in a star topology. A single host is used to run an object cache system while the remaining seven are used to generate workloads against the server.
 
 \subsection{Workload generation}
+\label{methodology:workload-gen}
 Workload for the cache server is generated using Memtier Benchmark developed by Redis Labs \cite{memtier}. Memtier has been chosen as the benchmark for this study due to it's high level of configurability as well as ability to benchmark both \textit{Memcached} and \textit{Redis}. Utilizing the same benchmark client for both caches allows for a decreased variability in results when a comparison is made.
 
 In order to create a more realistic simulation of a given workload, 7 servers all running \textit{memtier} simultaneously are used. A simple parallel ssh utility is used to start, stop and collect statistics from the load generating clients.
+
+\subsection{Benchmark}
+
+In the context of this thesis, a benchmark is a set of workloads executed against the cache host. Statistics are collected from the cache host as well as the clients in order to draw conclusions.
+
+Firstly, a benchmark consists of a warm up stage. The cache is being loaded with initial data in order to prevent a large number of cache misses and skewed results.
+
+Secondly, a configured workload is generated and issued against the cache host from multiple benchmarking hosts simultaneously.
+
+Thirdly, the workload is repeated 2 more times in order to decrease the impact of stochastic events in the benchmark.
+
+Finally, statistics are collected, individual benchmark runs are averaged and the results are processed.
+
+
 
 \subsubsection{Memtier}
 Memtier benchmark is ``a command line utility developed by Redis Labs for load generation and benchmarking NoSQL key-value databases'' \cite{memtier}. It provides a high level of configurability allowing for example to specify patterns of \textit{sets} and \textit{gets} as well as generation of key-value pairs according to various distributions, including Gaussian and pseudo-random.

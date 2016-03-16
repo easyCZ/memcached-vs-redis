@@ -185,7 +185,37 @@ for i in [1..19]
         --test-time=400
 \end{lstlisting}
 
-We run 19 iterations of the benchmark since 512 KB is equivalent to 2 to the power of 19 bytes. The \texttt{data-size} is configured to be increasing in powers of 2. The key range is defined as 6.4 GB split across 6 instances and further accounts for the increased size. Therefore, we arrive at \texttt{6.4 GB / (6 * data-size)} which is equivalent to \texttt{(1066666666 / pow(2, i))}.
+We run 19 iterations of the benchmark since 512 KB is equivalent to 2 to the power of 19 bytes. The \texttt{data-size} is configured to be increasing in powers of 2. The key range is defined as 6.4 GB split across 6 instances and further accounts for the increased size. Table \ref{tab:6:object_size_latency} outlines the configuration options for each iteration.
+
+\begin{table}[h!]
+\centering
+ \begin{tabular}{| c || c c c |}
+ \hline
+ Iteration & Data Size (bytes) & Key Maximum & Total Size (GB) \\ [0.5ex]
+ \hline\hline
+    1 & 2 & 53333333 & 6.4 \\ \hline
+    2 & 4 & 26666667 & 6.4 \\ \hline
+    3 & 8 & 13333334 & 6.4 \\ \hline
+    4 & 16 & 6666667 & 6.4 \\ \hline
+    5 & 32 & 3333334 & 6.4 \\ \hline
+    6 & 64 & 1666667 & 6.4 \\ \hline
+    7 & 128 & 833334 & 6.4 \\ \hline
+    8 & 256 & 416667 & 6.4 \\ \hline
+    9 & 512 & 208334 & 6.4 \\ \hline
+    10 & 1024 & 104167 & 6.4 \\ \hline
+    11 & 2048 & 52084 & 6.4 \\ \hline
+    12 & 4096 & 26042 & 6.4 \\ \hline
+    13 & 8192 & 13021 & 6.4 \\ \hline
+    14 & 16384 & 6511 & 6.4 \\ \hline
+    15 & 32768 & 3256 & 6.4 \\ \hline
+    16 & 65536 & 1628 & 6.4 \\ \hline
+    17 & 131072 & 814 & 6.4 \\ \hline
+    18 & 262144 & 407 & 6.4 \\ \hline
+    19 & 524288 & 204 & 6.4 \\ \hline
+\end{tabular}
+\caption{Redis Object Size - Data Size and Maximum Key for each iteration. Total size is calculated as the product of \texttt{Data Size}, \texttt{Key Maximum} and \texttt{6} instances.}
+\label{tab:6:object_size_latency}
+\end{table}
 
 
 \subsection{Latency and Throughput}
@@ -222,7 +252,7 @@ Secondly, the Redis applications (guest) require 27 percent of the total time wh
 Finally, the time allocated to servicing hardware interrupts (irq) remains at 12 percent below 1KB, with object size increases beyond 1 KB, there is significant increase in the time required to service hardware interrupts. This is due to buffering of large objects and is effectively the cause of high mean and 99th percentile latency as well as low throughput.
 
 
-Overall, Redis is designed to work well with objects sizes below 1 KB. As the object size increases, the cache experiences a degraded performance due to network buffering.
+Overall, Redis is designed to work well with objects sizes below 1 KB. As the object size increases, the cache experiences a degraded performance due to buffering of network input and output.
 
 \section{Key Distributions}
 TODO
