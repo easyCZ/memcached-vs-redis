@@ -58,6 +58,32 @@ By offloading response handling to a callback inside libevent, memtier is able t
 
 Connections created with the target server are only destroyed at the end of the benchmark. This is a realistic scenario as in a large distributed environment the cache clients will maintain open connections to the cache to reduce the overhead of establishing a connection.
 
+Memtier provides a comprehensive set of configuration options to customize Memtier behavior and tailor the load. Table \ref{tab:memtier_config} outlines the relevant configuration options. The complete set of configuration options is available on RedisLabs \cite{MemtierConfiguration}.
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{| c c c |}
+ \hline
+ Configuration option & Explanation & Default Value\\ [0.5ex]
+ \hline\hline
+
+ -s & Server Address & localhost \\
+ -p & Port number & 6379 \\
+ -P & Protocol - redis, memcache\_text, memcache\_binary & redis \\
+ -c & Number of Clients per Thread & 50 \\
+ -t & Number of Threads & 4 \\
+ --data-size & The size of the object to send in bytes & 32 \\
+ --random-data & Data should be randomized & false \\
+ --key-minimum & The minimum value of keys to generate & 0 \\
+ --key-maximum & The maximum value of keys to generate & 10 million \\
+
+ \hline
+
+\end{tabular}
+\caption{Memtier Configuration Options}
+\label{tab:memtier_config}
+\end{table}
+
 
 \subsubsection{Open-loop vs Closed-loop}
 A load tester can be constructed with different architecture in mind. The main two types of load testers are \textit{open-loop} and \textit{closed-loop}. Closed-loop load testers frequently construct and send a new request only when the previous request has received a response. On the other hand, open-loop principle aims to send requests in timed intervals regardless of the response from the previous requests.
