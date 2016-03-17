@@ -51,7 +51,6 @@ Memtier execution model is based on the number of threads and connections config
             \item Make a request to the cache server
             \item Provide a \textit{libevent} callback to handle response outside of the main event loop
         \end{enumerate}
-    \item Tear down \texttt{c} connections
 \end{enumerate}
 
 By offloading response handling to a callback inside libevent, memtier is able to process a large number of requests without blocking the main event loop until a response from the network request is returned while maintaining the ability to collect statistics effectively.
