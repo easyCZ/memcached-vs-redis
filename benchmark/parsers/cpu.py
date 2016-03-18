@@ -35,4 +35,4 @@ class CPUParser(object):
         return [float(token) for token in tokens]
 
     def get_irq(self, averages):
-        return averages[4]
+        return averages['irq']
