@@ -27,7 +27,7 @@ def write_dict(data, path):
             os.makedirs(os.path.dirname(path))
 
     with open(path, 'w') as f:
-        headers = data.values()
+        headers = data.keys()
         values = [data[header] for header in headers]
         f.write(', '.join(headers))
         f.write('\n')
