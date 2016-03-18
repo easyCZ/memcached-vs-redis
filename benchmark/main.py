@@ -31,7 +31,7 @@ def write_dict(data, path):
         values = [data[header] for header in headers]
         f.write(', '.join(headers))
         f.write('\n')
-        f.write(', '.join(values))
+        f.write(', '.join(map(str,values)))
         f.write('\n')
 
 def write_stats(content, path):
