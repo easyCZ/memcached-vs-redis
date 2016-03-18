@@ -1,1 +1,1 @@
-ls -l | grep 'd' | awk '{ print $9 }' | while read x; do echo $x; done
+ls -l | grep 'd' | awk '{ print $9 }' | while read x; do $x/memcached.run; done
