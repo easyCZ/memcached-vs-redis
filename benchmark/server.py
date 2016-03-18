@@ -5,7 +5,7 @@ from parsers.config import ServerConfigParser
 
 class Server(object):
 
-    MPSTAT_CMD = 'mpstat 1 %d'
+    MPSTAT_CMD = 'mpstat %d 1'
     ULIMIT_CMD = 'ulimit -n 65535'
 
     def __init__(self, cache_type, server_conf, base_port, instances=1):

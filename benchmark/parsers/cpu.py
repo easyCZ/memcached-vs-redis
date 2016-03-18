@@ -33,3 +33,6 @@ class CPUParser(object):
     def _parse_average_row(self, input):
         tokens = input.split()[2:]
         return [float(token) for token in tokens]
+
+    def get_irq(self, averages):
+        return averages[4]

@@ -68,9 +68,12 @@ def run(type, server_conf, memtier_conf, output_dir, base_port=11120, instances=
         '%s/latency.csv' % output_dir
     )
 
+    server_cpu_averages = cpu_parser.get_average_stats(server_cpu)
+    print('%IRQ', cpu_parser.get_irq(server_cpu_averages))
+
     write(
         ', '.join(cpu_parser.get_labels()),
-        cpu_parser.get_average_stats(server_cpu).values(),
+        server_cpu_averages.values(),
         '%s/cpu.csv' % output_dir
     )
 
