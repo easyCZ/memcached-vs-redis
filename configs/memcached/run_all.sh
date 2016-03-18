@@ -1,0 +1,1 @@
+ls -ld ./* | grep 'd' | awk '{ print $9 }' | while read x; do echo $x; done
