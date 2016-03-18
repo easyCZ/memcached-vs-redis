@@ -22,6 +22,18 @@ def write(headers, content, path):
         f.write(', '.join(map(str, content)))
         f.write('\n')
 
+def write_dict(data, path):
+    if not os.path.exists(os.path.dirname(path)):
+            os.makedirs(os.path.dirname(path))
+
+    with open(path, 'w') as f:
+        headers = data.values()
+        values = [data[header] for header in headers]
+        f.write(', '.join(headers))
+        f.write('\n')
+        f.write(', '.join(values))
+        f.write('\n')
+
 def write_stats(content, path):
     if not os.path.exists(os.path.dirname(path)):
             os.makedirs(os.path.dirname(path))
@@ -71,11 +83,13 @@ def run(type, server_conf, memtier_conf, output_dir, base_port=11120, instances=
     server_cpu_averages = cpu_parser.get_average_stats(server_cpu)
     print('CPU', server_cpu_averages)
 
-    write(
-        ', '.join(cpu_parser.get_labels()),
-        server_cpu_averages.values(),
-        '%s/cpu.csv' % output_dir
-    )
+    write_dict(server_cpu_averages, '%s/cpu.csv' % output_dir)
+
+    # write(
+    #     ', '.join(cpu_parser.get_labels()),
+    #     server_cpu_averages.values(),
+    #     '%s/cpu.csv' % output_dir
+    # )
 
     print('Average 99th:', memtier_parser.get_average_99th())
 
