@@ -69,7 +69,7 @@ def run(type, server_conf, memtier_conf, output_dir, base_port=11120, instances=
     )
 
     server_cpu_averages = cpu_parser.get_average_stats(server_cpu)
-    print('%IRQ', cpu_parser.get_irq(server_cpu_averages))
+    print('CPU', server_cpu_averages)
 
     write(
         ', '.join(cpu_parser.get_labels()),

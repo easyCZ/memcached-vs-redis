@@ -25,6 +25,7 @@ class CPUParser(object):
         for hostname, output in output.iteritems():
             # average is the last line
             average_line = [line for line in output['stdout']][-1]
+            print('Average line:', average_line)
             instance_averages = self._parse_average_row(average_line)
 
             return dict(zip(self.get_labels(), instance_averages))
@@ -33,6 +34,3 @@ class CPUParser(object):
     def _parse_average_row(self, input):
         tokens = input.split()[2:]
         return [float(token) for token in tokens]
-
-    def get_irq(self, averages):
-        return averages['irq']
