@@ -1,4 +1,4 @@
-DIR=object-size-2
+DIR=object-size-retest
 
 echo "ops/s, hits/s, miss/s, latency, KB/s" > $DIR/totals.csv
 for i in {1..100}

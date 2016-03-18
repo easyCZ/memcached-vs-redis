@@ -83,13 +83,14 @@ def run(type, server_conf, memtier_conf, output_dir, base_port=11120, instances=
     server_cpu_averages = cpu_parser.get_average_stats(server_cpu)
     print('CPU', server_cpu_averages)
 
-    write_dict(server_cpu_averages, '%s/cpu.csv' % output_dir)
+    # write_dict(server_cpu_averages, '%s/cpu.csv' % output_dir)
 
-    # write(
-    #     ', '.join(cpu_parser.get_labels()),
-    #     server_cpu_averages.values(),
-    #     '%s/cpu.csv' % output_dir
-    # )
+    server_cpu_labels = cpu_parser.get_labels()
+    write(
+        ', '.join(server_cpu_labels),
+        [server_cpu_averages[key] for key in server_cpu_labels],
+        '%s/cpu.csv' % output_dir
+    )
 
     print('Average 99th:', memtier_parser.get_average_99th())
 
