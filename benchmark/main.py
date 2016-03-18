@@ -42,7 +42,7 @@ def run(type, server_conf, memtier_conf, output_dir, base_port=11120, instances=
     if pin:
         server.pin()
 
-    server_cpu = server.log_cpu(duration + 3)
+    server_cpu = server.log_cpu(duration + 1)
 
     cpu_parser = CPUParser()
 
