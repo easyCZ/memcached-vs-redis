@@ -45,7 +45,7 @@ def write_stats(content, path):
                     f.write('\n')
 
 
-def run(type, server_conf, memtier_conf, output_dir, base_port=11120, instances=1, duration=30, zipf=False, pin=False):
+def run(type, server_conf, memtier_conf, output_dir, base_port=11120, instances=1, duration=30, zipf=False, pin=False, iterations=3):
     server = Server(type, server_conf, base_port, instances)
     clients = Clients(type, memtier_conf, base_port, instances, zipf=zipf)
 
@@ -54,45 +54,72 @@ def run(type, server_conf, memtier_conf, output_dir, base_port=11120, instances=
     if pin:
         server.pin()
 
-    server_cpu = server.log_cpu(duration + 1)
 
-    cpu_parser = CPUParser()
 
-    client_results = clients.run_memtier(False)
+    cpu_stats = []
+    total_stats = []
+    latency_stats = []
+    for i in range(iterations):
+        server_cpu = server.log_cpu(duration + 1)
+        cpu_parser = CPUParser()
 
-    memtier_parser = MemtierResultsParser(client_results)
+        client_results = clients.run_memtier(False)
 
-    memtier_parser.read()
+        memtier_parser = MemtierResultsParser(client_results)
 
-    # print(memtier_parser.content)
-    write_stats(memtier_parser.content, output_dir)
+        memtier_parser.read()
+
+        averaged_totals = memtier_parser.get_averaged_totals()
+        average_99th = memtier_parser.get_average_99th()
+        server_cpu_averages = cpu_parser.get_average_stats(server_cpu)
+        server_cpu_labels = cpu_parser.get_labels()
+
+        total_stats.append(averaged_totals)
+        latency_stats.append(average_99th)
+        cpu_stats.append([server_cpu_averages[key] for key in server_cpu_labels])
+
+
+    avg_latency = sum(latency_stats) / float(iterations)
+    avg_cpu_stats = []
+    for index in range(len(cpu_stats[0])):
+        values = [cpu[index] for cpu in cpu_stats]
+        avg_cpu_stats.append(sum(values) / float(iterations))
+
+    avg_total_stats = []
+    for index in range(len(total_stats[0])):
+        values = [cpu[index] for cpu in total_stats]
+        avg_total_stats.append(sum(values) / float(iterations))
+
+    print('[Main] Totals:', avg_total_stats)
+    print('[Main] 99th:', avg_latency)
+    print('[Main] CPU:', avg_cpu_stats)
 
     # write results
     write(
         ', '.join(memtier_parser.get_totals_headers()),
-        memtier_parser.get_averaged_totals(),
+        avg_total_stats,
         '%s/totals.csv' % output_dir
     )
 
     write(
         '99th latency',
-        [memtier_parser.get_average_99th()],
+        [avg_latency],
         '%s/latency.csv' % output_dir
     )
 
-    server_cpu_averages = cpu_parser.get_average_stats(server_cpu)
-    print('CPU', server_cpu_averages)
+    # server_cpu_averages = cpu_parser.get_average_stats(server_cpu)
+    # print('CPU', server_cpu_averages)
 
     # write_dict(server_cpu_averages, '%s/cpu.csv' % output_dir)
 
     server_cpu_labels = cpu_parser.get_labels()
     write(
         ', '.join(server_cpu_labels),
-        [server_cpu_averages[key] for key in server_cpu_labels],
+        avg_cpu_stats,
         '%s/cpu.csv' % output_dir
     )
 
-    print('Average 99th:', memtier_parser.get_average_99th())
+    # print('Average 99th:', memtier_parser.get_average_99th())
 
     # Clean up
     server.kill_cache()
