@@ -60,6 +60,7 @@ def run(type, server_conf, memtier_conf, output_dir, base_port=11120, instances=
     total_stats = []
     latency_stats = []
     for i in range(iterations):
+        print('[Main] Iteration {} started'.format(i))
         server_cpu = server.log_cpu(duration + 1)
         cpu_parser = CPUParser()
 
@@ -77,6 +78,11 @@ def run(type, server_conf, memtier_conf, output_dir, base_port=11120, instances=
         total_stats.append(averaged_totals)
         latency_stats.append(average_99th)
         cpu_stats.append([server_cpu_averages[key] for key in server_cpu_labels])
+
+        print('[Main] Iteration {} finished'.format(i))
+        print('[Main] Totals:', averaged_totals)
+        print('[Main] 99th:', average_99th)
+        print('[Main] CPU:', server_cpu_averages)
 
 
     avg_latency = sum(latency_stats) / float(iterations)
