@@ -50,7 +50,7 @@ def run(type, server_conf, memtier_conf, output_dir, base_port=11120, instances=
     clients = Clients(type, memtier_conf, base_port, instances, zipf=zipf)
 
     server.start_cache()
-  
+
     if pin:
         server.pin()
 
