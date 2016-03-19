@@ -13,3 +13,8 @@ do
         -instances=1 \
         -duration=30
 done
+
+../../../results/memcached/analyze.sh $DIR
+
+git add ../../../
+git commit -m "Memcached Baseline Throughput"

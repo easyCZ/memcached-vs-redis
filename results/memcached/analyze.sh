@@ -1,4 +1,4 @@
-DIR=baseline-throughput
+DIR=$@
 
 echo "ops/s, hits/s, miss/s, latency, KB/s" > $DIR/totals.csv
 for i in {1..100}

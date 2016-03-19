@@ -50,7 +50,7 @@ def run(type, server_conf, memtier_conf, output_dir, base_port=11120, instances=
     clients = Clients(type, memtier_conf, base_port, instances, zipf=zipf)
 
     server.start_cache()
-
+  
     if pin:
         server.pin()
 
@@ -113,19 +113,12 @@ def run(type, server_conf, memtier_conf, output_dir, base_port=11120, instances=
         '%s/latency.csv' % output_dir
     )
 
-    # server_cpu_averages = cpu_parser.get_average_stats(server_cpu)
-    # print('CPU', server_cpu_averages)
-
-    # write_dict(server_cpu_averages, '%s/cpu.csv' % output_dir)
-
     server_cpu_labels = cpu_parser.get_labels()
     write(
         ', '.join(server_cpu_labels),
         avg_cpu_stats,
         '%s/cpu.csv' % output_dir
     )
-
-    # print('Average 99th:', memtier_parser.get_average_99th())
 
     # Clean up
     server.kill_cache()
