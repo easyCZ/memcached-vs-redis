@@ -70,5 +70,14 @@ class Clients(object):
 
         return output
 
+    def warmup(self, duration=30):
+        config = self.generate_configs()
+        configs = [c + ' --ratio=1:0']
+        for client, config in zip(self.clients, configs):
+            out = client.run_memtier(config, zipf=self.zipf)
+            output.append(out)
+
+        return output
+
     def _make_connections(self):
         return [Client(self.cache_type) for i in range(self.instances)]
