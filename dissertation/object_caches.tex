@@ -75,6 +75,9 @@ As a result, memcached employs a locking mechanism in order to be able to guaran
 
 We can observe that steps \textit{1-4} and \textit{8} can be parallelized without the need for resource locking. However, the critical section in steps \textit{5-7} is executed with the acquisition of a global lock. Therefore, at this stage execute is not being performed in parallel.
 
+\subsubsection{Configuration}
+\label{sec:memcached_configuration}
+TODO
 
 \subsubsection{Production deployments}
 TODO: Discuss Facebook, Amazon, Twitter, ... deployments of memcached

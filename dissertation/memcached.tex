@@ -1,33 +1,87 @@
 The purpose of this chapter is to benchmark and evaluate memcached performance. Firstly, we will examine performance under default configuration of both the server and the client. Secondly, threading will be explored in relation to latency and throughput. Thirdly, the effect of memcached's \texttt{group size} will be explored in relation to performance. Additionally, configuration of receive and transmit queues will be explored and finally, an execution model of multiple processes will be visited in order to establish a comparison baseline. Throughout the benchmarks, we will be focusing cache performance which meets desired the QoS.
 
 
-\section{Default Performance}
+\section{Out of the Box Performance}
 
-Firstly, it is essential to establish a performance baseline of \emph{memcached} under high utilization. In order to establish the baseline, a default configuration of memcached will be used with the exception of the amount of memory allocated for exclusive use by the application. The \emph{memcached} application will be started with
+Firstly, we consider Memcached in it's default configuration. A list of the configuration parameters as well as the default values is presented in Section \ref{sec:memcached_configuration}. The purpose of benchmarking Memcached in the default configuration is to obtain a baseline performance. This will in turn allow us to consider potential optimizations with respect to the baseline.
+
+The Memcached server is started with the following command.
+
 \begin{lstlisting}
 memcached -d -p 11120 -m 6144
-\end{lstlisting} specifying the port and the amount of memory to be used by the application.
-
-To find a saturation point, we can increase the number of connections linearly and analyze the results. To load test the cache, we execute the following command on all client servers simultaneously.
-\begin{lstlisting}
-  memtier -s nsl200 -p 11120 -c <connections> -t 2
-    --random-data
-    --key-minimum=100
-    --key-maximum=10000
 \end{lstlisting}
 
-The effect will be to generate random data with keys between the specified ranges and send requests to the server in two simultaneous threads.
+We run Memcached in daemon mode (\textit{-d}), set the maximum amount of memory Memcached can use to 6GB (\textit{-m}) and finally we bind Memcached to port 11120 (textit{-p}). Note that by default, Memcached runs with 4 threads.
 
 
-\subsection{Default Throughput vs Latency}
+In order to generate a workload with increasing intensity, the number of simultaneous connections is increased linearly. As the number of connections grows, so does the number of requests per second issued to Memcached. We configure the Memtier benchmark as follows:
 
-Firstly, we are interested in the relationship between throughput and latency shown in Figure \ref{fig:memcached-default-latency-vs-ops}. The mean latency and the 99th percentile latency are plotted against corresponding number of operations (throughput). We can observe that as the number of operations increases so does latency. Additionally, latency (both 99th percentile and mean) increase linearly until a saturation point is reached when a further increase in throughput is met with an exponentially larger increase in latency. The highest throughput achieved under quality of service restriction of 99th percentile latency under 1 millisecond is 375,000 operations per second. The highest level of throughput corresponds to 84 simultaneous connections, or 12 connections per each client which is similar to benchmarks used in the literature \cite{lim2013thin}.
+\begin{lstlisting}
+  memtier -s <server> -p 11120 -c <connections> -t 3
+    --random-data
+    --key-minimum=1
+    --key-maximum=10000000
+    --data-size=32
+\end{lstlisting}
+Memtier is run simultaneously on 7 hosts (distinct from the server). The Memcached server and port number are provided (\textit{-s}, \textit{-p}). Each host executing Memtier runs 3 distinct threads with \textit{c} connections in each thread. The number of connections increases linearly from 1 connection to 17 connections. As a result, the number of connections in consecutive benchmarks increases by 21. This is the result of running Memtier on 7 hosts with 3 threads per each host. Additionally, the \textit{key-minimum}, \textit{key-maximum} and \textit{data-size} configuration parameters are provided for clarity and are set to the default values configured by Memtier. The result of the above configuration is to generate a linearly increasing load on the Memcached server.
+
+
+\subsection{Latency, Throughput and Number of Connections}
+
+Firstly, we are interested in the relationship between throughput and latency shown in Figure \ref{fig:memcached-default-latency-vs-ops}. Latency, both mean and 99th percentile, are plotted on the left vertical axis, the number of operations per second is plotted on the right vertical axis and the number of connections used is on the horizontal axis.
 
 \begin{figure}[h]
-    \includegraphics[width=\textwidth]{./res/5_default_latency_vs_ops.png}
-    \caption{Mean latency and 99th percentile latency against throughput}
+    \includegraphics[width=\textwidth]{./res2/m_baseline_latency.png}
+    \caption{Latency \& Throughput vs Number of Connections}
     \label{fig:memcached-default-latency-vs-ops}
 \end{figure}
+
+As the number of connections increases, mean latency increases too. There is a linear trend between the number of connections and the mean latency. The 99th percentile latency also increases with the number of connections, however, it grows faster than than the number of connections does and exceeds the required QoS constraint at 189 simultaneous connections. The total number of operations, increases quickly as the number of connections increases and begins to flatten at 100 connections or 415k requests per second. As the number of connections increases beyond 100, the throughput remains relatively stable at around 430k requests per second.
+
+Examining the relationship between latency and throughput, we can observe that initially we are able to increase throughput to 415k requests per second, however, a further increase in throughput comes at a disproportionately larger cost in terms of 99th percentile latency. This is reasonable as there is a limit to the number of requests we can process per second, a larger number of requests will incur queuing delay which translates to increased latency.
+
+\subsection{CPU Utilization}
+
+Secondly, we consider the effect of the workload on the Memcached server in terms of CPU Utilization. The CPU utilization is monitored through the \textit{mpstat} \cite{mpstat} utility which reports the percentage of CPU utilization broken down into multiple categories. The following table \cite{mpstat} summarizes the responsibilities of each category.
+
+\begin{enumerate}
+    \item [\%usr] Show the percentage of CPU utilization that occurred while executing at the user level (application).
+    \item [\%sys] Show the percentage of CPU utilization that occurred while executing at the system level (kernel). Note that this does not include time spent servicing hardware and software interrupts.
+    \item [\%iowait] Show the percentage of time that the CPU or CPUs were idle during which the system had an outstanding disk I/O request.
+    \item [\%irq] Show the percentage of time spent by the CPU or CPUs to service hardware interrupts.
+    \item [\%soft] Show the percentage of time spent by the CPU or CPUs to service software interrupts.
+    \item [\%idle] Show the percentage of time that the CPU or CPUs were idle and the system did not have an outstanding disk I/O request.
+\end{enumerate}
+
+For the context of this paper, \textit{\%usr} corresponds directly to the CPU utilization used by Memcached as it is the only application running on the server.
+
+Furthermore, \textit{\%soft} represents the software interrupt issued by \textit{libevent} when a new file descriptor is available for processing, that is, a new request is available to be processed or a response is ready to be handed over to the network stack.
+
+\begin{figure}[h]
+    \includegraphics[width=\textwidth]{./res2/m_baseline_cpu.png}
+    \caption{CPU Utilization for Out of the Box Configuration of Memcached}
+    \label{fig:m_baseline_cpu}
+\end{figure}
+
+Figure \ref{fig:m_baseline_cpu} outlines the CPU Utilization broken down into mpstat categories.
+
+Firstly, as the number of connections increases, the \textit{usr} utilization remains nearly constant at 9\%.
+
+Secondly, \texit{sys} utilization increases as the number of connection increases between 21 and 120 connections and remains relatively stable as the number connections increases further. This behavior corresponds to the saturation point also observed in the relationship of connections and throughput.
+
+Thirdly, \textit{soft}, increases as the number of connections increase due to the increased number of requests per second which are required to be serviced.
+
+Finally, \textit{iowait} and \textit{irq} account for less than 0.01\% of the total CPU utilization. This is a reasonable result as Memcached is an in-memory object cache and therefore we do not expect to see any disk I/O.
+
+
+
+
+
+
+
+
+
+
 
 
 \subsection{Effect of Connections}
