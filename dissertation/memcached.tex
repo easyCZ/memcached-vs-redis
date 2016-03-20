@@ -20,10 +20,10 @@ In order to generate a workload with increasing intensity, the number of simulta
   memtier -s <server> -p 11120 -c <connections> -t 3
     --random-data
     --key-minimum=1
-    --key-maximum=10000000
+    --key-maximum=100000
     --data-size=32
 \end{lstlisting}
-Memtier is run simultaneously on 7 hosts (distinct from the server). The Memcached server and port number are provided (\textit{-s}, \textit{-p}). Each host executing Memtier runs 3 distinct threads with \textit{c} connections in each thread. The number of connections increases linearly from 1 connection to 17 connections. As a result, the number of connections in consecutive benchmarks increases by 21. This is the result of running Memtier on 7 hosts with 3 threads per each host. Additionally, the \textit{key-minimum}, \textit{key-maximum} and \textit{data-size} configuration parameters are provided for clarity and are set to the default values configured by Memtier. The result of the above configuration is to generate a linearly increasing load on the Memcached server.
+Memtier is run simultaneously on 7 hosts (distinct from the server). The Memcached server and port number are provided (\textit{-s}, \textit{-p}). Each host executing Memtier runs 3 distinct threads with \textit{c} connections in each thread. The number of connections increases linearly from 1 connection to 17 connections. As a result, the number of connections in consecutive benchmarks increases by 21. This is the result of running Memtier on 7 hosts with 3 threads per each host. Additionally, the \textit{key-minimum}, \textit{key-maximum} defines the key range utilized in this benchmark. and \textit{data-size} configuration parameters are provided for clarity and are set to the default values configured by Memtier. The result of the above configuration is to generate a linearly increasing load on the Memcached server.
 
 
 \subsection{Latency, Throughput and Number of Connections}
@@ -85,23 +85,26 @@ Memcached performs reasonably well `out of the box', delivering 420k requests pe
 \section{Memcached Thread Scalability}
 Memcached, as a high performance object cache, is designed to be executed on a multi-core architecture. It implements scalability through the use multiple threads allowing memcached to utilize many core architectures. Therefore, the next step in scaling a memcached deployment is to examine the impact threads have on Memcached's performance.
 
-Memcached execution model is capable of processing incoming and outgoing requests in parallel, however, operations executed require a global application lock to be acquired. Therefore, the expected number of threads maximising throughput while minimizing latency can be expected to be achieved when memcached is provisioned with the same number of threads as hardware CPU cores which is also suggested by Leverich and Kozyrakis \cite{leverich2014reconciling}.
+Memcached execution model is capable of processing incoming and outgoing requests in parallel, however, operations executed require a global application lock to be acquired. Therefore, the expected number of threads which maximizes throughput and minimizes latency can be expected to be achieved when memcached is provisioned with the same number of threads as hardware CPU cores which is also suggested by Leverich and Kozyrakis \cite{leverich2014reconciling}.
+
+Utilizing results from the previous section, we configure the workload with 168 connections. At this workload, we have been able to achieve a throughput of 440k requests per second with latency meeting the QoS. Therefore, the configuration for the clients is as follows:
 
 Utilizing findings from the previous section, a configuration with 84 connections can be used to generate a consistent load while the number of threads provisioned for memcached can be varied. Therefore, we can set up each benchmark client as follows:
 
 \begin{lstlisting}
-  memtier -s nsl200 -p 11120 -c 6 -t 2 -P memcache_binary
+  memtier -s <server> -p 11120 -c 8 -t 3
     --random-data
-    --key-minimum=100
-    --key-maximum=10000
+    --key-minimum=1
+    --key-maximum=100000
+    --data-size=32
 \end{lstlisting}
 
-The server in turn is configured as follows:
+The Memcached server configuration is setup with an increasing number of threads in each iteration of the benchmark. The used configuration is as follows:
 \begin{lstlisting}
   memcached -d -p 11120 -m 6144 -t <thread_count>
 \end{lstlisting}
 
-Where the number of threads is progressively increased.
+
 
 \subsection{Throughput \& Latency}
 
