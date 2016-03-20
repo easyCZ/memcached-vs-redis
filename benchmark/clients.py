@@ -73,6 +73,7 @@ class Clients(object):
     def warmup(self, duration=30):
         configs = self.generate_configs()
         configs = [c + ' --ratio=1:0' for c in configs]
+        output = []
         for client, config in zip(self.clients, configs):
             out = client.run_memtier(config, zipf=self.zipf)
             output.append(out)
