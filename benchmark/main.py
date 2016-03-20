@@ -54,7 +54,9 @@ def run(type, server_conf, memtier_conf, output_dir, base_port=11120, instances=
     if pin:
         server.pin()
 
-
+    # Warm up
+    print('[Main] Warming up cache')
+    clients.run_memtier(False)
 
     cpu_stats = []
     total_stats = []
