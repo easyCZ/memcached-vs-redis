@@ -57,6 +57,8 @@ def run(type, server_conf, memtier_conf, output_dir, base_port=11120, instances=
     # Warm up
     print('[Main] Warming up cache')
     clients.run_memtier(False)
+    memtier_parser = MemtierResultsParser(client_results)
+    memtier_parser.read()
 
     cpu_stats = []
     total_stats = []
