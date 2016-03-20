@@ -74,7 +74,7 @@ do
     for tid in "${memcached_tids[@]}"
     do
         taskset -pc $i $tid
-        i=$((i + 1))
+        i=$(( (i + 1) % 6 ))
     done
 done
         '''
@@ -85,7 +85,7 @@ i=0
 for pid in "${redis_pids[@]}"
 do
     taskset -pc $i $pid
-    i=$((i + 1))
+    i=$(( (i + 1) % 6 ))
 done
         '''
         if self.cache_type == 'redis':
