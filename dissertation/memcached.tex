@@ -63,63 +63,23 @@ Furthermore, \textit{\%soft} represents the software interrupt issued by \textit
     \label{fig:m_baseline_cpu}
 \end{figure}
 
-Figure \ref{fig:m_baseline_cpu} outlines the CPU Utilization broken down into mpstat categories.
+Figure \ref{fig:m_baseline_cpu} outlines the CPU Utilization broken down into mpstat categories. Note that \textit{idle} percentage is represented in the chart as the remaining transparent area of each column.
 
 Firstly, as the number of connections increases, the \textit{usr} utilization remains nearly constant at 9\%.
 
-Secondly, \texit{sys} utilization increases as the number of connection increases between 21 and 120 connections and remains relatively stable as the number connections increases further. This behavior corresponds to the saturation point also observed in the relationship of connections and throughput.
+Secondly, \textit{sys} utilization increases as the number of connection increases between 21 and 120 connections and remains relatively stable as the number connections increases further. This behavior corresponds to the saturation point also observed in the relationship of connections and throughput.
 
 Thirdly, \textit{soft}, increases as the number of connections increase due to the increased number of requests per second which are required to be serviced.
 
+Furthermore, \textit{idle}, represented as the remaining CPU utilization in each column, decreases as the number of connection increases. This is primarily due to an increase in \textit{sys} and \textit{soft}. The peak total CPU utilization is 75\%, this corresponds to 4 Memcached threads on distinct cores being utilized at 100\% and additional low utilization on the remaining 2 cores.
+
 Finally, \textit{iowait} and \textit{irq} account for less than 0.01\% of the total CPU utilization. This is a reasonable result as Memcached is an in-memory object cache and therefore we do not expect to see any disk I/O.
 
+As a result of the breakdown, we can conclude that Memcached itself is not CPU intensive. Rather, the bulk of the CPU utilization is taken up by the kernel as well as processing software interrupts from high number of requests per second. The overall Memcached performance appears to be tightly linked to the performance of the network stack as well as the underlying kernel. This observation is consistent with findings in MICA \cite{lim2014mica}.
+
+Memcached performs reasonably well `out of the box', delivering 420k requests per second with 99th percentile latency meeting the QoS. The CPU utilization is dominated by the kernel and the network stack. However, Memcached has a lot to offer in terms of configuration and performance improvements which we will explore in subsequent sections.
 
 
-
-
-
-
-
-
-
-
-
-\subsection{Effect of Connections}
-To understand the effect of a large number of connections on the cache performance, Figure \ref{fig:memcached-default_connections} shows the effect an increase in the total number of connections has on throughput, mean latency and the 99th percentile latency. The figure deliberately shows the behavior outside of the requires QoS requirements in order to better illustrate the impact on the cache under high load.
-
-\begin{figure}[h]
-    \includegraphics[width=\textwidth]{./res/5_default_connections.png}
-    \caption{Throughput, Mean latency and 99th percentile against the number of connections}
-    \label{fig:memcached-default_connections}
-\end{figure}
-
-Firstly, Figure \ref{fig:memcached-default_connections} displays the general trend an increased load has on throughput. As load increases, so does throughput. However, as the number of connections surpasses 100, the rate of increase in throughput for each increase the number of connections decreases. This is the saturation point of the cache, an increase in load yield disproportionate increase in throughput. Beyond the saturation point, the cache throughput fluctuates around 450,000 operations per second.
-
-Secondly, the mean latency increases linearly with the number of connections (load). This is an expected behavior as the server experiences network stack queuing as well as increased resource requirements to process requests.
-
-Thirdly, the 99th percentile latency increases linearly, with some fluctuations, against the increased server load. As the load gets higher, the fluctuation increases as well as the upper bound. This is due to some requests being queued for a long time before being processed, pushing the 99th percentile high.
-
-We can observe that the server is capable of scaling much better until around 100 connections are reached. When the saturation point is surpassed, overall performance and quality of service degrades.
-
-
-\subsection{Server CPU}
-In order to be better understand the impact of memcached on the system, specifically the CPU usage, we consider a breakdown of CPU time spent in various areas of the operating system in Figure \ref{fig:memcached-default-cpu}.
-
-\begin{figure}[h]
-    \includegraphics[width=\textwidth]{./res/5_default_cpu.png}
-    \caption{CPU Time against number of connections}
-    \label{fig:memcached-default-cpu}
-\end{figure}
-
-Firstly, we can observe that the effective footprint of memcached (\texttt{guest}) is relatively small compared to the rest. The CPU usage of memcached increases up until 100 connections at which point it remains fairly stable.
-
-Secondly, the operating system (\texttt{sys}) increases as we increase the load. Fluctuations occur past 250 connections but the CPU usage by the system remains around 40 percent as the load is increased further. An increased number of connections requires additional resources to process incoming requests as well as process outgoing requests. The context switching from receiving and transmitting contributes to the high load from the system.
-
-Thirdly, interrupt processing by the system (\texttt{irq}) decreases as we increase load, this is due to having more CPU available and therefore being able to process a higher number of interrupts per unit of time. As resources are required by the system and the memcached application, this number of interrupts processed per unit of time decreases as reflected by the proportion of CPU.
-
-Finally, software interrupt footprint (\texttt{soft}) remains relatively stable throughout. The software interrupts correspond to running threads of the memcached application (4 threads by default) and are used for context switching.
-
-From the breakdown in Figure \ref{fig:memcached-default-cpu}, we can conclude that memcached is not CPU heavy on its own. The large CPU footprint of running memcached under high load is tightly linked to performance of the network stack and the underlying hardware processing network requests rather than the application itself. This observation is consistent with findings in MICA \cite{lim2014mica}.
 
 
 \section{Memcached Thread Scalability}
