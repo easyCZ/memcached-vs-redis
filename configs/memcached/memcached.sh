@@ -1,6 +1,6 @@
 #!/bin/bash
 
-LABEL=threads
+LABEL=group-size
 
 mkdir $LABEL
 
