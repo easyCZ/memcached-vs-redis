@@ -36,7 +36,7 @@ Firstly, we are interested in the relationship between throughput and latency sh
     \label{fig:memcached-default-latency-vs-ops}
 \end{figure}
 
-As the number of connections increases, mean latency increases too. There is a linear trend between the number of connections and the mean latency. The 99th percentile latency also increases with the number of connections, however, it grows faster than than the number of connections does and exceeds the required QoS constraint at 189 simultaneous connections. The total number of operations, increases quickly as the number of connections increases and begins to flatten at 100 connections or 415k requests per second. As the number of connections increases beyond 100, the throughput remains relatively stable at around 430k requests per second.
+As the number of connections increases, mean latency increases too. There is a linear trend between the number of connections and the mean latency. The 99th percentile latency also increases with the number of connections, however, it grows faster than than the number of connections does and exceeds the required QoS constraint at 189 simultaneous connections. The total number of operations, increases quickly as the number of connections increases and begins to flatten at 100 connections or 400k requests per second. As the number of connections increases beyond 100, the throughput remains relatively stable at around 420k requests per second.
 
 Examining the relationship between latency and throughput, we can observe that initially we are able to increase throughput to 415k requests per second, however, a further increase in throughput comes at a disproportionately larger cost in terms of 99th percentile latency. This is reasonable as there is a limit to the number of requests we can process per second, a larger number of requests will incur queuing delay which translates to increased latency.
 
@@ -87,7 +87,7 @@ Memcached, as a high performance object cache, is designed to be executed on a m
 
 Memcached execution model is capable of processing incoming and outgoing requests in parallel, however, operations executed require a global application lock to be acquired. Therefore, the expected number of threads which maximizes throughput and minimizes latency can be expected to be achieved when memcached is provisioned with the same number of threads as hardware CPU cores which is also suggested by Leverich and Kozyrakis \cite{leverich2014reconciling}.
 
-Utilizing results from the previous section, we configure the workload with 168 connections. At this workload, we have been able to achieve a throughput of 440k requests per second with latency meeting the QoS. Therefore, the configuration for the clients is as follows:
+Utilizing results from the previous section, we configure the workload with 168 connections. At this workload, we have been able to achieve a throughput of 430k requests per second with latency meeting the QoS. Therefore, the configuration for the clients is as follows:
 
 Utilizing findings from the previous section, a configuration with 84 connections can be used to generate a consistent load while the number of threads provisioned for memcached can be varied. Therefore, we can set up each benchmark client as follows:
 
@@ -105,38 +105,50 @@ The Memcached server configuration is setup with an increasing number of threads
 \end{lstlisting}
 
 
-
 \subsection{Throughput \& Latency}
 
-Figure \ref{fig:memcached-threads} shows the relationship between throughput, mean latency and 99th percentile latency in relation to the number of threads used by a memcached application.
+Figure \ref{fig:m_threads_latency.png} plots the relationship between the number of threads used by Memcached on the horizontal axis, latency on the left vertical and the number of operations on the right vertical.
 
 \begin{figure}[h]
-    \includegraphics[width=\textwidth]{./res/5_memcached_threads.png}
-    \caption{Memcached Thread Scaling}
-    \label{fig:memcached-threads}
+    \includegraphics[width=\textwidth]{./res2/m_threads_latency.png}
+    \caption{Memcached Threads: Latency \& Throughput vs Number of Threads}
+    \label{fig:m_threads_latency.png}
 \end{figure}
 
-Firstly, we can observe that throughput increases as thread count increases until we reach 6 threads where it peaks at 450k requests per second. As we increase thread count further, throughput decreases. This behavior corresponds with our expectation that performance is maximized when there are as many threads as CPU cores.
+Firstly, mean latency (\textit{blue}) decreases as the number of threads increases from 1 to 6 where it reaches a minimum of 0.301ms. As the numbr of threads grows beyond 6, the mean latency increases at a slow pace.
 
-Secondly, mean latency decreases as the number of threads is increased reaching a minimum of 0.1843 milliseconds at 6 threads. With more threads, the mean latency increases steadily.
+Secondly, 99th percentile latency (\textit{red}) starts at 2.05ms, above the required QoS. As the number of threads increases, the 99th percentile latency drops sharply. With 4 to 6 threads, the 99th percentile latency satisfies the QoS with a minimum of 0.84ms reached at 5 threads. Beyond 6 threads, the 99th percentile latency rises sharply beyond the required QoS.
 
-Thirdly, the 99th percentile latency decreases as we increase the number of threads from 1 to 2, reaching a minimum and increasing as the number of threads increases. At 6 threads, we reach a 99th percentile latency of 0.973 which satisfies the QoS requirements under 1 millisecond.
+Thirdly, the number of operations per second (\textit{yellow}), increases linearly with the number of threads up until 6 threads where it reaches a maximum of 558k requests per second. A further increase in the number of threads results in a decrease of the number of operations per second.
 
-Indeed, as expected we have been able to obtain the highest throughput and achieve the quality of service requirements with 6 threads, as many as CPU cores on the host. Beyond 6 threads, the overhead of context switching between threads increases processing time and reduces throughput.
+Overall, QoS constraints are only achieved with 4 to 6 threads. We can attribute this effect to the multi threaded design of Memcached. With 3 threads or less, the load exerted by the clients cannot be processed quickly resulting in requests being queued up. This leads to an increased 99th percentile latency. With a sufficient number of threads to process the load effectively, a CPU core is able to service the requests sooner and therefore reduce the 99th percentile latency while also increasing the total number of operations.
 
-\subsection{CPU Time}
+With more than 6 threads, the kernel is forced to schedule multiple threads on the same core. This effect is described as `load imbalance' by Leverich \& Kozyrakis. With more than 1 Memcached thread executing on a single core, it is reasonable to expect the throughput to decrease, as opposed to only 1 Memcached thread per each core, due to context switching.
+
+Overall, the best performance in terms of maximizing throughput and minimizing latency is provided by as many threads as CPU cores, in our case 6 threads. However, this is not in fact the minimum 99th percentile latency achieved in the benchmark - at 5 threads we obtain 99th percentile latency of 0.84ms with 480k requests per second.
+
+
+\subsection{CPU Utilization}
+
+Figure \ref{fig:m_threads_cpu} provides the \textit{mpstat} category breakdown of the CPU utilization of Memcached during the benchmark. Note that unattributed utilization accounts for idle time.
 
 \begin{figure}[h]
-    \includegraphics[width=\textwidth]{./res/5_threads_cpu.png}
-    \caption{Memcached CPU Time against Number of Threads}
-    \label{fig:memcached-threads-cpu}
+    \includegraphics[width=\textwidth]{./res2/m_threads_cpu.png}
+    \caption{Memcached CPU Utilization with Multiple Threads}
+    \label{fig:m_threads_cpu}
 \end{figure}
 
-Analyzing the CPU usage in Figure \ref{fig:memcached-threads-cpu} as we increase the number of threads, we can observe that initially a large portion of the CPU time is spent servicing hardware interrupts (\textit{irq}). Therefore, the OS is handling incoming traffic interrupts from the NIC. As the number of threads increases, an increasingly larger portion of CPU time is spent processing system calls and context switching (\textit{sys}). This is reasonable as a larger number of threads will require context switching and concurrency management provided by the operating system. We can see that time spent processing hardware interrupts (\textit{irq}) decreases which has the effect of increasing latency as packets remained queued up in the NIC for longer before the OS manages to schedule the interrupt to be serviced. Furthermore, we can observe that software interrupts (\textit{soft}) CPU time progressively increases until we reach 6 threads and remains stable as the number of threads grows further. The initial increase is reasonable as we are demanding more threads to processed simultaneously, past this point the percentage remains stable as we have reached a saturation point in terms of scalability and server performance. Finally, memcached (\textit{guest}) follows a similar pattern as software interrupts. Usage increases until 6 threads are used and saturates further. This is further indicative of the inability to efficiently scale the number of threads past the point at which memcached uses the same number of threads as CPU cores.
+Firstly, Memcached CPU usage (\textit{usr}) increases linearly with the number of instances up to 6 threads and accounts for 12.7\%. With more than 6 threads, the Memcached CPU usage remains constant. This is reasonable as Memcached itself is not CPU intensive, however, a larger number of threads will require more CPU to operate effectively. Consequently, with more than 6 threads, context switching occurs due to insufficient number of CPU cores to monopolize a given core and therefore the CPU usage remains constant.
 
-\subsection{Thread evaluation}
-Comparing results obtain from thread scalability with the results from the default configuration of memcached, we have been able to increase throughput from 375k to 450k requests per second while maintaining the desired QoS under 1ms.
+Secondly, kernel utilization increases with the number of threads up to 6 threads at which point it stabilizes and accounts for 50\%. A further increase in the number of threads does not result in increased utilization. It is reasonable to expect a large kernel CPU utilization as it is responsible for receiving and sending of network requests and memcached is a network bound application \cite{belay2014ix}.
 
+Thirdly, similarly to kernel CPU usage, CPU utilization for software interrupts (\textit{soft}) increases with the number of threads. At 6 threads, it accounts for 33.7\%. The increase in the time spent processing software interrupts is due to overall increase in throughput as requests are processed faster. An increase in the number of requests per second directly results in an increase in the number of software interrupts received and issued by \textit{libevent}.
+
+Finally, we observe no disk I/O wait as Memcached is an in memory object cache and therefore does not access the hard drive unless the memory is exhausted and swapping to disk is triggered. Additionally, hardware interrupt servicing \textit{irq} only accounts for 0.01\% as batching in the NIC is enabled.
+
+
+\subsection{Thread Evaluation}
+Increasing the number of Memcached threads results in increased throughput and decreased latency. The best performing configuration observed is with as many threads as there are CPU cores. The direct cost of increased number of threads is CPU utilization.
 
 
 \section{Thread pinning}
