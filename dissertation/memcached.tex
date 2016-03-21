@@ -150,12 +150,13 @@ Finally, we observe no disk I/O wait as Memcached is an in memory object cache a
 \subsection{Thread Evaluation}
 Increasing the number of Memcached threads results in increased throughput and decreased latency. The best performing configuration observed is with as many threads as there are CPU cores. The direct cost of increased number of threads is CPU utilization.
 
+% ________________________________________________________
 
 \section{Thread pinning}
 \label{sec:thread-pinning}
 Thread pinning is the process of assigning a \textit{set\_irq\_affinity} to each individual thread. As suggested by Leverich and Kozyrakis, "pinning memcached threads to distinct cores greatly improves load balance, consequently improving tail latency." \cite{leverich2014reconciling} and therefore the reasonable next step in optimizing memcached performance is to attempt thread pinning and analyse the results obtained.
 
-By default, when a new process is started, its affinity is set to all available CPUs. We can discover a given process affinity by executing the following command where \textit{pid} is the process identifier.
+By default, when a new process is started, its affinity is set to all available CPUs. We can discover the affinity of a given process through the following command where \textit{pid} is the process identifier.
 
 \begin{lstlisting}
     taskset -p <pid>
@@ -167,7 +168,7 @@ By default, when a new process is started, its affinity is set to all available 
     ps -p <memcache-pid> -o tid= -L | sort -n | tail -n +2 | head -n -1
 \end{lstlisting}
 
-Given the best performance under QoS constraints of 1ms found in the previous section is memcached with 6 threads, the following benchmark will be using this best configuration in order the analyze the impact of thread pinning.
+For this benchmark, the previous configuration with 6 threads will be used.
 
 \subsection{Throughput vs Latency}
 
