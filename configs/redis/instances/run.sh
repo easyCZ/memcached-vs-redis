@@ -1,8 +1,8 @@
 #!/bin/bash
 
-DIR=instances2
+DIR=instances3
 
-for i in {1..9}
+for i in {1..8}
 do
     python ../../../benchmark/main.py \
         -type=redis \
