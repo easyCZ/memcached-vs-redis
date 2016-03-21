@@ -150,12 +150,13 @@ Finally, we observe no disk I/O wait as Memcached is an in memory object cache a
 \subsection{Thread Evaluation}
 Increasing the number of Memcached threads results in increased throughput and decreased latency. The best performing configuration observed is with as many threads as there are CPU cores. The direct cost of increased number of threads is CPU utilization.
 
+% ________________________________________________________
 
 \section{Thread pinning}
 \label{sec:thread-pinning}
 Thread pinning is the process of assigning a \textit{set\_irq\_affinity} to each individual thread. As suggested by Leverich and Kozyrakis, "pinning memcached threads to distinct cores greatly improves load balance, consequently improving tail latency." \cite{leverich2014reconciling} and therefore the reasonable next step in optimizing memcached performance is to attempt thread pinning and analyse the results obtained.
 
-By default, when a new process is started, its affinity is set to all available CPUs. We can discover a given process affinity by executing the following command where \textit{pid} is the process identifier.
+By default, when a new process is started, its affinity is set to all available CPUs. We can discover the affinity of a given process through the following command where \textit{pid} is the process identifier.
 
 \begin{lstlisting}
     taskset -p <pid>
@@ -167,25 +168,35 @@ By default, when a new process is started, its affinity is set to all available 
     ps -p <memcache-pid> -o tid= -L | sort -n | tail -n +2 | head -n -1
 \end{lstlisting}
 
-Given the best performance under QoS constraints of 1ms found in the previous section is memcached with 6 threads, the following benchmark will be using this best configuration in order the analyze the impact of thread pinning.
+For this benchmark, the previous configuration with 6 threads will be used.
 
-\subsection{Throughput vs Latency}
+\subsection{Latency \& Throughput vs Threads}
+
+Figure \ref{fig:m_pinning_latency} presents a comparison of Memcached with pinned threads against unpinned threads.
 
 \begin{figure}[h]
-    \includegraphics[width=\textwidth]{./res/5_threads_pinned.png}
-    \caption{Memcached Pinned Threads vs Unpinned}
-    \label{fig:memcached-threads-pinned}
+    \includegraphics[width=\textwidth]{./res2/m_pinning_latency.png}
+    \caption{Memcached Latency \& Throughput vs Threads: Comparison of pinned threads (labeled: \textit{Pin}) vs unpinned threads}
+    \label{fig:m_pinning_latency}
 \end{figure}
 
-Figure \ref{fig:memcached-threads-pinned} shows the impact thread pinning has on mean and 99th percentile latency against throughput.
+Overall, we can observe that there is very little change in all of the results observed. Mean latency remains the same, 99th percentile latency only differs slightly in it's minimum value at 5 threads and the number of operations per second remains the same. Overall, we find that in our benchmarks thread pinning does not affect performance significantly. This is contrary to results reported by Leverich and Kozyrakis \cite{leverich2014reconciling}. According to their research, thread pinning results in improved load balance and a result decreases 99th percentile latency. This in turn results in increased throughput.
 
-Firstly, the mean latency of both pinned and unpinned benchmarks remains very similar as throughput increases.
+\subsection{CPU Utilization}
 
-Secondly, the 99th percentile latency is lower in the case of pinned threads than unpinned. The pattern holds as throughput increases up until the required QoS boundary.
+Figure \ref{fig:m_pinning_cpu} presents the CPU Usage with Memcached threads pinned.
 
-Furthermore, the throughput has also increased reaching 520k requests per second compared to 475k requests per second in the case of unpinned threads. This pattern is further confirmed by  Leverich and Kozyrakis \cite{leverich2014reconciling}.
+\begin{figure}[h]
+    \includegraphics[width=\textwidth]{./res2/m_pinning_cpu.png}
+    \caption{Pinned Memcached CPU Utilization}
+    \label{fig:m_pinning_cpu}
+\end{figure}
 
-The reason for a significant improvement in the tail latency is reduced contention for access to receive and transmission queues in the network stack. Given memcached's design of running \textit{t} threads for request processing and \textit{1} thread for hash table expansion under high load, the result may be two or more request processing threads scheduled on the same CPU core while the hash table expansion thread is scheduled to run alone on a core. Pinning threads prevents this scenario from occurring as well as creates a direct mapping between each receive and transmission queue in the network stack to the memcached thread, reducing need for context switching.
+The CPU Utilization of pinned threads is nearly identical to unpinned threads presented in Figure \ref{fig:m_threads_cpu}.
+
+\subsection{Thread Pinning Conclusion}
+
+In our benchmarks, we have not been able to achieve the significant improvements in both latency and throughput suggested to be gained by thread pinning. This is likely due to differences in hardware as Leverich and Kozyrakis \cite{leverich2014reconciling} perform benchmarks on a significantly more performant hardware as well as running on a slightly older version of memcached.
 
 
 \section{Group Size}
