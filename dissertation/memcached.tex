@@ -20,7 +20,7 @@ In order to generate a workload with increasing intensity, the number of simulta
   memtier -s <server> -p 11120 -c <connections> -t 3
     --random-data
     --key-minimum=1
-    --key-maximum=100000
+    --key-maximum=10000000
     --data-size=32
 \end{lstlisting}
 Memtier is run simultaneously on 7 hosts (distinct from the server). The Memcached server and port number are provided (\textit{-s}, \textit{-p}). Each host executing Memtier runs 3 distinct threads with \textit{c} connections in each thread. The number of connections increases linearly from 1 connection to 17 connections. As a result, the number of connections in consecutive benchmarks increases by 21. This is the result of running Memtier on 7 hosts with 3 threads per each host. Additionally, the \textit{key-minimum}, \textit{key-maximum} defines the key range utilized in this benchmark. and \textit{data-size} configuration parameters are provided for clarity and are set to the default values configured by Memtier. The result of the above configuration is to generate a linearly increasing load on the Memcached server.
@@ -95,7 +95,7 @@ Utilizing findings from the previous section, a configuration with 84 connection
   memtier -s <server> -p 11120 -c 8 -t 3
     --random-data
     --key-minimum=1
-    --key-maximum=100000
+    --key-maximum=10000000
     --data-size=32
 \end{lstlisting}
 
@@ -213,7 +213,7 @@ In this benchmark, we consider the 6-threaded Memcached configuration without th
     \label{fig:m_group_size_latency}
 \end{figure}
 
-Figure \ref{fig:memcached_group_size} plots the relationship between group size, latency and throughput.
+Figure \ref{fig:m_group_size_latency} plots the relationship between group size, latency and throughput.
 
 Firstly, we can observe that mean latency remains unaffected as group size increases.
 Secondly, the total number of operations remains stable at an average of 550k requests per second. This corresponds to the same level of throughput as observed with the default group size of 20.

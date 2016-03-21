@@ -12,29 +12,39 @@ redis redis.conf --port 11120
 
 By default, a Redis deployment comes with a default configuration file \texttt{redis.conf}\cite{RedisConfiguration}. Any options specified in the configuration file can be overridden from the command line by prefixing them with \texttt{--}, in our case we are overriding the port number and setting it to 11120. All other configuration options remain unmodified.
 
-In order to understand the default Redis performance, we design the benchmark to exert an increasing level of load on the Redis server. Initially, we start with 2 threads and 1 connection per each thread on all workload generating clients, there are 7 such clients in our setup.  In our workload, we define the key space to be up to 100 million keys with an object size of 64 bytes yielding around 6.4 GB of data while the memory capacity of the server is 8GB and therefore data should not be swapped out of main memory. The workload generating clients are executed with the following command:
+In order to understand the default Redis performance, we design the benchmark to exert an increasing level of load on the Redis server. Initially, we start with 2 threads and 1 connection per each thread on all workload generating clients and increase the number of connections per thread linearly. The workload generating clients are executed with the following command:
 
 \begin{lstlisting}
 memtier -s nsl200 -p 11120
     -c <connection_count> -t 2
     -P redis
-    --random-data --data-size=64
-    --key-minimum=1 --key-maximum=100000000
-    --test-time=400
+    --random-data
+    --key-minimum=1 --key-maximum=10000000
+    --data-size=32
 \end{lstlisting}
-
-The number of connections per each thread is increased linearly in each subsequent benchmark run. Each workload is executed over the course of 400 seconds and the data is randomly generated with keys drawn from a uniform distribution between 1 and 100 million.
 
 
 \subsection{Latency vs Throughput}
 
 \begin{figure}[h]
-    \includegraphics[width=\textwidth]{./res/6_default_latency_ops.png}
-    \caption{Redis: Throughput vs Mean and 99th percentile latency}
-    \label{fig:redis-default-latency-ops}
+    \includegraphics[width=\textwidth]{./res2/r_baseline_latency.png}
+    \caption{Redis: Latency \& Throughput vs Number of Connections}
+    \label{fig:r_baseline_latency.png}
 \end{figure}
 
-Figure \ref{fig:redis-default-latency-ops} plots the relationship between mean latency and the 99th percentile latency on the vertical axis and the number of operations per second on the horizontal axis. The graph has been trimmed to show only data which satisfies the QoS requirements.
+Figure \ref{fig:r_baseline_latency.png} plots the relationship between mean latency and the 99th percentile latency on the left vertical axis, the number of operations per second on the right vertical axis and the number of client connections on the horizontal axis. Each connection contributes to the overall load of the cache equally, therefore, a larger number of connections results in increased load exerted by the clients. The graph has been trimmed to show only data which satisfies the QoS requirements.
+
+Firstly, mean latency (\textit{blue}) increases linearly with the number of connections. This is a reasonable result as a linear increase in the number of requests sent by the clients should result in linear increase in mean latency.
+
+Secondly, the 99th percentile latency (\textit{red}) increases as the number of connections increases with the exception of 28 connections. The 99th percentile latency increases faster than the mean latency does, however, this is also reasonable as increased load will result in queuing delay incurred on the server before Redis is able to process the request, driving the 99th percentile latency up. The QoS requirements are only satisfied up to 84 simultaneous connections.
+
+Thirdly, the number of operations (\textit{yellow}) increases between 14 and 28 requests and reaches a maximum at 28 connections. Beyond 28 connections, the number of operations remains stable around 116k requests per second. At this point, we have reached the maximum a single Redis instance is able to process per second.
+
+
+
+
+
+
 
 We can observe that the number of operations Redis processes increases steadily until it reaches 119k requests per second at which point a further increase in throughput comes at a disproportionately grater cost in both mean and 99th percentile latency. The peak throughput observed under the QoS requirements is around 123k requests per second.
 
