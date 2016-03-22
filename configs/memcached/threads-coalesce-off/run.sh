@@ -1,8 +1,8 @@
 #!/bin/bash
 
-DIR=threads2
+DIR=threads-coalesce-off
 
-for i in {1..50}
+for i in {1..12}
 do
     python ../../../benchmark/main.py \
         -type=memcached \
@@ -13,3 +13,7 @@ do
         -instances=1 \
         -duration=30
 done
+
+git add ../../../
+git commit -m "Memcached Threads Results"
+git push

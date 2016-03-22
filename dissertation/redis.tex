@@ -72,7 +72,7 @@ for i in [1..n]
 
 Note that we are explicitly specifying the maximum amount of memory each instance will be allocated. In our case, we partition 6 GB of memory space evenly between the individual instances.
 
-Secondly, in order to obtain comparable results, the load exerted on the Redis cache must remain constant. The load itself, however, needs to be partitioned across all of the instances of Redis evenly. In order to achieve this, each workload generating client spawns \texttt{i} instances of the benchmark and targets its respective Redis instance. Table \ref{tab:redis_threads_load} outlines the configuration in terms of the number of connections.
+Secondly, in order to obtain comparable results, the load exerted on the Redis cache must remain constant. The load itself, however, needs to be partitioned across all of the instances of Redis evenly. In order to achieve this, each workload generating client spawns \texttt{i} instances of the benchmark and targets its respective Redis instance. Table \ref{tab:redis_threads_load} outlines the configuration in terms of the number of connections. Overall, we aim to find a configuration such that we use 24 connections per each client host.
 
 \begin{table}[h!]
 \centering
@@ -95,26 +95,20 @@ Secondly, in order to obtain comparable results, the load exerted on the Redis c
 \label{tab:redis_threads_load}
 \end{table}
 
-
-
-
-
-We use the following script to start the workload generating clients:
-
-
+Having defined the configuration in Table \ref{tab:redis_threads_load}, we use the following script to start the workload generating clients:
 
 \begin{lstlisting}
 for i in [1..n]
     memtier -s nsl200 -p <port>
-        -c round(16 / i)
-        -t 1
+        -c round(<connection_count>)
+        -t <thread_count>
         -P redis
         --random-data --data-size=64
         --key-minimum=1 --key-maximum=round(100000000 / i)
         --test-time=400
 \end{lstlisting}
 
-Initially, we start with 16 connections and 1 thread. As we increase the number of instances, the number of connections goes down, however, a larger number of instances are deployed. Note that we are using a \texttt{round} function to ensure that the number of connections as well as the maximum key are integers. In order to smooth out load variance caused by integer divisibility, we consider two cases. One in which the \texttt{round} function is defined as the \texttt{ceiling} function and the other when it is defined as the \texttt{floor} function. The results of both types of the \texttt{round} function are then averaged. If a higher number of workload generating clients were available for the experimentation, the round approach would not be required.
+Initially, we start with 24 connections and 1 thread. As we increase the number of instances, the number of connections goes down, however, a larger number of instances are deployed. Note that we are using a \texttt{round} function to ensure that the number of connections as well as the maximum key are integers. In order to smooth out load variance caused by integer divisibility, in the case when the number of connections is not an integer, we consider two cases. One in which the \texttt{round} function is defined as the \texttt{ceiling} function and the other when it is defined as the \texttt{floor} function. The results of both types of the \texttt{round} function are then averaged. If a higher number of workload generating clients were available for the experimentation, the rounding approach would not be required.
 
 Furthermore, the generated dataset is 6.4GB (100 million keys * 64 bytes of data). This is by design and leads to evictions in the cache as the size approaches the maximum.
 
@@ -122,12 +116,12 @@ Furthermore, the generated dataset is 6.4GB (100 million keys * 64 bytes of data
 \subsection{Latency and Throughput}
 
 \begin{figure}[h]
-    \includegraphics[width=\textwidth]{./res/6_instances_latency_ops.png}
-    \caption{Redis Instances: Latency, Throughput vs Number of instances}
-    \label{fig:redis-instances-latency-ops}
+    \includegraphics[width=\textwidth]{./res2/r_instances_latency.png}
+    \caption{Redis Instances: Latency, Throughput vs Number of Instances}
+    \label{fig:r_instances_latency}
 \end{figure}
 
-Figure \ref{fig:redis-instances-latency-ops} plots the relationship between the number of Redis instances running simultaneously on the cache server against the mean and 99th percentile latency on the left vertical axis and the total number of operations per second on the right axis. The black line positioned at 1 ms outlines the QoS target of the benchmark.
+Figure \ref{fig:r_instances_latency} plots the relationship between the number of Redis instances running simultaneously on the cache server against the mean and 99th percentile latency on the left vertical axis and the total number of operations per second on the right axis. The black line positioned at 1 ms outlines the QoS target of the benchmark.
 
 The mean latency (blue) decreases steadily as the number of Redis instances increases. At five Redis instances, the mean latency flattens out and remains stable as the number of instances is increased further.
 
