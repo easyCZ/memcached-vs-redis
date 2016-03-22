@@ -139,12 +139,16 @@ Furthermore, at 6 instances the 99th percentile latency is at around one third o
 \subsection{CPU Utilization}
 
 \begin{figure}[h]
-    \includegraphics[width=\textwidth]{./res/6_instances_cpu.png}
+    \includegraphics[width=\textwidth]{./res2/r_instances_cpu.png}
     \caption{Redis Instances: CPU Utilization vs Number of Instances}
-    \label{fig:6_instances_cpu.png}
+    \label{fig:r_instances_cpu.png}
 \end{figure}
 
-Figure \ref{fig:6_instances_cpu.png} presents the relationship between the number of instances and the CPU utilization.
+Figure \ref{fig:r_instances_cpu.png} presents a category breakdown of CPU utilization for given category as reported by \textit{}.
+
+Firstly,
+
+
 
 Firstly, the CPU usage of Redis (green), \textit{guest}, increases as the number of instances provisioned increases steadily. At 6 instances and more, the overall CPU usage remains fairly constant accounting for 27 percent of the total CPU utilization. This is due to the server having 6 CPU cores, requiring context switching between applications rather than parallel processing.
 
