@@ -38,23 +38,13 @@ Firstly, mean latency (\textit{blue}) increases linearly with the number of conn
 
 Secondly, the 99th percentile latency (\textit{red}) increases as the number of connections increases with the exception of 28 connections. The 99th percentile latency increases faster than the mean latency does, however, this is also reasonable as increased load will result in queuing delay incurred on the server before Redis is able to process the request, driving the 99th percentile latency up. The QoS requirements are only satisfied up to 84 simultaneous connections.
 
-Thirdly, the number of operations (\textit{yellow}) increases between 14 and 28 requests and reaches a maximum at 28 connections. Beyond 28 connections, the number of operations remains stable around 116k requests per second. At this point, we have reached the maximum a single Redis instance is able to process per second.
-
-
-
-
-
-
-
-We can observe that the number of operations Redis processes increases steadily until it reaches 119k requests per second at which point a further increase in throughput comes at a disproportionately grater cost in both mean and 99th percentile latency. The peak throughput observed under the QoS requirements is around 123k requests per second.
-
-The performance degrades significantly with an increased workload beyond the peak shown at 123k requests per second. The throughput remains the same while the mean and the 99th percentile latency spikes heavily.
-
+Thirdly, the number of operations (\textit{yellow}) increases between 14 and 28 requests and reaches a maximum at 28 connections. Beyond 28 connections, the number of operations remains stable around 116k requests per second. At this point, we have reached the maximum a single Redis instance is able to process per second. These results are similar to results reported on Redis.io documentation \cite{redis-benchmarks} when scaled down to CPU speed equivalent our setup.
 
 \subsection{CPU Utilization}
 
+TODO
 \begin{figure}[h]
-    \includegraphics[width=\textwidth]{./res/6_default_cpu.png}
+    \includegraphics[width=\textwidth]{./res2/r_baseline_cpu.png}
     \caption{Redis: CPU Utilization}
     \label{fig:redis-default-cpu}
 \end{figure}
@@ -82,7 +72,36 @@ for i in [1..n]
 
 Note that we are explicitly specifying the maximum amount of memory each instance will be allocated. In our case, we partition 6 GB of memory space evenly between the individual instances.
 
-Secondly, in order to obtain comparable results, the load exerted on the Redis cache must remain constant. The load itself, however, needs to be partitioned across all of the instances of Redis evenly. In order to achieve this, each workload generating client spawns \texttt{i} instances of the benchmark and targets its respective Redis instance. We use the following script to start the workload generating clients:
+Secondly, in order to obtain comparable results, the load exerted on the Redis cache must remain constant. The load itself, however, needs to be partitioned across all of the instances of Redis evenly. In order to achieve this, each workload generating client spawns \texttt{i} instances of the benchmark and targets its respective Redis instance. Table \ref{tab:redis_threads_load} outlines the configuration in terms of the number of connections.
+
+\begin{table}[h!]
+\centering
+ \begin{tabular}{| c || c c || c c |}
+ \hline
+ Instances & Threads & Avg \# of Connections & Connections Total & Percentage \\ [0.5ex]
+ \hline\hline
+
+1 & 3 & 8 & 24 & 100\% \\ \hline
+2 & 3 & 4 & 24 & 100\% \\ \hline
+3 & 2 & 4 & 24 & 100\% \\ \hline
+4 & 2 & 3 & 24 & 100\% \\ \hline
+5 & 1 & 5 & 25 & 104.16\% \\ \hline
+6 & 1 & 4 & 24 & 100\% \\ \hline
+7 & 1 & 3.5 & 24.5 & 102.08\% \\ \hline
+8 & 1 & 3 & 24 & 100\% \\ \hline
+
+\end{tabular}
+\caption{Redis Multiple Instances - Number of Threads \& Connections per each workload generating host. The percentage outlines how close the configuration for a given number of instances is to the target of 24 connections.}
+\label{tab:redis_threads_load}
+\end{table}
+
+
+
+
+
+We use the following script to start the workload generating clients:
+
+
 
 \begin{lstlisting}
 for i in [1..n]

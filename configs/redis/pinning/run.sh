@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DIR=instances
+DIR=pinning
 
 for i in {1..9}
 do
