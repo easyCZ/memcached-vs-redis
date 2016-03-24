@@ -10,7 +10,7 @@ do
 -p 11120
 --test-time=30
 -c $i
--t 4
+-t 3
 -P memcache_binary
 --random-data
 --data-size=64
