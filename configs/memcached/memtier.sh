@@ -13,6 +13,7 @@ do
 -t 4
 -P memcache_binary
 --random-data
+--data-size=64
 --key-minimum=1
 --key-maximum=10000000" > $LABEL/memtier.memcached.$i.conf
 
