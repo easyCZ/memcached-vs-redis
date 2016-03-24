@@ -4,13 +4,13 @@ LABEL=baseline
 DATA_SIZE=2
 mkdir $LABEL
 
-for i in {1..19}
+for i in {1..10}
 do
     echo "-s nsl200
 -p 11120
 --test-time=30
 -c $i
--t 3
+-t 4
 -P memcache_binary
 --random-data
 --key-minimum=1
