@@ -110,7 +110,7 @@ for i in [1..n]
 
 Initially, we start with 24 connections and 1 thread. As we increase the number of instances, the number of connections goes down, however, a larger number of instances are deployed. Note that we are using a \texttt{round} function to ensure that the number of connections as well as the maximum key are integers. In order to smooth out load variance caused by integer divisibility, in the case when the number of connections is not an integer, we consider two cases. One in which the \texttt{round} function is defined as the \texttt{ceiling} function and the other when it is defined as the \texttt{floor} function. The results of both types of the \texttt{round} function are then averaged. If a higher number of workload generating clients were available for the experimentation, the rounding approach would not be required.
 
-Furthermore, the generated dataset is 6.4GB (100 million keys * 64 bytes of data). This is by design and leads to evictions in the cache as the size approaches the maximum.
+Furthermore, the generated dataset is 6.4GB (100 million keys * 64 bytes of data). This is by design and leads to evictions in the cache as the size approaches the maximum. Note that the load exerted may initially exceed the QoS constraints, however, as the load gets partitioned across more instances, the QoS constraint will be satisfied.
 
 
 \subsection{Latency and Throughput}
@@ -123,17 +123,13 @@ Furthermore, the generated dataset is 6.4GB (100 million keys * 64 bytes of data
 
 Figure \ref{fig:r_instances_latency} plots the relationship between the number of Redis instances running simultaneously on the cache server against the mean and 99th percentile latency on the left vertical axis and the total number of operations per second on the right axis. The black line positioned at 1 ms outlines the QoS target of the benchmark.
 
-The mean latency (blue) decreases steadily as the number of Redis instances increases. At five Redis instances, the mean latency flattens out and remains stable as the number of instances is increased further.
+Firstly, as the number of instances increases, mean latency decreases. This behavior is expected as requests are processed in parallel, their mean processing time should decrease. We can observe that the decrease in mean latency is linear in terms of the number of instances. Interestingly, as the number of instances grows beyond 6, the trend continues and we see a decrease in the mean latency.
 
-The 99th percentile latency (red), on the other hand, experiences a sharp decrease as the number of instances is increased from 1 to 2 which brings the 99th percentile latency within the desired QoS constraints. As the number of instances increases further, the 99th percentile latency continues to decrease steadily. The minimum is reached at 5 instances with latency of 0.346 ms. A further increase in the number of instances results in higher 99th percentile latency.
+Secondly, the 99th percentile latency decreases steadily as the number of instances increases up to 6. At 6 instances we reach a minimum of 0.56ms. A further increase in the number of instances results in increase in the tail latency. This effect is due to insufficient parallel level resources (not enough cores) to support more than 6 instances leading to context switching. A request may not be able to be services immediately, as a context switch is required, and therefore remains enqueued. The time spent queuing is the source of the increased tail latency.
 
-The total number of operations increases steadily as the number of instances increases, peaking at 517,000 requests per second with 7 and 8 instances. A further increase in the number of instances results in a decrease in the total number of operations.
+Thirdly, the number of operations per second increases linearly with each instance up to 6 instances. At 6 instances, we reach a maximum of 512k requests per second. Increasing the number of instances further only leads to decreased throughput.
 
-The QoS target is achieved in all but the 1 instance scenario. This is due to significantly larger load exerted on a single instance which in the subsequent multi-instance benchmarks gets distributed across the larger number of instances and therefore satisfies the QoS constraints.
-
-Additionally, Redis manages to scale quite well as the number of instances increases up to 6. At this point, there are as many instances as there are CPU cores on the Redis server. Consequently, at 6 instances we achieve near minimum 99th percentile latency while also achieving near maximum throughput.
-
-Furthermore, at 6 instances the 99th percentile latency is at around one third of the accepted QoS constraint. In real world deployment, it should be possible to utilize this gap to increase the throughput further. In our benchmarks, we have not been able to exert a load which would both increase throughput as well as increase the 99th percentile underutilization. This is due to a limited number of client benchmarking hosts to effectively tune the load to the required level.
+The QoS constraint is satisfied with more than 3 instances of Redis. However, maximum throughput with minimum tail latency is only achieved with 6 threads, as many as there are CPU cores.
 
 
 \subsection{CPU Utilization}
@@ -144,25 +140,21 @@ Furthermore, at 6 instances the 99th percentile latency is at around one third o
     \label{fig:r_instances_cpu.png}
 \end{figure}
 
-Figure \ref{fig:r_instances_cpu.png} presents a category breakdown of CPU utilization for given category as reported by \textit{}.
+Figure \ref{fig:r_instances_cpu.png} presents a category breakdown of CPU utilization for given category as reported by \textit{mpstat}.
 
-Firstly,
+Firstly, CPU utilization of Redis (\textit{usr}) increases linearly with the number of instances up until we reach 6 instances. At this point, CPU utilization stabilizes at 14\%. This is due to a larger number of instances requiring more CPU time as well as being scheduled in parallel on multiple cores. When all available CPU cores are exhausted (6 CPUs), multiple instances are scheduled on the same CPU core and therefore total utilization does not increase.
 
+Secondly, the kernel (\textit{sys}) CPU utilization increases with each additional instance and at it's peak of 6 instances accounts for 51\% of total CPU utilization. The increase can be attributed to increased number of requests the system is required to handle when processing requests in parallel. With all CPU cores utilized, the system utilization cannot increase further due to hardware constraints.
 
+Thirdly, the time dedicated to processing software interrupts increases linearly too. This is caused by a larger number of requests being processed in parallel which in turn requires an increased number of software interrupts to be triggered in order to process the incoming and outgoing requests.
 
-Firstly, the CPU usage of Redis (green), \textit{guest}, increases as the number of instances provisioned increases steadily. At 6 instances and more, the overall CPU usage remains fairly constant accounting for 27 percent of the total CPU utilization. This is due to the server having 6 CPU cores, requiring context switching between applications rather than parallel processing.
+Finally, \textit{iowait} accounts for no CPU utilization as all operations are performed in memory only. Additionally, \textit{irq} accounts for 0.01\% total utilization.
 
-Secondly, the CPU dedicated to software interrupts (yellow), \textit{soft}, follows a similar pattern to Redis. As the number of instances increases, so does the CPU usage dedicated to software interrupts. At 6 instances or more, the CPU utilization remains stable, accounting for 10 percent of the total usage. Software interrupts are inherently correlated to the software applications running on the server and therefore it is reasonable to observe a similar pattern between software interrupts and the application itself.
+\subsection{Redis Instances Evaluation}
 
-Thirdly, the CPU usage required by the operating system (blue), \textit{sys}, grows steadily as the number of Redis instances increases. At 6 instances or more, the operating system CPU usage peaks and remains stable at 48 percent.
+Redis, like Memcached, appears to be network intensive rather than CPU intensive on its own. Multiple Redis instances allow the cache server to scale better and achieve 512k requests per second at 99th percentile latency of 0.56ms. This is close to a 5 fold increase over the single Redis instance benchmark. However, increasing the number of Redis instances also results in key space partitioning. We are no longer able to utilize the server as a singular cache with 6 GB of memory available, instead, we now have 6 individual instances with 1 GB of memory each. In a production environment, the client side would be required to implement consistent hashing in order to be able to utilize the cache entirely. Similarly, a load balancing proxy could be used to spread the load across the instances, however, this setup is outside of the scope of this paper.
 
-Finally, the portion of the CPU time dedicated to processing hardware interrupts (red), \textit{irq}, decreases steadily as the number of Redis instances increases. This is due to batching of requests at the network interface card. At 6 or more instances, hardware interrupt servicing takes up about 11 percent of the total CPU usage.
-
-Despite the increased resource requirements by Redis, it still only accounts for about 27 percent CPU usage at 6 processes with majority of the CPU time spent in the operating system and or networking. The observation from the single instance benchmark in the previous section therefore extends to a multi instance setup. Redis appears to be network intensive rather than CPU intensive.
-
-
-By spawning multiple instances of Redis, we have been able to significantly increase the overall performance of the server cache. Running multiple simultaneous instances, however, requires the key space to be partitioned.
-
+% ____________________________________________________
 
 \section{Pinned Redis Instances}
 
