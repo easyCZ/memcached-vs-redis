@@ -2,7 +2,7 @@
 
 DIR=pinning
 
-for i in {1..10}
+for i in {1..12}
 do
     python ../../../benchmark/main.py \
         -type=memcached \
@@ -14,3 +14,7 @@ do
         -duration=30 \
         -pin=true
 done
+
+git add ../../../
+git commit -m "Memcached Thread Pinning Results"
+git push
