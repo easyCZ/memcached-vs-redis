@@ -304,13 +304,11 @@ Figure \ref{fig:m_threads_irq_cpu} outlines the CPU utilization with IRQ Affinit
     \label{fig:m_threads_irq_cpu_individual}
 \end{figure}
 
-Let us consider individual CPU utilization breakdown with 6 threads. Figure \ref{fig:m_threads_irq_cpu_individual} outlines the utilization categories. We can observe that all cores are nearly 100\% utilized as well as all cores participate in software interrupt processing.
+Let us consider individual CPU utilization breakdown with 6 threads. Figure \ref{fig:m_threads_irq_cpu_individual} outlines the utilization categories. We can observe that all cores are nearly 100\% utilized as well as all cores participate in software interrupt processing. Utilization of each core is not the same, however. This can be due to a range of factors including given load on each Memcached thread as well as interference from kernel's memory management. Memcached also spawns an additional thread for load balancing purposes \cite{solarflarememcached} which can cause interference in the individual load. This topic will be further examined in the following section.
 
 
 \subsection{IRQ Conclusion}
-
-
-
+We have shown that setting IRQ affinity to individual cores drastically improves performance of Memcached. Throughput has increased more than two fold while the 99th percentile latency decreased. Distribution of work across the CPU cores has improved and we have been able to fully utilize all of the cores available to us. For the rest of this chapter, all benchmarks executed will be considered with IRQ affinity set distinct cores.
 
 % ________________________________________________________
 
