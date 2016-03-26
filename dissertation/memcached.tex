@@ -286,8 +286,6 @@ Firstly, throughput improved drastically. In the peaks, we are able to achieve 5
 
 Secondly, the 99th percentile latency has decreased significantly. With six or less threads, we are now able to achieve the required QoS. Additionally, the 99th percentile latency reaches a minimum with 6 threads providing the best combination of low latency and highest throughput. This is according to our expectation.
 
-Interestingly, neither throughput nor 99th percentile latency change between 1 and 2 threads. We would expect the throughput to increase with more threads, however, this appears to not be the case. When Memcached runs with only 1 thread, there is no need for resource locking and therefore lock contention is eliminated. We can argue that with 2 threads, lock contention introduces an overhead which does not outweigh the benefit of increased parallelization.
-
 \subsection{CPU Utilization with IRQ pinned}
 
 \begin{figure}[h]
@@ -314,9 +312,9 @@ We have shown that setting IRQ affinity to individual cores drastically improves
 
 \section{Thread pinning}
 \label{sec:thread-pinning}
-Thread pinning is the process of assigning a \textit{set\_irq\_affinity} to each individual thread. As suggested by Leverich and Kozyrakis, "pinning memcached threads to distinct cores greatly improves load balance, consequently improving tail latency." \cite{leverich2014reconciling} and therefore the reasonable next step in optimizing memcached performance is to attempt thread pinning and analyse the results obtained.
+We now turn our attention to individual threads of Memcached. Thread pinning is the process of assigning a \textit{set\_irq\_affinity} to each individual thread. As suggested by Leverich and Kozyrakis, "pinning memcached threads to distinct cores greatly improves load balance, consequently improving tail latency." \cite{leverich2014reconciling} Furthermore, ``While it is not strictly necessary, it may be additionally beneficial to pin every Memcache worker thread onto a single CPU to further improve performance by minimising cache pollution.'' \cite{solarflarememcached} Therefore, we will investigate thread pinning and their impact on performance.
 
-By default, when a new process is started, its affinity is set to all available CPUs. We can discover the affinity of a given process through the following command where \textit{pid} is the process identifier.
+Firstly, it is important to understand how the kernel determines which core a process/thread will run on. It is the responsibility of the \textit{scheduler} to maintain CPU cores busy and schedule work \cite{siddha2005chip}. As such, the scheduler decided which core an application should be scheduled and executed on. As such, a scheduler aims to optimize for a given metric, such as utilization, priority or aims to avoid starvation. By default, when a new process is started it can be scheduled on any CPU core. As a result, the scheduler may choose to schedule multiple threads on the same CPU core. In order to explicitly prevent such behavior, we can set a distinct core for each thread using the \textit{taskset} utility. We can discover the CPU affinity of a given process through the following command where \textit{pid} is the process identifier.
 
 \begin{lstlisting}
     taskset -p <pid>
@@ -327,6 +325,10 @@ By default, when a new process is started, its affinity is set to all available 
 \begin{lstlisting}
     ps -p <memcache-pid> -o tid= -L | sort -n | tail -n +2 | head -n -1
 \end{lstlisting}
+
+
+
+
 
 For this benchmark, the previous configuration with 6 threads will be used.
 
