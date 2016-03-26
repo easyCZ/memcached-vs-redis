@@ -326,27 +326,21 @@ Firstly, it is important to understand how the kernel determines which core a pr
     ps -p <memcache-pid> -o tid= -L | sort -n | tail -n +2 | head -n -1
 \end{lstlisting}
 
-
-
-
-
-For this benchmark, the previous configuration with 6 threads will be used.
+For this benchmark, we use the same configuration as in previous sections. Tables \ref{tab:m_threads_memtier} and \ref{tab:m_threads_memcached} provides the complete configuration.
 
 \subsection{Latency \& Throughput vs Threads}
 
-Figure \ref{fig:m_pinning_latency} presents a comparison of Memcached with pinned threads against unpinned threads.
-
 \begin{figure}[h]
     \includegraphics[width=\textwidth]{./res2/m_pinning_latency.png}
-    \caption{Memcached Latency \& Throughput vs Threads: Comparison of pinned threads (labeled: \textit{Pin}) vs unpinned threads}
+    \caption{Memcached Latency \& Throughput vs Threads: Comparison of pinned threads (labeled: \textit{Pinned}) vs unpinned threads}
     \label{fig:m_pinning_latency}
 \end{figure}
 
-Overall, we can observe that there is very little change in all of the results observed. Mean latency remains the same, 99th percentile latency only differs slightly in it's minimum value at 5 threads and the number of operations per second remains the same. Overall, we find that in our benchmarks thread pinning does not affect performance significantly. This is contrary to results reported by Leverich and Kozyrakis \cite{leverich2014reconciling}. According to their research, thread pinning results in improved load balance and a result decreases 99th percentile latency. This in turn results in increased throughput.
+Figure \ref{fig:m_pinning_latency} presents a comparison of Memcached with pinned threads against unpinned threads. Overall, thread pinning appears to be no significant change in performance with threads pinned. In the case of Memcached with 1 thread, there appears to be an improvement in the tail latency, however, the QoS constraint is still violated.
+
+We expected to see an improvement in tail latency or throughput. However, as other research suggests the improvement may only be observable in environments with a higher number of cores and/or in environments with shared workloads and only a fixed number of cores dedicated to Memcached \cite{solarflarememcached}.
 
 \subsection{CPU Utilization}
-
-Figure \ref{fig:m_pinning_cpu} presents the CPU Usage with Memcached threads pinned.
 
 \begin{figure}[h]
     \includegraphics[width=\textwidth]{./res2/m_pinning_cpu.png}
@@ -354,15 +348,24 @@ Figure \ref{fig:m_pinning_cpu} presents the CPU Usage with Memcached threads pin
     \label{fig:m_pinning_cpu}
 \end{figure}
 
-The CPU Utilization of pinned threads is nearly identical to unpinned threads presented in Figure \ref{fig:m_threads_cpu}.
+Figure \ref{fig:m_pinning_cpu} presents the overall CPU Usage with Memcached threads pinned. The CPU Utilization of pinned threads is nearly identical to unpinned threads presented in Figure \ref{fig:m_threads_cpu}.
+
+\begin{figure}[h]
+    \includegraphics[width=\textwidth]{./res2/m_pinning_cpu_individual.png}
+    \caption{Pinned Memcached Individual CPU Utilization with 6 threads}
+    \label{fig:m_pinning_cpu_individual}
+\end{figure}
+
+Figure \ref{fig:m_pinning_cpu_individual} plots the individual CPU usage breakdown. With thread pinning, we can observe a more evenly balanced distribution of CPU utilization as opposed to Figure \ref{fig:m_threads_irq_cpu_individual}.
 
 \subsection{Thread Pinning Conclusion}
+We have shown that thread pinning, in our benchmark, does not impact Memcached performance negative nor does it have a positive impact. CPU Utilization remains the same with thread pinning, however, the distribution of user, kernel and software interrupt processing is more balanced. Our findings are not consistent with findings reported by Leverich \& Kozyrakis \cite{leverich2014reconciling}. This may be due to scheduling policy inconsistency of the systems. However, it has been suggested that thread pinning reduces interference and therefore in subsequent benchmarks we will pin Memcached threads unless otherwise stated.
 
-In our benchmarks, we have not been able to achieve the significant improvements in both latency and throughput suggested to be gained by thread pinning. This is likely due to differences in hardware as Leverich and Kozyrakis \cite{leverich2014reconciling} perform benchmarks on a significantly more performant hardware as well as running on a slightly older version of memcached.
 
 % ________________________________________________________
 
 \section{Group Size}
+TODO
 Memcached provides a configuration option \textit{-R} to set the group size used inside memcached. The group size defines the ``maximum number of requests per event, limits the number of requests processed for a given connection to prevent starvation (default: 20)'' \cite{interactive2006memcached}. This in effect means the number of requests that will be processed from a single connection before memcached switches to a different connection to enforce a fairness policy.
 
 In this benchmark, we consider the 6-threaded Memcached configuration without thread pinning with the addition of the \textit{-R} configuration parameter to set the group size. Memcached implementation limits the minimum value of group size to be 20 while the maximum can be at most 320 (if set higher, memcached will override the setting) \cite{blake54does}. Therefore, we set up the benchmark to increase the group size by 20 in each consequtive iteration. The workload generated by the clients remains the same as in previous sections.
@@ -395,11 +398,6 @@ Figure \ref{fig:m_group_size_cpu} plots the CPU utilization reported by \textit{
 
 In our scenario, we have used 168 simultaneous connections from clients. In order to exploit the group size effectively, a small number of connections with very high number of requests per second may be required in order to effectively utilize the larger group size. With the hardware setup in this paper, we are unable to generate such a load and verify this claim. However, Blake and Saidi \cite{blake54does} have suggested that increasing the group size leads to increased throughput and decreased 99th percentile latency.
 
-
-\section{Receive \& Transmit Queues fixing}
-TODO: Haven't been able to obtain any improvements in terms of performance (both throughput and latency), not sure if the topic should still be discussed in detail.
-
-
 \section{Multiple Memcached Processes}
-
+TODO
 In this section, we will examine the impact multiple memcached processed have on the overall performance of the caches as a whole. In some applications, it is important to be able to partition the system in such a way systems interact with different instances of memcached. Additionally, this information will also serve as a useful benchmark comparison for Redis performance.
