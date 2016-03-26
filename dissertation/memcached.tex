@@ -419,6 +419,6 @@ Figure \ref{fig:m_group_size_cpu} plots the CPU utilization reported by \textit{
 In our benchmarks, we have observed that group size does not have any impact on the overall performance of Memcached. We have used 147 simultaneous connections in our benchmark, however, a smaller number of connections with higher throughput may be required to effectively exploit the group size. The benchmark setup does not allow us to generate a high enough load from a singular connection and therefore we are unable to replicate the results obtained by Blake and Saidi \cite{blake54does}.
 
 % ---------------------------------------------------------------
-\section{Multiple Memcached Processes}
+\section{Less Locking: More Work}
 TODO
 In this section, we will examine the impact multiple memcached processed have on the overall performance of the caches as a whole. In some applications, it is important to be able to partition the system in such a way systems interact with different instances of memcached. Additionally, this information will also serve as a useful benchmark comparison for Redis performance.
