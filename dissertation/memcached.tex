@@ -120,6 +120,7 @@ Given the trends presented in Figures \ref{fig:memcached-default-latency-vs-ops}
 % ________________________________________________________
 
 \section{Thread Scalability}
+\label{sec:memcached-threads}
 In this section, we focus on increasing CPU utilization through the use of multiple threads. We have shown that the default configuration results in underutilization of the server resources and argued that increased CPU utilization should result in improved performance. Memcached, as a high performance object cache, is designed to be executed on a multi-core architecture. Scalability is primarily implemented through the use of multi threading. It is worth noting that multi-threading also results in increased application complexity. Individual threads requiring access to shared data are required to obtain a lock before they can proceed with data manipulation. We design a benchmark which focuses on thread scalability by linearly increasing the number of threads Memcached is provisioned.
 
 Empirically, we expect the best performance to be achieved when there are as many Memcached threads as there are CPU cores. The cache server is equipped with 6 CPU cores and therefore we would expect 6 threads to maximize performance. This is also suggested by Leverich and Kozyrakis \cite{leverich2014reconciling}. Utilizing less threads should result in underutilization of the CPU leading to sub-optimal throughput. More than 6 threads should conversely result in increased context switching overhead and therefore should lead to increased latency.
@@ -186,7 +187,7 @@ Mean latency, experiences a sharp decrease between 1 and 2 threads and increases
 The 99th percentile latency fails to meet the QoS constraints initially between 1 and 2 threads, dropping below the QoS constraint with 3, 4 and 5 threads. However, it climbs beyond the QoS requirements with 6 threads and continues to increase as the number of threads increases.
 The number of operations increases sharply between 1 and 2 threads, reaching a maximum of 270k requests per second while decreasing as the number of threads increases.
 
-The performance obtained with increased number of threads does not match our expectations of best performance at 6 threads. Let us examine the CPU utilization to gain a better insight into the problem.
+The performance obtained with increased number of threads does not match our expectations of best performance at 6 threads. However, we can still observe the expected downward shaped parabolic curve the 99th percentile latency plots. Let us examine the CPU utilization to gain a better insight into the problem.
 
 
 \subsection{CPU Utilization}
@@ -199,47 +200,117 @@ Figure \ref{fig:m_threads_cpu} provides the \textit{mpstat} category breakdown o
     \label{fig:m_threads_cpu}
 \end{figure}
 
+The CPU utilization of Memcached accounts for a small portion of the total utilization. Initially, with 1 thread Memcached only accounts for 3\% of total utilization. As the number of threads increases, Memcached CPU usage increases too, however, only up to 4 threads at which point it remains constant.
+The kernel usage increases with the number of threads and stabilizes at 4 threads with 34\%. An increase in the number of threads does not result in increase in the kernel usage.
+Software interrupt CPU usage increases from 2\% to 15\% between 1 and 2 threads and remains stable as the number of threads increases.
+Similarly to previous benchmarks, disk IO and hardware interrupts take up insignificant portions of the CPU utilization.
 
+Overall, we can observe that the total CPU utilization reaches at most 65\%. The CPU usage overall does not reflect our expectation of increased CPU usage with more threads. In fact, there is no significant increased utilization with more than 4 threads.
 
-
-
-
-
-
-Firstly, mean latency (\textit{blue}) decreases as the number of threads increases from 1 to 6 where it reaches a minimum of 0.301ms. As the numbr of threads grows beyond 6, the mean latency increases at a slow pace.
-
-Secondly, 99th percentile latency (\textit{red}) starts at 2.05ms, above the required QoS. As the number of threads increases, the 99th percentile latency drops sharply. With 4 to 6 threads, the 99th percentile latency satisfies the QoS with a minimum of 0.84ms reached at 5 threads. Beyond 6 threads, the 99th percentile latency rises sharply beyond the required QoS.
-
-Thirdly, the number of operations per second (\textit{yellow}), increases linearly with the number of threads up until 6 threads where it reaches a maximum of 558k requests per second. A further increase in the number of threads results in a decrease of the number of operations per second.
-
-Overall, QoS constraints are only achieved with 4 to 6 threads. We can attribute this effect to the multi threaded design of Memcached. With 3 threads or less, the load exerted by the clients cannot be processed quickly resulting in requests being queued up. This leads to an increased 99th percentile latency. With a sufficient number of threads to process the load effectively, a CPU core is able to service the requests sooner and therefore reduce the 99th percentile latency while also increasing the total number of operations.
-
-With more than 6 threads, the kernel is forced to schedule multiple threads on the same core. This effect is described as `load imbalance' by Leverich \& Kozyrakis. With more than 1 Memcached thread executing on a single core, it is reasonable to expect the throughput to decrease, as opposed to only 1 Memcached thread per each core, due to context switching.
-
-Overall, the best performance in terms of maximizing throughput and minimizing latency is provided by as many threads as CPU cores, in our case 6 threads. However, this is not in fact the minimum 99th percentile latency achieved in the benchmark - at 5 threads we obtain 99th percentile latency of 0.84ms with 480k requests per second.
-
-
-\subsection{CPU Utilization}
-
-Figure \ref{fig:m_threads_cpu} provides the \textit{mpstat} category breakdown of the CPU utilization of Memcached during the benchmark. Note that unattributed utilization accounts for idle time.
+Interestingly, the software interrupt usage only increases between 1 and 2 threads which is contrary to the expectation of a linear increase in interrupt processing with multiple threads. Let us investigate CPU utilization further by focusing on the breakdown of individual CPU usage.
 
 \begin{figure}[h]
-    \includegraphics[width=\textwidth]{./res2/m_threads_cpu.png}
-    \caption{Memcached CPU Utilization with Multiple Threads}
-    \label{fig:m_threads_cpu}
+    \includegraphics[width=\textwidth]{./res2/m_threads_cpu_individual.png}
+    \caption{Memcached CPU Utilization with 6 threads by Individual CPU}
+    \label{fig:m_threads_cpu_individual}
 \end{figure}
 
-Firstly, Memcached CPU usage (\textit{usr}) increases linearly with the number of instances up to 6 threads and accounts for 12.7\%. With more than 6 threads, the Memcached CPU usage remains constant. This is reasonable as Memcached itself is not CPU intensive, however, a larger number of threads will require more CPU to operate effectively. Consequently, with more than 6 threads, context switching occurs due to insufficient number of CPU cores to monopolize a given core and therefore the CPU usage remains constant.
+Figure \ref{fig:m_threads_cpu_individual} shows the category breakdown of CPU utilization by each CPU for Memcached with 6 threads. We can observe that CPU 0 is processing all of the software interrupts while the remaining CPUs handle Memcached and the kernel. It is apparent that processing all of the software interrupts on a single CPU cores is a bottleneck in this case as the remaining CPUs are heavily underutilized. This phenomenon can be described as ``load imbalance'' \cite{leverich2014reconciling}. The kernel is responsible for scheduling software interrupt processing and depending on the configuration it may choose to process all interrupts on a single CPU.
 
-Secondly, kernel utilization increases with the number of threads up to 6 threads at which point it stabilizes and accounts for 50\%. A further increase in the number of threads does not result in increased utilization. It is reasonable to expect a large kernel CPU utilization as it is responsible for receiving and sending of network requests and memcached is a network bound application \cite{belay2014ix}.
-
-Thirdly, similarly to kernel CPU usage, CPU utilization for software interrupts (\textit{soft}) increases with the number of threads. At 6 threads, it accounts for 33.7\%. The increase in the time spent processing software interrupts is due to overall increase in throughput as requests are processed faster. An increase in the number of requests per second directly results in an increase in the number of software interrupts received and issued by \textit{libevent}.
-
-Finally, we observe no disk I/O wait as Memcached is an in memory object cache and therefore does not access the hard drive unless the memory is exhausted and swapping to disk is triggered. Additionally, hardware interrupt servicing \textit{irq} only accounts for 0.01\% as batching in the NIC is enabled.
+\subsection{Threads Conclusion}
+In this section, we have explored the impact of threading on Memcached performance. We have reasoned that the best performance will be delivered when running with as many threads as there are CPU cores, however, our benchmarks have showed that this is in fact not the case. Closer inspection of the behavior has shown that the culprit is software interrupt processing on only one CPU core rendering it a bottleneck for the rest of the system. In order to solve this problem, we will examine explicit assignment of IRQ affinity to CPU cores in the next section.
 
 
-\subsection{Thread Evaluation}
-Increasing the number of Memcached threads results in increased throughput and decreased latency. The best performing configuration observed is with as many threads as there are CPU cores. The direct cost of increased number of threads is CPU utilization.
+% ________________________________________________________
+\section{IRQ Affinity}
+We have shown that increasing the number of threads itself does not result in improved CPU utilization and better Memcached performance. In this section, we focus resolving the problem of software interrupt processing on a single core. In order to resolve the load imbalance, it is important to understand how the kernel determines which CPU is responsible for processing a given interrupt.
+
+Firstly, a request arrives at the network interface controller (NIC). The packet is processed by the NIC and pushed onto a receive queue. Secondly, an interrupt is raised to notify the kernel that an action is required. Thirdly, the kernel receives an interrupt, determines the application level destination of the request and inserts the request into a queue. Memcached utilizes \textit{libevent} API to receive and send requests between the kernel and the application and is bound to the \textit{epoll} socket \cite{zhang2014efficient}. When a request is inserted into the epoll socket, a level triggered software interrupt is fired \cite{blacklibtorque}. Each Memcached thread is awaiting the software interrupt with \textit{epoll wait()} \cite{thongprasit2015toward} and the request is processed. In the case where a software interrupt is being processed on a core different from the recipient application, a context switch is required which contributes to high kernel space CPU utilization observed in previous benchmarks.
+
+Therefore, we can reason distributing software interrupt processing across many CPU cores should lead to improved CPU utilization and improved overall performance in terms of throughput and latency as the overhead of context switching and the single CPU bottleneck are mitigated.
+
+The kernel chooses which CPU core is responsible for processing a request is determined through IRQ Affinity. IRQ Affinity is an assignment of a given queue to a given CPU and the overall process is called IRQ Affinity pinning.
+
+Firstly, let us inspect which IRQ queues are being used by the network interface. We can list the queues our \textit{eth0} interfaces uses with the following command:
+\begin{lstlisting}
+$ cat /proc/interrupts | grep eth0 | awk '{ print $1 " " $9 }'
+
+81: eth0
+82: eth0-TxRx-0
+83: eth0-TxRx-1
+84: eth0-TxRx-2
+85: eth0-TxRx-3
+86: eth0-TxRx-4
+87: eth0-TxRx-5
+\end{lstlisting}
+
+We obtain a mapping of queues to individual Transmit and Receive (TxRx) queues. For each queue id, we can list their respective CPUs responsible for processing the queue. The following script provides us with this information:
+
+\begin{lstlisting}
+$ for i in $(seq 81 1 87); do
+    echo $i $(cat $/proc/irq/$i/smp_affinity_list);
+  done;
+
+81 0-5
+82 0-5
+83 0-5
+84 0-5
+85 0-5
+86 0-5
+87 0-5
+\end{lstlisting}
+
+We can observe that all of the queues are bound to all available CPUs (zero indexed). In order to assign a particular core to a given queue, we simply write the index of the CPU to the corresponding queue file. We can assign each queue with a unique core with the following script. Note that we leave \textit{eth0} (queue 81) assigned to all CPUs as we do not want to bind processing of network requests to a specific core, we only want the transmit and receive queues to be bound.
+
+\begin{lstlisting}
+$ for i in $(seq 82 1 87); do
+    echo $(($i % 6)) > /proc/irq/$i/smp_affinity_list;
+  done
+\end{lstlisting}
+
+With the transmit and receive queues assigned, we are now in a position to determine the effect of IRQ affinity pinning on Memcached performance. We will be using the same configuration as in Section \ref{sec:memcached-threads} as well as increasing the number of threads linearly.
+
+\subsection{Threads, Latency \& Throughput with IRQ pinned}
+
+\begin{figure}[h]
+    \includegraphics[width=\textwidth]{./res2/m_threads_irq_latency.png}
+    \caption{Memcached Latency \& Throughput vs Threads with IRQ Affinity pinned to distinct cores}
+    \label{fig:m_threads_irq_latency}
+\end{figure}
+
+Figure \ref{fig:m_threads_irq_latency} plots the relationship between latency on the left vertical axis, number of operations per second on the right vertical axis and the number of threads on the horizontal axis.
+
+The mean latency decreases as we increase the number of threads and flattens out at 0.23ms at 6 threads or more. Tail latency, the 99th, decreases as we increase the number of threads. It reaches a minimum of 0.37ms, well within our QoS, at 6 threads and begins to increase as threads increase further. There is a sharp increase between 7 and 8 threads bringing it outside of our QoS. The number of operations per second remains constant between 1 and 2 threads at 240k requests per second. As the number of threads increases, so does throughput. In fact, throughput increases linearly between 2 and 6 threads and peaks at 546k requests per second. Throughput decreases slowly as the number of threads increases beyond 6.
+
+Firstly, throughput improved drastically. In the peaks, we are able to achieve 546k requests per second with IRQ pinned compared to 264k requests previously. According to expectation, throughput is maximized with as many threads as CPU cores. Additionally, we can see throughput decline with more threads than CPU cores as context switching overhead increases.
+
+Secondly, the 99th percentile latency has decreased significantly. With six or less threads, we are now able to achieve the required QoS. Additionally, the 99th percentile latency reaches a minimum with 6 threads providing the best combination of low latency and highest throughput. This is according to our expectation.
+
+Interestingly, neither throughput nor 99th percentile latency change between 1 and 2 threads. We would expect the throughput to increase with more threads, however, this appears to not be the case. When Memcached runs with only 1 thread, there is no need for resource locking and therefore lock contention is eliminated. We can argue that with 2 threads, lock contention introduces an overhead which does not outweigh the benefit of increased parallelization.
+
+\subsection{CPU Utilization with IRQ pinned}
+
+\begin{figure}[h]
+    \includegraphics[width=\textwidth]{./res2/m_threads_irq_cpu.png}
+    \caption{Memcached CPU Utilization with IRQ Affinity pinned}
+    \label{fig:m_threads_irq_cpu}
+\end{figure}
+
+Figure \ref{fig:m_threads_irq_cpu} outlines the CPU utilization with IRQ Affinity pinned. The overall ratio of \textit{usr}, \textit{sys} and \textit{soft} remains the same, however, we can observe that as we increase the number of threads the total utilization increases. We achieve near 100\% utilization across all CPUs. Furthermore, CPU utilization breakdown does not change with more than 6 threads. This is reasonable as we are constrained by the number of cycles available to us, more Memcached threads are constrained to the same number of cycles while also incurring a context switching overhead. Therefore, more CPU threads than CPU cores do not result in better performance.
+
+\begin{figure}[h]
+    \includegraphics[width=\textwidth]{./res2/m_threads_irq_cpu_individual.png}
+    \caption{Memcached with 6 threads - Individual CPU utilization}
+    \label{fig:m_threads_irq_cpu_individual}
+\end{figure}
+
+Let us consider individual CPU utilization breakdown with 6 threads. Figure \ref{fig:m_threads_irq_cpu_individual} outlines the utilization categories. We can observe that all cores are nearly 100\% utilized as well as all cores participate in software interrupt processing.
+
+
+\subsection{IRQ Conclusion}
+
+
+
 
 % ________________________________________________________
 

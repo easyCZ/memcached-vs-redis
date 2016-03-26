@@ -2,7 +2,7 @@
 
 DIR=pinning
 
-for i in {1..10}
+for i in {1..8}
 do
     python ../../../benchmark/main.py \
         -type=memcached \
@@ -11,6 +11,5 @@ do
         -output=../../../results/memcached/$DIR/$i/ \
         -base-port=11120 \
         -instances=1 \
-        -duration=30 \
-        -pin=true
+        -duration=30
 done
