@@ -369,7 +369,30 @@ In this section, we focus on the effect of connections on the performance of the
 
 In this benchmark, we focus on the effect of the group size on a Memcached deployment with 6 threads - the best configuration found so far. The benchmark increases the group size linearly in increments of 20 starting at 20 up to the maximum. The table below summarizes the Memcached and Memtier configurations used in this benchmark.
 
+\begin{table}[h!]
+\centering
+\begin{tabular}{| c c c | c c c |}
+ \hline
+ \multicolumn{3}{|c|}{Memcached} & \multicolumn{3}{|c|}{Memtier} \\
+ \hline
+ Flag & Explanation & Value & Flag & Explanation & Value \\ [0.5ex]
+ \hline\hline
 
+ -d & Daemon Mode & true        & -s & Server & nsl200 \\
+ -p & Port number & 11120       & -p & Port number & 11120 \\
+ -t & Thread count & 6          & -c & Conn. Count & 7 \\
+ -m & Memory & 6144 (6GB)       & -t & Thread Count & 3 \\
+ -R & Group Size & [20..320]    & --key-minimum & Min Key & 1 \\
+ & &                            & --key-maximum & Max Key & 100m \\
+ & &                            & --random-data & Gen random & true \\
+ & &                            & --data-size & Data Size & 64 \\
+
+ \hline
+
+\end{tabular}
+\caption{Group Size benchmark configuration}
+\label{tab:m_threads_memcached}
+\end{table}
 
 
 \subsection{Latency \& Throughput}
@@ -380,11 +403,7 @@ In this benchmark, we focus on the effect of the group size on a Memcached deplo
     \label{fig:m_group_size_latency}
 \end{figure}
 
-Figure \ref{fig:m_group_size_latency} plots the relationship between group size, latency and throughput.
-
-Firstly, we can observe that mean latency remains unaffected as group size increases.
-Secondly, the total number of operations remains stable at an average of 550k requests per second. This corresponds to the same level of throughput as observed with the default group size of 20.
-Thirdly, the 99th percentile latency has decreased compared to the default at group size of 20. We have been able to reduce the 99th percentile latency to an average of 0.9ms by increasing the group size. However, there does not appear to be a strong direct correlation with a particular group size providing lower 99th percentile latency.
+Figure \ref{fig:m_group_size_latency} plots the relationship between group size, latency and throughput. Overall, there is very little difference in the performance at various group sizes. The throughput remains constant at 545k requests per second with tail latency at 0.35ms. The mean latency remains constant too at 0.22ms.
 
 \subsection{CPU Utilization}
 
@@ -397,9 +416,9 @@ Thirdly, the 99th percentile latency has decreased compared to the default at gr
 Figure \ref{fig:m_group_size_cpu} plots the CPU utilization reported by \textit{mpstat}. We can observe that group size does not have any impact on the distribution of CPU utilization, nor does it impact the total utilization of the CPU.
 
 \subsection{Group Size Conclusion}
+In our benchmarks, we have observed that group size does not have any impact on the overall performance of Memcached. We have used 147 simultaneous connections in our benchmark, however, a smaller number of connections with higher throughput may be required to effectively exploit the group size. The benchmark setup does not allow us to generate a high enough load from a singular connection and therefore we are unable to replicate the results obtained by Blake and Saidi \cite{blake54does}.
 
-In our scenario, we have used 168 simultaneous connections from clients. In order to exploit the group size effectively, a small number of connections with very high number of requests per second may be required in order to effectively utilize the larger group size. With the hardware setup in this paper, we are unable to generate such a load and verify this claim. However, Blake and Saidi \cite{blake54does} have suggested that increasing the group size leads to increased throughput and decreased 99th percentile latency.
-
+% ---------------------------------------------------------------
 \section{Multiple Memcached Processes}
 TODO
 In this section, we will examine the impact multiple memcached processed have on the overall performance of the caches as a whole. In some applications, it is important to be able to partition the system in such a way systems interact with different instances of memcached. Additionally, this information will also serve as a useful benchmark comparison for Redis performance.

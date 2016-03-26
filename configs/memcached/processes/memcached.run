@@ -1,17 +1,39 @@
 #!/bin/bash
 
-DIR=processes-1-2
-INSTANCES=1
+DIR=processes
 
-for i in {1..5}
-do
-    python ../../../benchmark/main.py \
-        -type=memcached \
-        -server-conf=./memcached.$i.conf \
-        -memtier-conf=./memtier.memcached.$i.conf \
-        -output=../../../results/memcached/$DIR/$i/ \
-        -base-port=11120 \
-        -instances=$INSTANCES \
-        -duration=120
-    INSTANCES=$((INSTANCES * 2))
-done
+python ../../../benchmark/main.py \
+    -type=memcached \
+    -server-conf=./memcached.1.conf \
+    -memtier-conf=./memtier.memcached.1.conf \
+    -output=../../../results/memcached/processes/1/ \
+    -base-port=11120 \
+    -instances=1 \
+    -duration=60
+
+python ../../../benchmark/main.py \
+    -type=memcached \
+    -server-conf=./memcached.2.conf \
+    -memtier-conf=./memtier.memcached.2.conf \
+    -output=../../../results/memcached/processes/2/ \
+    -base-port=11120 \
+    -instances=2 \
+    -duration=60
+
+python ../../../benchmark/main.py \
+    -type=memcached \
+    -server-conf=./memcached.3.conf \
+    -memtier-conf=./memtier.memcached.3.conf \
+    -output=../../../results/memcached/processes/3/ \
+    -base-port=11120 \
+    -instances=3 \
+    -duration=60
+
+python ../../../benchmark/main.py \
+    -type=memcached \
+    -server-conf=./memcached.4.conf \
+    -memtier-conf=./memtier.memcached.4.conf \
+    -output=../../../results/memcached/processes/4/ \
+    -base-port=11120 \
+    -instances=6 \
+    -duration=60
