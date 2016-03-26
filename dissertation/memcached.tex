@@ -173,13 +173,38 @@ Memcached, on the other hand, is configured to increase the number of threads in
 
 \subsection{Throughput \& Latency}
 
-Figure \ref{fig:m_threads_latency.png} plots the relationship between the number of threads used by Memcached on the horizontal axis, latency on the left vertical and the number of operations on the right vertical.
-
 \begin{figure}[h]
     \includegraphics[width=\textwidth]{./res2/m_threads_latency.png}
     \caption{Memcached Threads: Latency \& Throughput vs Number of Threads}
     \label{fig:m_threads_latency.png}
 \end{figure}
+
+
+Figure \ref{fig:m_threads_latency.png} plots the relationship between the number of threads used by Memcached on the horizontal axis, latency on the left vertical and the number of operations on the right vertical.
+
+Mean latency, experiences a sharp decrease between 1 and 2 threads and increases steadily as the number of threads increases beyond 2 threads.
+The 99th percentile latency fails to meet the QoS constraints initially between 1 and 2 threads, dropping below the QoS constraint with 3, 4 and 5 threads. However, it climbs beyond the QoS requirements with 6 threads and continues to increase as the number of threads increases.
+The number of operations increases sharply between 1 and 2 threads, reaching a maximum of 270k requests per second while decreasing as the number of threads increases.
+
+The performance obtained with increased number of threads does not match our expectations of best performance at 6 threads. Let us examine the CPU utilization to gain a better insight into the problem.
+
+
+\subsection{CPU Utilization}
+
+Figure \ref{fig:m_threads_cpu} provides the \textit{mpstat} category breakdown of the CPU utilization of Memcached during the benchmark. Note that unattributed utilization accounts for idle time.
+
+\begin{figure}[h]
+    \includegraphics[width=\textwidth]{./res2/m_threads_cpu.png}
+    \caption{Memcached CPU Utilization with Multiple Threads}
+    \label{fig:m_threads_cpu}
+\end{figure}
+
+
+
+
+
+
+
 
 Firstly, mean latency (\textit{blue}) decreases as the number of threads increases from 1 to 6 where it reaches a minimum of 0.301ms. As the numbr of threads grows beyond 6, the mean latency increases at a slow pace.
 
