@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DIR=object-size
+DIR=object-size-30
 
 for i in {1..14}
 do

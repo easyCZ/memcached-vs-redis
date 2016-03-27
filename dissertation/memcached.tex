@@ -418,8 +418,10 @@ Figure \ref{fig:m_group_size_cpu} plots the CPU utilization reported by \textit{
 \subsection{Group Size Conclusion}
 In our benchmarks, we have observed that group size does not have any impact on the overall performance of Memcached. We have used 147 simultaneous connections in our benchmark, however, a smaller number of connections with higher throughput may be required to effectively exploit the group size. The benchmark setup does not allow us to generate a high enough load from a singular connection and therefore we are unable to replicate the results obtained by Blake and Saidi \cite{blake54does}.
 
+
 % ---------------------------------------------------------------
 \section{Multiple Instances}
+\label{sec:m_multiple_instances}
 In this section, we focus on a scenario with multiple separate Memcached instances (processes). In a production deployment, it may be desirable to logically split a Memcached deployment into multiple instances. This decision can be driven by application isolation, ability to migrate deployments independently or simply running multiple applications on the same server.
 
 In the context of this paper, we consider an ``instance'' to be an application with an isolated view of the rest of the system. Therefore, when referring to an instance, we make the assumption that multiple instances cannot communicate with each other and more generally the instance makes no assumptions about the rest of the system or other applications on the same system.
@@ -517,3 +519,66 @@ From the benchmark, we can conclude that multiple instances with proportionate a
 
 % ---------------------------------------------------------------
 \section{Object Size}
+In this section, we turn our focus away from optimizing the performance of the cache itself onto the the effect of the data stored in the cache. We focus on the object size, the data stored in the cache. In particular, we focus on the scalability of Memcached with larger objects. It has been reported that ``object size distribution has a large impact on system behavior'' \cite{lim2013thin}.
+
+In this benchmark, we utilize the same configuration as in Section \ref{sec:m_multiple_instances}, specifically we consider single instance Memcached with 6 threads since we found multi-instance setup of Memcached does not improve performance. On the client workload generation side, we reuse our configuration with 30 connections per each client host. We maintain the client side dataset constant at 6.4 GB, however, we adjust the maximum key based on the data size in order to maintain the same key range to data size ratio. Table \ref{tab:m_object_size_config} outlines the configuration details used for this benchmark.
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{| c c c | c c c |}
+ \hline
+ \multicolumn{3}{|c|}{Memcached} & \multicolumn{3}{|c|}{Memtier} \\
+ \hline
+ Flag & Explanation & Value & Flag & Explanation & Value \\ [0.5ex]
+ \hline\hline
+
+ -d & Daemon Mode & true        & -s & Server & nsl200 \\
+ -p & Port number & 11120       & -p & Port number & 11120 \\
+ -t & Thread count & 6          & -c & Conn. Count & 5 \\
+ -m & Memory & 6GB              & -t & Thread Count & 6 \\
+ & &                            & --key-minimum & Min Key & 1 \\
+ & &                            & --key-maximum & Max Key & 6.4GB / data\_size \\
+ & &                            & --random-data & Gen random & true \\
+ & &                            & --data-size & Data Size & [64B..512KB] \\
+
+ \hline
+
+\end{tabular}
+\caption{Memcached \& Memtier configuration for Object Size benchmark}
+\label{tab:m_object_size_config}
+\end{table}
+
+\subsection{Latency \& Throughput vs Object Size}
+
+\begin{figure}[h]
+    \includegraphics[width=\textwidth]{./res2/m_object_size_latency.png}
+    \caption{CPU Utilization with Multiple Instances}
+    \label{fig:m_object_size_latency}
+\end{figure}
+
+Figure \ref{fig:m_object_size_latency} plots the relationship between object size, latency and throughput. As object size increases the number of operations decreases while the 99th percentile latency increases. This is an expected result as larger object sizes will incur increased latency. Similar results are reported by \cite{lim2013thin}. Interestingly, with object sizes of 128 bytes we achieve the highest throughput with the smallest tail latency, however, this result is overshadowed by the overall trend of object size.
+
+The QoS requirements are satisfied with object sizes between 64 and 256 bytes. With objects larger, we are no longer able to provide the required QoS.
+
+
+\subsection{CPU vs Object Size}
+
+\begin{figure}[h]
+    \includegraphics[width=\textwidth]{./res2/m_object_size_cpu.png}
+    \caption{CPU Utilization with Multiple Instances}
+    \label{fig:m_object_size_cpu}
+\end{figure}
+
+Figure \ref{fig:m_object_size_cpu} plots the CPU utilization against each object size. Overall, we achieve high CPU utilization with only objects of size 64 and 128 bytes. As the object size decreases, the total CPU utilization decreases too. The individual category breakdown remains the same with majority of CPU used by the kernel followed by software interrupts.
+
+As object size increases, the network performance begins to dominate over the performance of the cache and/or the host CPU. Smaller objects, on the other hand, are processing constrained \cite{lim2013thin}.
+
+\subsection{Object Size Conclusion}
+In this section, we have explored Memcached scalability with respect to object size. Our benchmarks show that Memcached scales well up to objects of size 256 bytes. Larger objects result in significant penalties in terms of throughput and tail latency. Reducing the load on our cache server, we would be able to obtain better scalability in terms of object size at the expense of throughput. Additionally, we have argued that large objects are predominantly network dependent. A faster NIC with corresponding switch interconnect would likely provide better scalability. In an analysis of Facebook Memcached workloads, a dominant portion of all object sizes fall below 270 bytes \cite{atikoglu2012workload}. It is further argued that ``small values dominate all workloads, not just in count, but especially in overall weight.'' \cite{atikoglu2012workload} We can conclude that Memcached does not scale well for objects larger than 512 bytes. In practice, application design and architecture decisions can be made to either optimize Memcached for large object size performance and/or use many smaller objects with client side re-assembly.
+
+
+% ---------------------------------------------------------------
+\section{Key Distribution}
+
+
+
