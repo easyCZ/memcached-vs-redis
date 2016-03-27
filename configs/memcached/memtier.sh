@@ -1,6 +1,6 @@
 #!/bin/bash
 
-LABEL=object-size
+LABEL=object-size-30
 DATA_SIZE=64
 mkdir $LABEL
 
@@ -9,8 +9,8 @@ do
     echo "-s nsl200
 -p 11120
 --test-time=60
--c 7
--t 3
+-c 5
+-t 6
 -P memcache_binary
 --random-data
 --data-size=$DATA_SIZE
