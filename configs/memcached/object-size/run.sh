@@ -11,6 +11,6 @@ do
         -output=../../../results/memcached/$DIR/$i/ \
         -base-port=11120 \
         -instances=1 \
-        -duration=30 \
+        -duration=60 \
         -pin=true
 done
