@@ -419,6 +419,101 @@ Figure \ref{fig:m_group_size_cpu} plots the CPU utilization reported by \textit{
 In our benchmarks, we have observed that group size does not have any impact on the overall performance of Memcached. We have used 147 simultaneous connections in our benchmark, however, a smaller number of connections with higher throughput may be required to effectively exploit the group size. The benchmark setup does not allow us to generate a high enough load from a singular connection and therefore we are unable to replicate the results obtained by Blake and Saidi \cite{blake54does}.
 
 % ---------------------------------------------------------------
-\section{Less Locking: More Work}
-TODO
-In this section, we will examine the impact multiple memcached processed have on the overall performance of the caches as a whole. In some applications, it is important to be able to partition the system in such a way systems interact with different instances of memcached. Additionally, this information will also serve as a useful benchmark comparison for Redis performance.
+\section{Multiple Instances}
+In this section, we focus on a scenario with multiple separate Memcached instances (processes). In a production deployment, it may be desirable to logically split a Memcached deployment into multiple instances. This decision can be driven by application isolation, ability to migrate deployments independently or simply running multiple applications on the same server.
+
+In the context of this paper, we consider an ``instance'' to be an application with an isolated view of the rest of the system. Therefore, when referring to an instance, we make the assumption that multiple instances cannot communicate with each other and more generally the instance makes no assumptions about the rest of the system or other applications on the same system.
+
+We have previously concluded that the best performance is achieved with as many threads/processes as there are CPU cores. In this section, we build on top of this observation and design the benchmark with at most as many threads/processes as there are CPU cores.
+
+Given the hardware configuration of this paper with 6 CPU cores, we can construct multiple scenarios of instances on the server. Table \ref{tab:m_instances_config} outlines the configuration scenarios with respect to the number of instances, threads and the total number of threads/processes. Note that the scenario with only 1 instance corresponds the previously explored scenario and serves as a baseline for comparison.
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{| c c c |}
+ \hline
+ Number of Instances & Threads per Instance & Total threads/processes \\ [0.5ex]
+ \hline\hline
+
+ 1 & 6 & 6 \\
+ 2 & 3 & 6 \\
+ 3 & 2 & 6 \\
+ 6 & 1 & 6 \\
+
+ \hline
+
+\end{tabular}
+\caption{Configuration Scenarios with at most 6 threads/processes on the server}
+\label{tab:m_instances_config}
+\end{table}
+
+For the purposes of this section, we will use a modified configuration for the workload generating clients. We have previously observed that Memtier with 3 threads and 7 connections provides a sufficient workload to saturate the object cache, however, achieves a tail latency close to 0.4ms. We increase the number of connections in this benchmark to 30 in order to gain flexibility for workload partitioning. This is necessary as 21 connections cannot be partitioned evenly across 6 instances due to indivisibility. Instead, we choose 30 connections per each workload generating host. The direct consequence of increasing the number of connections is expected to be an increase in the tail latency. Throughout the benchmark, we continue to target the required QoS.
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{| c c c |}
+ \hline
+ Number of Instances & Threads per Instance & Memory per Instance \\ [0.5ex]
+ \hline\hline
+
+ 1 & 6 & 6GB \\
+ 2 & 3 & 3GB \\
+ 3 & 2 & 2GB \\
+ 6 & 1 & 1GB \\
+
+ \hline
+
+\end{tabular}
+\caption{Memcached configuration for multiple instances}
+\label{tab:m_instances_memcached_conf}
+\end{table}
+
+Table \ref{tab:m_instances_memcached_conf} outlines the Memcached configuration at individual instance configurations. Note that the total amount of memory allocated remains constant. Additionally, when there are multiple threads per instance, each thread is pinned to an individual core.
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{| c c c c c|}
+ \hline
+ Number of Instances & Threads & Connections & Key Maximum & Total Dataset\\ [0.5ex]
+ \hline\hline
+
+ 1 & 6 & 5 & 10 million & 6.4 GB \\
+ 2 & 3 & 5 & 5 million & 6.4 GB \\
+ 3 & 2 & 5 & 3.3 million & 6.4 GB \\
+ 6 & 1 & 5 & 1 million & 6.4 GB \\
+
+ \hline
+
+\end{tabular}
+\caption{Memtier configuration for multiple instances}
+\label{tab:m_instances_memtier_conf}
+\end{table}
+
+Table \ref{tab:m_instances_memcached_conf} outlines the Memtier configuration at individual instance configurations. The total size of the dataset remains constant, however, the maximum key is lowered to allow for the increased number of instances. Furthermore, each workload generating host will execute as many instances of Memtier as there are corresponding instances of Memcached effectively spreading the load evenly across each individual instance.
+
+\subsection{Latency \& Throughput vs Instances}
+
+\begin{figure}[h]
+    \includegraphics[width=\textwidth]{./res2/m_instances_latency.png}
+    \caption{Multiple Instances: Latency \& Throughput vs Number of instances. Note the scale of the right vertical axis starts at 525k.}
+    \label{fig:m_instances_latency}
+\end{figure}
+
+Figure \ref{fig:m_instances_latency} plots mean latency, 99th percentile latency and throughput as the number of instances is increased. Mean latency and 99th percentile latency remain nearly constant as the number of instances increases. There is a very slight increase in latency at 3 instances, however, it is rather insignificant with respect to the scale. Throughput is maximized with only 1 instance and reaches a minimum at 3 instances, however, the difference is rather insignificant relative to the scale.
+
+\subsection{CPU Utilization vs Instances}
+
+\begin{figure}[h]
+    \includegraphics[width=\textwidth]{./res2/m_instances_cpu.png}
+    \caption{CPU Utilization with Multiple Instances}
+    \label{fig:m_instances_cpu}
+\end{figure}
+
+Figure \ref{fig:m_instances_cpu} plots the CPU utilization with multiple instances. We can observe that the number of instances does not impact the total utilization nor does it impact the breakdown of individual category utilization.
+
+\subsection{Multiple Instances Conclusion}
+From the benchmark, we can conclude that multiple instances with proportionate allocation of resources do not incur any significant penalties in terms of performance. We have observed a slight decrease in throughput and increase in 99th percentile latency with a shared workload of 3 instances at 2 threads each. However, the relative scale of the change as well as the limited number of shared workload scenarios do not provide sufficient evidence to reach a conclusion.
+
+
+% ---------------------------------------------------------------
+\section{Object Size}
