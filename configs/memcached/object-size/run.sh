@@ -1,8 +1,8 @@
 #!/bin/bash
 
-DIR=object-size-no-coalesce
+DIR=object-size
 
-for i in {6..19}
+for i in {1..14}
 do
     python ../../../benchmark/main.py \
         -type=memcached \
@@ -14,7 +14,3 @@ do
         -duration=30 \
         -pin=true
 done
-
-git add ../../../
-git commit -m "Object size results"
-git push
