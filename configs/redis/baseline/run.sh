@@ -2,7 +2,7 @@
 
 DIR=baseline
 
-for i in {1..20}
+for i in {1..14}
 do
     python ../../../benchmark/main.py \
         -type=redis \

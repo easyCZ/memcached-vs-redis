@@ -8,7 +8,7 @@ for i in {1..14}
 do
     echo "-s nsl200
 -p 11120
---test-time=60
+--test-time=30
 -c $i
 -t 2
 -P redis
