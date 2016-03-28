@@ -233,7 +233,36 @@ It has been suggested that process and thread pinning can help reduce ``load imb
 
 % ____________________________________________________
 \section{Object Size}
-TODO
+In this section, we shift our focus from improving the performance of the cache itself to understanding how it performs under various scenarios, namely how does the size of each object stored impact overall performance within the QoS.
+
+We consider the case of increasing the object size by a factor of 2 at each step. We utilize the same configuration for Memtier as in Section \ref{sec:m_object_size}. The generated dataset remains the same in size while the range of possible keys shifts to account for the increased individual object size.
+
+\subsection{Latency \& Throughput vs Object Size}
+\begin{figure}[h]
+    \includegraphics[width=\textwidth]{./res2/r_object_size_latency.png}
+    \caption{Redis \& Object size: Latency and Throughput}
+    \label{fig:r_object_size_latency}
+\end{figure}
+
+Figure \ref{fig:r_object_size_latency} plots the relationship between object size, latency and throughput. Please note that the horizontal axis increases in multiples of 2.
+
+Initially, we start with object size of 64 bytes, the object size used all previous benchmarks. This serves as a baseline. As object size increases to 128, we observe an slight increase in the number of operations. Mean and tail latency remain the same.
+
+Subsequently, as object size grows, we observe a decrease in the total number of operations and an increase in both mean and tail latency. In fact, QoS constraints are already violated with object sizes 256 bytes large. As object size increases even more, throughput falls drastically while mean and tail latency sky rockets.
+
+As object size increases, the pattern of execution becomes network dominated rather than computation dominated. Larger objects take longer to transmit resulting in increased tail latency.
+
+\subsection{Latency \& Throughput vs Object Size}
+\begin{figure}[h]
+    \includegraphics[width=\textwidth]{./res2/r_object_size_cpu.png}
+    \caption{Redis \& Object size: CPU Utilization}
+    \label{fig:r_object_size_cpu}
+\end{figure}
+
+Figure \ref{fig:r_object_size_cpu} considers the effect of object size on the CPU utilization of the server. Initially, we obtain a 100\% utilization on the server side with object sizes 64 and 128 bytes large. As object size increases, and the tail latency increases, the inter-arrival time of each packet also increases. This results in reduced utilization. Effectively, the server is idle awaiting work. This pattern dominates as object size increases further.
+
+\subsection{Object Size Conclusion}
+
 
 % ____________________________________________________
 \section{Key Distributions}

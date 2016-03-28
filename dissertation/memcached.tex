@@ -520,6 +520,7 @@ From the benchmark, we can conclude that multiple instances with proportionate a
 
 % ---------------------------------------------------------------
 \section{Object Size}
+\label{sec:m_object_size}
 In this section, we turn our focus away from optimizing the performance of the cache itself onto the the effect of the data stored in the cache. We focus on the object size, the data stored in the cache. In particular, we focus on the scalability of Memcached with larger objects. It has been reported that ``object size distribution has a large impact on system behavior'' \cite{lim2013thin}.
 
 In this benchmark, we utilize the same configuration as in Section \ref{sec:m_multiple_instances}, specifically we consider single instance Memcached with 6 threads since we found multi-instance setup of Memcached does not improve performance. On the client workload generation side, we reuse our configuration with 30 connections per each client host. We maintain the client side dataset constant at 6.4 GB, however, we adjust the maximum key based on the data size in order to maintain the same key range to data size ratio. Table \ref{tab:m_object_size_config} outlines the configuration details used for this benchmark.
