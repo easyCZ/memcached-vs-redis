@@ -196,142 +196,45 @@ With IRQ Affinity assigned, we would expect the software interrupt processing to
     \label{fig:r_irq_latency}
 \end{figure}
 
+Figure \ref{fig:r_irq_latency} plots the relationship between latency, throughput and number of instances after IRQ pinning. Firstly, mean latency decreases as the number of instances increases up until it reaches a minimum of 0.4 ms at 6 instances. A further increase in the number of instances does not affect the mean latency. Secondly, the 99th percentile latency decreases sharply between 1 and 6 instances. It reaches a minimum of 0.57 ms at 6 instances. Additional instances lead to a sharp increase in tail latency. Furthermore, the number of operations increases steadily between 1 and 6 instances. There is a linear relationship between the number of instances and throughput with up to 6 instances. At 6 instances, we obtain 502k requests per second. A further increase in the number of instances leads to a slight increase in the number of operations, however, it is outside of the QoS constraints for tail latency.
+
 \subsection{CPU Utilization with IRQ Affinity}
 \begin{figure}[h]
     \includegraphics[width=\textwidth]{./res2/r_irq_cpu.png}
     \caption{Redis Instances with IRQ Pinned: CPU Utilization}
     \label{fig:r_irq_cpu}
 \end{figure}
+
+Figure \ref{fig:r_irq_cpu} plots the category breakdown of CPU utilization against the number of instances. We can observe that the total utilization is nearly 100\%. Additionally, we can observe that the proportion of kernel, user and software interrupt utilization increases linearly with the number of instances. This is indicative of good multi-instance scalability. At 10 instances, we obtain the same utilization as well as category utilization as with 6 instances. This is due to hard constraint on the amount of resources available on the server.
+
+Inspecting individual CPU core utilization in Figure \ref{fig:r_irq_cpu_individual} at 6 instances, we can observe that software interrupt processing is spread across all CPU cores and allows all cores to be fully utilized.
+
 \begin{figure}[h]
     \includegraphics[width=\textwidth]{./res2/r_irq_cpu_individual.png}
     \caption{Redis Instances with IRQ Pinned: Individual CPU utilization at 6 instances}
     \label{fig:r_irq_cpu_individual}
 \end{figure}
 
-% % ____________________________________________________
-
-% \section{Pinned Redis Instances}
-
-% In the previous section we have observed that the performance of a Redis server can be greatly improved by provisioning multiple Redis instances simultaneously. Pinning processes to distinct cores is suggested to improve tail latency \cite{leverich2014reconciling}. In this section, we examine the effect process pinning has on the performance of Redis. We consider exactly the same workload as in the previous section \ref{sec:multiple-redis-instances} as well as exactly the same server setup with the exception of pinning the Redis processes. That is, the workload is kept constant while it is partitioned across multiple instances.
-
-% A Redis process can be pinned to a unique core through the use of the \texttt{taskset} utility as follows:
-
-% \begin{lstlisting}
-% taskset -pc <redis_pid> <core_id>
-% \end{lstlisting}
-
-% The Redis processes identified as \texttt{redis pid} is pinned to the CPU core identified by \texttt{core id}. We can identify the process id of a Redis application through the \texttt{ps} command. When running more Redis applications than there are CPUs, we assign it to the \textit{n}th index of the application modulo the total number of cores, which is 6.
+\subsection{IRQ Affinity Conclusion}
+In this section, we have shown that software interrupt processing is essential to good Redis performance. By spreading the software interrupt handling onto multiple CPU cores, we have been able to achieve linear scalability with the number of instances up to the hard limit of the number of CPU cores. This is significantly more than without IRQ pinning. Additionally, we have shown that Redis is capable of delivering 500k requests per second with 6 instances while satisfying QoS constraints. It is worth noting that the tail latency of Redis exhibits relatively small deviation from the mean latency. This suggests that there are only a small number of requests taking above average time to process and further indicates good scalability in terms of multiple instances.
 
 
-% \subsection{Pinned Latency and Throughput}
+% ____________________________________________________
+\section{Pinned Redis Instances}
+In this section, we take a brief look at process pinning. Process pinning is an assignment of CPU affinity to a particular process. Similarly to thread pinning, we can pin processes to individual cores. In this benchmark, we consider the best found configuration so far, that is 30 connections with IRQ affinity set.
 
-% \begin{figure}[h]
-%     \includegraphics[width=\textwidth]{./res/6_pinned.png}
-%     \caption{Redis Instance Pinning: Instances vs Latency and Throughput}
-%     \label{fig:6_pinned.png}
-% \end{figure}
+Firstly, after starting Redis, we can discover the required process IDs through the use of the \textit{ps} utility. Assigning process affinity can then be done through the \textit{taskset} utility. The following bash command sets the CPU affinity of process \textit{pid} to core \textit{5}.
 
-% Figure \ref{fig:6_pinned.png} plots the relationship between the number of instances on the horizontal axis, latency on the left vertical and throughput on the right vertical. Additionally, the performance obtained without pinning are plotted alongside the pinned results.
+\begin{lstlisting}
+  taskset -pc 5 pid
+\end{lstlisting}
 
-% We can observe that pinning  Redis processes results which strongly correlate to the results of the unpinned benchmark. Across mean latency, 99th percentile latency and throughput, there is very little variance in the performance observed.
+It has been suggested that process and thread pinning can help reduce ``load imbalance'' \cite{leverich2014reconciling} by reducing interference caused by scheduling multiple simultaneous workloads. However, in our benchmarks we have not been able to obtain any significant speed up by pinning Redis processes to individual cores. We have obtained nearly identical results as with IRQ pinning and for clarity purposes will not be including a figure.
 
+% ____________________________________________________
+\section{Object Size}
+TODO
 
-% \subsection{Redis Persistence}
-% TODO
-
-
-% \section{Object Size}
-% In this section, the impact of the size of the object stored in the cache is investigated. Redis imposes no restrictions on the size of objects stored in the cache.
-
-% In order to investigate the impact of object size on the cache, we consider a benchmark with an increasing object size. The object size is increased in powers of two starting at 2 bytes and ranging to 512 KB. This allows us to capture the majority of important sizes commonly used when designing applications.
-
-% The server configuration remains the same as the current best found configuration, the multi-instance configuration with 6 instances. The clients are configured as follows:
-
-% \begin{lstlisting}
-% for i in [1..19]
-%     memtier -s nsl200 -p <port>
-%         -c 3
-%         -t 1
-%         -P redis
-%         --random-data --data-size=pow(2, i)
-%         --key-minimum=1 --key-maximum=(1066666666 / pow(2, i))
-%         --test-time=400
-% \end{lstlisting}
-
-% We run 19 iterations of the benchmark since 512 KB is equivalent to 2 to the power of 19 bytes. The \texttt{data-size} is configured to be increasing in powers of 2. The key range is defined as 6.4 GB split across 6 instances and further accounts for the increased size. Table \ref{tab:6:object_size_latency} outlines the configuration options for each iteration.
-
-% \begin{table}[h!]
-% \centering
-%  \begin{tabular}{| c || c c c |}
-%  \hline
-%  Iteration & Data Size (bytes) & Key Maximum & Total Size (GB) \\ [0.5ex]
-%  \hline\hline
-%     1 & 2 & 53333333 & 6.4 \\ \hline
-%     2 & 4 & 26666667 & 6.4 \\ \hline
-%     3 & 8 & 13333334 & 6.4 \\ \hline
-%     4 & 16 & 6666667 & 6.4 \\ \hline
-%     5 & 32 & 3333334 & 6.4 \\ \hline
-%     6 & 64 & 1666667 & 6.4 \\ \hline
-%     7 & 128 & 833334 & 6.4 \\ \hline
-%     8 & 256 & 416667 & 6.4 \\ \hline
-%     9 & 512 & 208334 & 6.4 \\ \hline
-%     10 & 1024 & 104167 & 6.4 \\ \hline
-%     11 & 2048 & 52084 & 6.4 \\ \hline
-%     12 & 4096 & 26042 & 6.4 \\ \hline
-%     13 & 8192 & 13021 & 6.4 \\ \hline
-%     14 & 16384 & 6511 & 6.4 \\ \hline
-%     15 & 32768 & 3256 & 6.4 \\ \hline
-%     16 & 65536 & 1628 & 6.4 \\ \hline
-%     17 & 131072 & 814 & 6.4 \\ \hline
-%     18 & 262144 & 407 & 6.4 \\ \hline
-%     19 & 524288 & 204 & 6.4 \\ \hline
-% \end{tabular}
-% \caption{Redis Object Size - Data Size and Maximum Key for each iteration. Total size is calculated as the product of \texttt{Data Size}, \texttt{Key Maximum} and \texttt{6} instances.}
-% \label{tab:6:object_size_latency}
-% \end{table}
-
-
-% \subsection{Latency and Throughput}
-
-% \begin{figure}[h]
-%     \includegraphics[width=\textwidth]{./res/6_object_size_latency_ops.png}
-%     \caption{Redis Object Size: Latency and Throughput}
-%     \label{fig:6_object_size_latency_ops.png}
-% \end{figure}
-
-% Figure \ref{fig:6_object_size_latency_ops.png} displays the relationship between object size on the horizontal logarithmic axis, latency on the left vertical axis and throughput on the right vertical axis.
-
-% Firstly, as object size increases up to 512 bytes, the mean latency remains stable at 0.55 ms. Beyond 512 bytes, the mean latency starts to increase and climbs beyond the desired QoS constraint at object size of 4 KB. A further increase in object size leads an disproportionately greater increase in mean latency.
-
-% Secondly, the 99th percentile follows the same pattern as the mean latency, however, it begins to climb over the desired QoS sooner, at object size of 1 KB.
-
-% Thirdly, the number of operations per second remains constant for object sizes under 256 bytes. An increase in object size decreases the number of operations per second. This is a reasonable result as an increase in the object size leads to higher bandwidth requirements and therefore leads to a lower number of operations per second.
-
-% Overall, Redis appears to be capable to scale well with object sizes up to 512 bytes. Larger object sizes put additional strain on the cache and require buffering which leads to increased latency of the average, and therefore 99th percentile, request. Primarily, Redis is not designed to store large (1KB+) values. It is, however, possible to partition large values into smaller ones and perform assembly/disassembly of the value on the client side.
-
-% \subsection{CPU Utilization}
-% \begin{figure}[h]
-%     \includegraphics[width=\textwidth]{./res/6_object_size_cpu.png}
-%     \caption{Redis Object Size: CPU Usage}
-%     \label{fig:6_object_size_cpu.png}
-% \end{figure}
-
-% Figure \ref{fig:6_object_size_cpu.png} displays the relationship between object size and CPU usage on the Redis server.
-
-% Firstly, as object size increases up to 1 KB, the operating system (sys) requires about 47 percent of the total time to process the incoming requests and dispatch them to the relevant applications. As object size increases further, the time required decreases as the number of operations decreases.
-
-% Secondly, the Redis applications (guest) require 27 percent of the total time when processing requests under 1 KB, with requests larger the direct cost of running Redis decreases as there are less requests to process. A similar pattern holds for the software interrupts (soft), as there are less requests coming.
-
-% Finally, the time allocated to servicing hardware interrupts (irq) remains at 12 percent below 1KB, with object size increases beyond 1 KB, there is significant increase in the time required to service hardware interrupts. This is due to buffering of large objects and is effectively the cause of high mean and 99th percentile latency as well as low throughput.
-
-
-% Overall, Redis is designed to work well with objects sizes below 1 KB. As the object size increases, the cache experiences a degraded performance due to buffering of network input and output.
-
-% \section{Key Distributions}
-% TODO
-
-% \subsection{Gaussian distribution}
-% TODO
-
-% \subsection{Zipf distribution}
-% TODO
+% ____________________________________________________
+\section{Key Distributions}
+TODO
