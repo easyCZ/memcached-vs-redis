@@ -5,157 +5,208 @@ We initially focus on the default performance of Redis when it is first deployed
 Throughout this chapter, we focus on key performance metrics - throughput, mean and tail (99th) percentile latency as well as the target Quality of Service (QoS) of 99th percentile latency within 1 millisecond. Unless otherwise stated, all benchmarks are performed to target the QoS.
 
 
+\section{Out of the Box Performance}
+Firstly, we focus on the default Redis performance. Redis comes with a configuration file \texttt{redis.conf}\cite{RedisConfiguration} with sensible defaults. Redis supports data persistence management and by default keys are not evicted when the cache fills up. For the purposes of this paper, we are interested an eviction based cache and as such will configure Redis to use the Least Recently Used policy for key replacement. Configuration options can be supplied on the command line as well and override any configuration options specified in \texttt{redis.conf}. Table \ref{tab:r_redis_baseline_config} summarizes our default Redis configuration.
 
-% \section{Out of the Box Performance}
-% \label{sec:redis-default}
-% Firstly, in order to understand the baseline performance of Redis we consider the default configuration of Redis. A Redis deployment can be started with the following command:
-% \begin{lstlisting}
-% redis redis.conf --port 11120
-% \end{lstlisting}
+\begin{table}[h!]
+\centering
+\begin{tabular}{| c c c |}
+ \hline
+ Configuration Option & Explanation & Value\\ [0.5ex]
+ \hline\hline
 
-% By default, a Redis deployment comes with a default configuration file \texttt{redis.conf}\cite{RedisConfiguration}. Any options specified in the configuration file can be overridden from the command line by prefixing them with \texttt{--}, in our case we are overriding the port number and setting it to 11120. All other configuration options remain unmodified.
+ --port & Port number & 11120 \\
+ --maxmemory & Maximum used memory & 6GB \\
+ --maxmemory-policy & Policy for key evictions & allkeys-lru \\
 
-% In order to understand the default Redis performance, we design the benchmark to exert an increasing level of load on the Redis server. Initially, we start with 2 threads and 1 connection per each thread on all workload generating clients and increase the number of connections per thread linearly. The workload generating clients are executed with the following command:
+ \hline
 
-% \begin{lstlisting}
-% memtier -s nsl200 -p 11120
-%     -c <connection_count> -t 2
-%     -P redis
-%     --random-data
-%     --key-minimum=1 --key-maximum=10000000
-%     --data-size=32
-% \end{lstlisting}
+\end{tabular}
+\caption{Redis Configuration}
+\label{tab:r_redis_baseline_config}
+\end{table}
 
+With the configuration defined, we can deploy the Redis application with the following command.
 
-% \subsection{Latency vs Throughput}
+\begin{lstlisting}
+redis redis.conf --port 11120 --maxmemory=6GB
+    --maxmemory-policy=allkeys-lru
+\end{lstlisting}
 
-% \begin{figure}[h]
-%     \includegraphics[width=\textwidth]{./res2/r_baseline_latency.png}
-%     \caption{Redis: Latency \& Throughput vs Number of Connections}
-%     \label{fig:r_baseline_latency.png}
-% \end{figure}
+In order to get an initial feel for Redis performance, we setup the benchmark to increase load on the cache server linearly. Table \ref{tab:r_memtier_baseline_config} outlines the configuration used for the Memtier benchmark.
 
-% Figure \ref{fig:r_baseline_latency.png} plots the relationship between mean latency and the 99th percentile latency on the left vertical axis, the number of operations per second on the right vertical axis and the number of client connections on the horizontal axis. Each connection contributes to the overall load of the cache equally, therefore, a larger number of connections results in increased load exerted by the clients. The graph has been trimmed to show only data which satisfies the QoS requirements.
+\begin{table}[h!]
+\centering
+\begin{tabular}{| c c c |}
+ \hline
+ Configuration Option & Explanation & Value\\ [0.5ex]
+ \hline\hline
 
-% Firstly, mean latency (\textit{blue}) increases linearly with the number of connections. This is a reasonable result as a linear increase in the number of requests sent by the clients should result in linear increase in mean latency.
+ -s & Server & nsl200 (server hostname) \\
+ -p & Port number & 11120 \\
+ -c & Number of Connections & [1..10] \\
+ -t & Number of Threads & 2 \\
+ --key-minimum & Smallest key & 1 \\
+ --key-maximum & Largest key & 100 000 000 \\
+ --random-data & Generate Random Data & true \\
+ --data-size & The size of data in bytes & 64 \\
 
-% Secondly, the 99th percentile latency (\textit{red}) increases as the number of connections increases with the exception of 28 connections. The 99th percentile latency increases faster than the mean latency does, however, this is also reasonable as increased load will result in queuing delay incurred on the server before Redis is able to process the request, driving the 99th percentile latency up. The QoS requirements are only satisfied up to 84 simultaneous connections.
+ \hline
 
-% Thirdly, the number of operations (\textit{yellow}) increases between 14 and 28 requests and reaches a maximum at 28 connections. Beyond 28 connections, the number of operations remains stable around 116k requests per second. At this point, we have reached the maximum a single Redis instance is able to process per second. These results are similar to results reported on Redis.io documentation \cite{redis-benchmarks} when scaled down to CPU speed equivalent our setup.
+\end{tabular}
+\caption{Memtier Configuration Options}
+\label{tab:r_memtier_baseline_config}
+\end{table}
 
-% \subsection{CPU Utilization}
+Memtier can be started with the following command:
+\begin{lstlisting}
+  memtier -s <server> -p 11120 -c <connections> -t 2
+    --random-data
+    --key-minimum=1
+    --key-maximum=100000000
+    --random-data
+    --data-size=64
+\end{lstlisting}
 
-% TODO
-% \begin{figure}[h]
-%     \includegraphics[width=\textwidth]{./res2/r_baseline_cpu.png}
-%     \caption{Redis: CPU Utilization}
-%     \label{fig:redis-default-cpu}
-% \end{figure}
+We are showing the Redis deployment command as well as the Memtier command here for clarity, however, the commands will be omitted in subsequent sections.
 
-% Figure \ref{fig:redis-default-cpu} outlines the CPU utilization in terms of time spent processing system calls (sys), servicing hardware interrupts (irq), handling software interrupts (soft) and processing related to Redis (guest).
+\subsection{Latency \& Throughput vs Connections}
+\begin{figure}[h]
+    \includegraphics[width=\textwidth]{./res2/r_baseline_latency.png}
+    \caption{Latency \& Throughput vs Number of Connections}
+    \label{fig:r_baseline_latency}
+\end{figure}
 
-% We can observe that servicing hardware interrupts consumes the majority of the processing time - 83 percent. This is the result of receiving and dispatching a large number of requests through the NIC. The amount of CPU time devoted to processing system calls is about 10 percent while processing software interrupts accounts for 3 percent. Redis itself requires only about 2 percent of the overall CPU time.
+Figure \ref{fig:r_baseline_latency} plots the relationship between mean latency, 99th percentile latency and the number of operations per second against the number of connections.
+The mean latency increases with the number of connections linearly. Similarly, the 99th percentile latency increases linearly as the number of connections increases, however, it grows faster than the man latency. At 56 connections, we obtain a 99th percentile latency of 0.88 ms. A further increase in the number of connections leads to QoS violation.
+The number of operations per second remains constant with the number of connections and latency within QoS. The cache executes 93k requests per second, however, at this load we are unable to increase throughput while satisfying our QoS.
 
-% Redis appears to be network constrained rather than CPU constrained in the workload examined above. This is reasonable as Redis is executing within one main event loop therefore it does not require locking and does not generate heavy load on the CPU when looking values up in the cache.
+\subsection{CPU Utilization}
+\begin{figure}[h]
+    \includegraphics[width=\textwidth]{./res2/r_baseline_cpu.png}
+    \caption{Default Redis CPU Utilization vs Number of Connections}
+    \label{fig:r_baseline_cpu}
+\end{figure}
 
+Figure \ref{fig:r_baseline_cpu} plots the relationship between CPU utilization as reported by \textit{mpstat} and the number of connections. Firstly, we can observe that the total utilization remains stable at 17\%. We can clearly see that overall the server is heavily underutilized. However, the aggregate breakdown across all CPUs is misleading in this case. Figure \ref{fig:r_baseline_cpu_individual} shows the individual CPU utilization for 56 client connections. We can observe that we achieve nearly 100\% utilization on core 0 while the remaining cores are idle. Furthermore, we can observe that Redis accounts for only 14\% utilization while the rest is used for kernel processing (46\%) and software interrupt processing (34\%). From the breakdown, we can conclude Redis utilization is kernel and software interrupt dominated rather than application processing dominated.
 
-% \section{Multiple Redis Instances}
-% \label{sec:multiple-redis-instances}
+\begin{figure}[h]
+    \includegraphics[width=\textwidth]{./res2/r_baseline_cpu_individual.png}
+    \caption{Default Redis Individual CPU Utilization at 56 connections}
+    \label{fig:r_baseline_cpu_individual}
+\end{figure}
 
-% As seen in section \ref{sec:redis-default}, Redis cannot increase overall throughput of the system with only a single instance as only a single core is capable of processing requests and becomes the bottleneck. An immediate solution to this problem is to provision a larger number of instances on a multi-core system in order to better utilize the hardware resources.
-
-% In this benchmark, we examine the effects increased number of Redis instances with respect to latency, 99th percentile latency and overall throughput of the system. Additionally, we examine the effect of multiple instances on the CPU usage.
-
-% Firstly, multiple instances of Redis can be spawned easily on the server by binding them to distinct port numbers. Out of the box, Redis does not provide the capability to proxy multiple instances of Redis through a single port in order to load balance the instances. There is the option to configure a Redis cluster, however, the intended use case is primarily for resiliency and fail over. In this benchmark, we consider a simpler scenario where each instance is isolated from each other and acts as an independent cache. This is a simplification of a real world scenario, however, a large deployment of Redis could be designed to partition the key space and utilize multiple independent instances similarly. The Redis application can be spawned with the following script:
-
-% \begin{lstlisting}
-% for i in [1..n]
-%     redis-server redis.conf --port (11120 + i) --maxmemory (6 / i)gb
-% \end{lstlisting}
-
-% Note that we are explicitly specifying the maximum amount of memory each instance will be allocated. In our case, we partition 6 GB of memory space evenly between the individual instances.
-
-% Secondly, in order to obtain comparable results, the load exerted on the Redis cache must remain constant. The load itself, however, needs to be partitioned across all of the instances of Redis evenly. In order to achieve this, each workload generating client spawns \texttt{i} instances of the benchmark and targets its respective Redis instance. Table \ref{tab:redis_threads_load} outlines the configuration in terms of the number of connections. Overall, we aim to find a configuration such that we use 24 connections per each client host.
-
-% \begin{table}[h!]
-% \centering
-%  \begin{tabular}{| c || c c || c c |}
-%  \hline
-%  Instances & Threads & Avg \# of Connections & Connections Total & Percentage \\ [0.5ex]
-%  \hline\hline
-
-% 1 & 3 & 8 & 24 & 100\% \\ \hline
-% 2 & 3 & 4 & 24 & 100\% \\ \hline
-% 3 & 2 & 4 & 24 & 100\% \\ \hline
-% 4 & 2 & 3 & 24 & 100\% \\ \hline
-% 5 & 1 & 5 & 25 & 104.16\% \\ \hline
-% 6 & 1 & 4 & 24 & 100\% \\ \hline
-% 7 & 1 & 3.5 & 24.5 & 102.08\% \\ \hline
-% 8 & 1 & 3 & 24 & 100\% \\ \hline
-
-% \end{tabular}
-% \caption{Redis Multiple Instances - Number of Threads \& Connections per each workload generating host. The percentage outlines how close the configuration for a given number of instances is to the target of 24 connections.}
-% \label{tab:redis_threads_load}
-% \end{table}
-
-% Having defined the configuration in Table \ref{tab:redis_threads_load}, we use the following script to start the workload generating clients:
-
-% \begin{lstlisting}
-% for i in [1..n]
-%     memtier -s nsl200 -p <port>
-%         -c round(<connection_count>)
-%         -t <thread_count>
-%         -P redis
-%         --random-data --data-size=64
-%         --key-minimum=1 --key-maximum=round(100000000 / i)
-%         --test-time=400
-% \end{lstlisting}
-
-% Initially, we start with 24 connections and 1 thread. As we increase the number of instances, the number of connections goes down, however, a larger number of instances are deployed. Note that we are using a \texttt{round} function to ensure that the number of connections as well as the maximum key are integers. In order to smooth out load variance caused by integer divisibility, in the case when the number of connections is not an integer, we consider two cases. One in which the \texttt{round} function is defined as the \texttt{ceiling} function and the other when it is defined as the \texttt{floor} function. The results of both types of the \texttt{round} function are then averaged. If a higher number of workload generating clients were available for the experimentation, the rounding approach would not be required.
-
-% Furthermore, the generated dataset is 6.4GB (100 million keys * 64 bytes of data). This is by design and leads to evictions in the cache as the size approaches the maximum. Note that the load exerted may initially exceed the QoS constraints, however, as the load gets partitioned across more instances, the QoS constraint will be satisfied.
+\subsection{Conclusion}
+We have shown that Redis is capable of delivering 93k requests per second in its default configuration without any optimizations. Additionally, we have observed the impact of single threaded Redis on the overall host CPU utilization as well as the breakdown per individual core. We have also shown that the kernel and software interrupt processing play a significant role in overall performance.
 
 
-% \subsection{Latency and Throughput}
+\section{Multiple Redis Instances}
+\label{sec:multiple-redis-instances}
 
-% \begin{figure}[h]
-%     \includegraphics[width=\textwidth]{./res2/r_instances_latency.png}
-%     \caption{Redis Instances: Latency, Throughput vs Number of Instances}
-%     \label{fig:r_instances_latency}
-% \end{figure}
+As seen in previous section, the overall cache server utilization suffers from single threaded nature of Redis. An immediate solution to this problem is to deploy multiple instances simultaneously. In this section, we consider a multi-instance Redis setup. It is important to keep in mind that each individual instance is completely isolated from the rest. As a result, the amount of memory space available to each instance decreases and therefore the key range we can store on each instance decreases. An application requiring access to a large number of keys will therefore be forced to partition the key space. Client side consistent hashing has the ability to alleviate this problem. Alternatively, a proxy application such as Twemproxy \cite{twemproxy} can be used to spread the load and create a single point of access to the instances.
 
-% Figure \ref{fig:r_instances_latency} plots the relationship between the number of Redis instances running simultaneously on the cache server against the mean and 99th percentile latency on the left vertical axis and the total number of operations per second on the right axis. The black line positioned at 1 ms outlines the QoS target of the benchmark.
+As the number of instances increases on the server, we expect the overall throughput to increase. As such, we initially utilize a larger number of connections than in the previous section, namely we use 210 connections (30 connections per each benchmarking host). We have determined empirically that 30 connections allow us to demonstrate Redis multi-instance scalability effectively. Additionally, 30 provides a great deal of flexibility when dealing with load partitioning across instances as we have 6 CPU cores available to us on the server. We consider 5 distinct multi-instance scenarios, they breakdown is outlined in Table \ref{tab:redis_instances}.
 
-% Firstly, as the number of instances increases, mean latency decreases. This behavior is expected as requests are processed in parallel, their mean processing time should decrease. We can observe that the decrease in mean latency is linear in terms of the number of instances. Interestingly, as the number of instances grows beyond 6, the trend continues and we see a decrease in the mean latency.
+\begin{table}[h!]
+\centering
+\begin{tabular}{| c c c c |}
+ \hline
+ Instance Count & Connections & Threads & Total\\ [0.5ex]
+ \hline\hline
 
-% Secondly, the 99th percentile latency decreases steadily as the number of instances increases up to 6. At 6 instances we reach a minimum of 0.56ms. A further increase in the number of instances results in increase in the tail latency. This effect is due to insufficient parallel level resources (not enough cores) to support more than 6 instances leading to context switching. A request may not be able to be services immediately, as a context switch is required, and therefore remains enqueued. The time spent queuing is the source of the increased tail latency.
+ 1  & 5 & 6 & 30 \\
+ 2  & 5 & 3 & 30 \\
+ 3  & 5 & 2 & 30 \\
+ 6  & 5 & 1 & 30 \\
+ 10 & 3 & 1 & 30 \\
+ \hline
 
-% Thirdly, the number of operations per second increases linearly with each instance up to 6 instances. At 6 instances, we reach a maximum of 512k requests per second. Increasing the number of instances further only leads to decreased throughput.
+\end{tabular}
+\caption{Multi Instance Scenarios with Memtier connections and thread counts}
+\label{tab:redis_instances}
+\end{table}
 
-% The QoS constraint is satisfied with more than 3 instances of Redis. However, maximum throughput with minimum tail latency is only achieved with 6 threads, as many as there are CPU cores.
+Consequently, we can define the following Redis configuration for each scenario. We maintain the same amount total memory while partitioning it evenly across instances. We of course also use the LRU Redis policy.
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{| c c c |}
+ \hline
+ Instances & Memory & Total Memory\\ [0.5ex]
+ \hline\hline
+
+ 1  & 6GB & 6GB \\
+ 2  & 3GB & 6GB \\
+ 3  & 2GB & 6GB \\
+ 6  &  1GB & 6GB \\
+ 10 &  0.6GB & 6GB \\
+ \hline
+
+\end{tabular}
+\caption{Redis Maximum Memory config per number of instances}
+\label{tab:redis_instances}
+\end{table}
 
 
-% \subsection{CPU Utilization}
+\subsection{Latency \& Throughput vs Instances}
+\begin{figure}[h]
+    \includegraphics[width=\textwidth]{./res2/r_instances_latency.png}
+    \caption{Redis Instances: Latency \& Throughput}
+    \label{fig:r_instances_latency}
+\end{figure}
 
-% \begin{figure}[h]
-%     \includegraphics[width=\textwidth]{./res2/r_instances_cpu.png}
-%     \caption{Redis Instances: CPU Utilization vs Number of Instances}
-%     \label{fig:r_instances_cpu.png}
-% \end{figure}
+Figure \ref{fig:r_instances_latency} plots the relationship between latency, throughput and the number of instances.
 
-% Figure \ref{fig:r_instances_cpu.png} presents a category breakdown of CPU utilization for given category as reported by \textit{mpstat}.
+Firstly, as the number of instances increases, both 99th and mean latency decrease and a reach a minimum at 3 instances. At 3 instances, we obtain a 99th percentile latency of 1.33 milliseconds, above the requires QoS. As the number of instances increases further, both mean and tail latency increase too.
 
-% Firstly, CPU utilization of Redis (\textit{usr}) increases linearly with the number of instances up until we reach 6 instances. At this point, CPU utilization stabilizes at 14\%. This is due to a larger number of instances requiring more CPU time as well as being scheduled in parallel on multiple cores. When all available CPU cores are exhausted (6 CPUs), multiple instances are scheduled on the same CPU core and therefore total utilization does not increase.
+Secondly, as the number of instances increases, throughput does too up to 3 instances where it reaches a maximum of 285k requests per second. A further increase in the number of instances leads to a decrease in throughput.
 
-% Secondly, the kernel (\textit{sys}) CPU utilization increases with each additional instance and at it's peak of 6 instances accounts for 51\% of total CPU utilization. The increase can be attributed to increased number of requests the system is required to handle when processing requests in parallel. With all CPU cores utilized, the system utilization cannot increase further due to hardware constraints.
+We can observe that multiple Redis instances do not scale as expected. We would expect the maximum throughput with the minimum tail latency to be achieved at 6 instances as we have 6 cpu cores. However, we maximize throughput while minimizing tail latency at 3 instances instead. Let us investigate the CPU utilization to get a better insight into the problem.
 
-% Thirdly, the time dedicated to processing software interrupts increases linearly too. This is caused by a larger number of requests being processed in parallel which in turn requires an increased number of software interrupts to be triggered in order to process the incoming and outgoing requests.
+\subsection{CPU vs Instances}
+\begin{figure}[h]
+    \includegraphics[width=\textwidth]{./res2/r_instances_cpu.png}
+    \caption{Redis Instances CPU}
+    \label{fig:r_instances_cpu}
+\end{figure}
 
-% Finally, \textit{iowait} accounts for no CPU utilization as all operations are performed in memory only. Additionally, \textit{irq} accounts for 0.01\% total utilization.
+Figure \ref{fig:r_instances_cpu} plots the CPU utilization against the number of instances with the respective category breakdown as reported by \textit{mpstat}. We can observe that as we increase the number of instances, total CPU utilization increases. However, at no point do we reach a 100\% utilization on the server. The utilization remains capped at 75\% for configurations with 6 and 10 instances. Let us investigate the distribution of work on individual cores to get a better insight into the problem.
 
-% \subsection{Redis Instances Evaluation}
+Figure \ref{fig:r_instances_cpu_individual} outlines the CPU utilization per individual CPU core with 6 instances. We can observe that all software interrupts are processed on core 0 with 100\% utilization while the remaining cores remain underutilized. This renders core 0 a bottleneck for the remaining CPU cores and results in underutilization of resources.
 
-% Redis, like Memcached, appears to be network intensive rather than CPU intensive on its own. Multiple Redis instances allow the cache server to scale better and achieve 512k requests per second at 99th percentile latency of 0.56ms. This is close to a 5 fold increase over the single Redis instance benchmark. However, increasing the number of Redis instances also results in key space partitioning. We are no longer able to utilize the server as a singular cache with 6 GB of memory available, instead, we now have 6 individual instances with 1 GB of memory each. In a production environment, the client side would be required to implement consistent hashing in order to be able to utilize the cache entirely. Similarly, a load balancing proxy could be used to spread the load across the instances, however, this setup is outside of the scope of this paper.
+\begin{figure}[h]
+    \includegraphics[width=\textwidth]{./res2/r_instances_cpu_individual.png}
+    \caption{Redis Instances: Individual CPU Utilization at 6 instances}
+    \label{fig:r_instances_cpu_individual}
+\end{figure}
+
+\subsection{Multiple Instances Conclusion}
+We have shown that multiple Redis instances do not scale linearly with the number of instances. In our benchmark, we have observed that the software interrupt processing is the bottleneck of multiple instances. We will address the load imbalance problem in the following chapter through IRQ Affinity pinning.
+
+% ____________________________________________________
+\section{IRQ Affinity}
+In this chapter we turn our attention to addressing the load imbalance problem observed in when scaling Redis across multiple instances. In order to spread the software interrupt processing work across to multiple cores, we will assign each individual core a unique CPU core affinity. This process is outlined in detail in Section \ref{sec:m_irq_affinity}.
+
+With IRQ Affinity assigned, we would expect the software interrupt processing to be spread evenly across all CPU cores and therefore removing the single CPU core bottleneck observed in the previous chapter.
+
+\subsection{Latency \& Throughput with IRQ Affinity}
+\begin{figure}[h]
+    \includegraphics[width=\textwidth]{./res2/r_irq_latency.png}
+    \caption{Redis Instances with IRQ Pinned: Latency \& Throughput}
+    \label{fig:r_irq_latency}
+\end{figure}
+
+\subsection{CPU Utilization with IRQ Affinity}
+\begin{figure}[h]
+    \includegraphics[width=\textwidth]{./res2/r_irq_cpu.png}
+    \caption{Redis Instances with IRQ Pinned: CPU Utilization}
+    \label{fig:r_irq_cpu}
+\end{figure}
+\begin{figure}[h]
+    \includegraphics[width=\textwidth]{./res2/r_irq_cpu_individual.png}
+    \caption{Redis Instances with IRQ Pinned: Individual CPU utilization at 6 instances}
+    \label{fig:r_irq_cpu_individual}
+\end{figure}
 
 % % ____________________________________________________
 

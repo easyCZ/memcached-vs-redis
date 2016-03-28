@@ -1,7 +1,7 @@
 #!/bin/bash
+#!/bin/bash
 
-DIR=baseline
-
+DIR=object-size
 for i in {1..14}
 do
     python ../../../benchmark/main.py \
@@ -10,6 +10,6 @@ do
         -memtier-conf=./memtier.redis.$i.conf \
         -output=../../../results/redis/$DIR/$i/ \
         -base-port=11120 \
-        -instances=1 \
-        -duration=30
+        -instances=6 \
+        -duration=60
 done

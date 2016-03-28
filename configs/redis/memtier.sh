@@ -1,19 +1,19 @@
 #!/bin/bash
 
-LABEL=instances
+LABEL=object-size
 DATA_SIZE=64
 mkdir $LABEL
 
-for i in {1..4}
+for i in {1..14}
 do
     echo "-s nsl200
 -p 11120
---test-time=30
+--test-time=60
 -c 5
--t 6
+-t 1
 -P redis
 --random-data
---data-size=64
+--data-size=$DATA_SIZE
 --key-minimum=1
 --key-maximum=$((10000000 / $i))" > $LABEL/memtier.redis.$i.conf
 
