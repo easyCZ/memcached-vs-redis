@@ -37,3 +37,12 @@ python ../../../benchmark/main.py \
     -base-port=11120 \
     -instances=6 \
     -duration=30
+
+python ../../../benchmark/main.py \
+    -type=redis \
+    -server-conf=./redis.5.conf \
+    -memtier-conf=./memtier.redis.5.conf \
+    -output=../../../results/redis/instances/5/ \
+    -base-port=11120 \
+    -instances=10 \
+    -duration=30
