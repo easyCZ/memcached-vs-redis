@@ -1,22 +1,25 @@
 #!/bin/bash
 
-LABEL=object-size-30
-DATA_SIZE=64
+LABEL=zipf
+STDDEV=10
 mkdir $LABEL
 
-for i in {1..14}
+for i in {1..5}
 do
     echo "-s nsl200
 -p 11120
---test-time=60
+--test-time=30
 -c 5
 -t 6
--P memcache_binary
+-P redis
 --random-data
---data-size=$DATA_SIZE
 --key-minimum=1
---key-maximum=$((10000000 / $i))" > $LABEL/memtier.memcached.$i.conf
+--data-size=64
+--key-maximum=10000000
+--key-pattern=G:G
+--key-stddev=$STDDEV
+--key-median=2" > $LABEL/memtier.memcached.$i.conf
 
-DATA_SIZE=$(($DATA_SIZE * 2))
+STDDEV=$(($STDDEV * 10))
 
 done
