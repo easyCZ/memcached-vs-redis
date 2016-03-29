@@ -18,7 +18,7 @@ do
 --key-maximum=10000000
 --key-pattern=G:G
 --key-stddev=$STDDEV
---key-median=1" > $LABEL/memtier.redis.$i.conf
+--key-median=2" > $LABEL/memtier.redis.$i.conf
 
 STDDEV=$(($STDDEV * 10))
 
