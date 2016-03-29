@@ -11,7 +11,7 @@ do
 --test-time=30
 -c 5
 -t 6
--P memcached_binary
+-P memcache_binary
 --random-data
 --key-minimum=1
 --data-size=64
