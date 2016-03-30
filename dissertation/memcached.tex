@@ -611,3 +611,18 @@ The CPU utilization with a Zipf distribution remains the same as in Figure \ref{
 
 We find that there is no significant difference in overall performance of Memcached nor in CPU utilization with a zipf-like distribution. However, we also find that a Zipf-like key distribution increases throughput as opposed to a uniformly random distribution. We obtain an increase of 10k requests per second as opposed to results obtained after IRQ pinning.
 
+\section{Packet Coalescing}
+In this section, we consider the impact of packet coalescing on the performance of Memcached. Packet coalescing is used to group packets together in order to limit the number of interrupts fired. It is effectively packet batching in the network interface controller.
+
+In this benchmark, we consider two scenarios - one where packet coalescing is disabled and the other with packet coalescing enabled. We configure our workload to use our best performing configuration - with IRQ pinned.
+
+\begin{figure}[h]
+    \includegraphics[width=\textwidth]{./res2/m_coalesce.png}
+    \caption{Memcached Packet Coalescing on and off}
+    \label{fig:m_coalesce}
+\end{figure}
+
+Figure \ref{fig:m_coalesce} shows the performance of Memcached in terms of 99th percentile latency, operations per second and CPU utilization with packet coalescing disabled. We can see that with packet coalescing disabled, we achieve a lower throughput as well as higher latency. The difference in throughput is significant, Memcached is only capable of processing 468k requests a second with coalescing off as opposed to 557k request per second with coalescing enabled. Additionally, disabled packet coalescing leads to more CPU cycles spent processing software interrupts by 4\%.
+
+We can conclude that packet coalescing greatly improves the performance of Memcached. It allows Memcached to deliver nearly 90k requests more at lower 99th percentile latency.
+

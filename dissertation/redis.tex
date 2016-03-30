@@ -282,3 +282,17 @@ Figure \ref{fig:r_zipf} plots the relationship between latency, operations per s
 The CPU Utilization of the server remains the same in the IRQ benchmark, Figure \ref{fig:r_irq_cpu} with a total utilization at near 100\%.
 
 We find that Redis performance improves on a Zipf-like key distribution. Throughput increases by about 2\% while the 99th percentile decreases very slightly.
+
+
+\section{Packet Coalescing}
+In this section, we turn our attention to the impact of packet coalescing on the performance of Redis. In this benchmark, we consider two scenarios - one where packet coalescing is disabled and the other with packet coalescing enabled. We configure our workload to use our best performing configuration - with IRQ pinned and 6 instances.
+
+\begin{figure}[h]
+    \includegraphics[width=\textwidth]{./res2/r_coalesce.png}
+    \caption{Redis Packet Coalescing on and off}
+    \label{fig:r_coalesce}
+\end{figure}
+
+Figure \ref{fig:r_coalesce} shows the performance of Redis in terms of 99th percentile latency, operations per second and CPU utilization with packet coalescing disabled. Packet coalescing leads to lower throughput at higher latency as well as increases the number of CPU cycles used for software interrupt processing. Without packet coalescing, Redis only performs 427k requests per second compared with 509k request per second with packet coalescing enabled.
+
+Packet coalescing has a significant effect on the performance of Redis. Without it, Redis executes 82k requests per second less at higher 99th percentile latency.

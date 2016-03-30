@@ -1,6 +1,6 @@
 \section{Motivation}
 
-In recent years, we have seen a shift from supercomputer computing to commodity computing. As a result, horizontal scalability has increased, however, complexity increased too. With distributed, it is no longer sufficient to embed caching in an individual application as future requests for data may be directed to other machines in the deployment. And this is where object caches come in.
+In recent years, we have seen a shift from supercomputer computing to commodity computing. As a result, horizontal scalability has increased, however, complexity increased too. With distributed, it is no longer sufficient to embed caching in an individual applications as future requests for data may be directed to other machines in the deployment. And this is where object caches come in.
 
 An object cache is a dedicated application responsible for memoization of expensive computation results. For example, a popular person on a social media site may receive a large number of requests for the number of connections. It would be wasteful to traverse the social graph each time this data is requested and compute the number of connections. Instead, we execute the computation once and store the result in our object cache. Subsequent requests retrieve the results from the cache and avoid incurring the cost of the computation.
 
