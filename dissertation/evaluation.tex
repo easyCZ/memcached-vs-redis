@@ -64,7 +64,7 @@ Figure \ref{fig:mr_irq_cpu} plots the CPU utilization against the number of inst
 
 In a previous chapter on Memcached, we have also investigated the performance of Memcached when deployed in a multi-instance setup with 1 thread - in effectively single threaded mode. We have found that there is very little difference in performance (\ref{m_instances_latency}). We concluded that a multi-instance Memcached setup with 1 thread performs as good as a single instance multi-threaded setup.
 
-In previous chapters, we have considered additional optimizations such as thread/process pinning or group size in the case Memcached, however, we found that those optimizations did not increase performance further. Therefore,
+In previous chapters, we have considered additional optimizations such as thread/process pinning or group size in the case of Memcached, however, we found that those optimizations did not increase performance further.
 
 Overall, we find that Memcached outperforms Redis. Memcached achieves lower 99th percentile latency with higher throughput.
 

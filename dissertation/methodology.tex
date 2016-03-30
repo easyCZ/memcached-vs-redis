@@ -5,7 +5,7 @@ The benchmarking methodology is heavily influenced by similar studies and benchm
 
 
 \section{Quality of Service}
-Firstly, it is important the desired quality of service we are looking to benchmark for. Frequently, distributed systems are designed to work in parallel, each component responsible for a piece of computation which is then ultimately assembled into a larger piece of response before being shipped to the client. For example, an e-commerce store may choose to compute suggested products as well as brand new products separately only to assemble individual responses into an HTML page. Therefore, the slowest of all individual components will determine the overall time required to render a response.
+Firstly, it is important the define the desired quality of service we are looking to target with our benchmarks. Frequently, distributed systems are designed to work in parallel, each component responsible for a piece of computation which is then ultimately assembled into a larger piece of response before being shipped to the client. For example, an e-commerce store may choose to compute suggested products as well as brand new products separately only to assemble individual responses into an HTML page. Therefore, the slowest of all individual components will determine the overall time required to render a response.
 
 Let us define the quality of service (QoS) target of this study. For our benchmarking purposes, a sufficient QoS will be the \textit{99th percentile} tail latency of a system under 1 \textit{millisecond}. This is a reasonable target as the mean latency will generally (based on latency distribution) be significantly smaller. Furthermore, it is a similar latency target used in related research \cite{leverich2014reconciling}.
 
@@ -16,7 +16,7 @@ All the hosts are connected to a \textit{Pica8 P-3297} switch with 48 1Gbps port
 
 \section{Workload generation}
 \label{methodology:workload-gen}
-Workload for the cache server is generated using Memtier Benchmark developed by Redis Labs \cite{memtier}. Memtier has been chosen as the benchmark for this study due to it's high level of configurability as well as ability to benchmark both \textit{Memcached} and \textit{Redis}. Utilizing the same benchmark client for both caches allows for a decreased variability in results when a comparison is made.
+Workload for the cache server is generated using Memtier Benchmark developed by Redis Labs \cite{memtier}. Memtier has been chosen as the benchmark for this study due to its high level of configurability as well as ability to benchmark both \textit{Memcached} and \textit{Redis}. Utilizing the same benchmark client for both caches allows for a decreased variability in results when a comparison is made.
 
 In order to create a more realistic simulation of a given workload, 7 servers all running \textit{memtier} simultaneously are used. A simple parallel ssh utility is used to start, stop and collect statistics from the load generating clients.
 
@@ -41,7 +41,7 @@ Memtier benchmark is ``a command line utility developed by Redis Labs for load g
 
 Memtier is a threaded application built on top of \texttt{libevent} \cite{libevent}, allowing the user to configure the number of threads as well as the number of connections per each thread which can be used to control the server load. Additionally, memtier collects benchmark statistics including latency distribution, throughput and mean latency. The statistics reported are used to draw conclusions on the performance under a given load.
 
-Memtier execution model is based on the number of threads and connections configured. For each thread \texttt{t}, there are \texttt{c} connections created. The execution pattern within each thread is as follows:
+The Memtier execution model is based on the number of threads and connections configured. For each thread \texttt{t}, there are \texttt{c} connections created. The execution pattern within each thread is as follows:
 
 \begin{enumerate}
     \item Initiate \texttt{c} connections
@@ -56,7 +56,7 @@ By offloading response handling to a callback inside libevent, memtier is able t
 
 Connections created with the target server are only destroyed at the end of the benchmark. This is a realistic scenario as in a large distributed environment the cache clients will maintain open connections to the cache to reduce the overhead of establishing a connection.
 
-Memtier provides a comprehensive set of configuration options to customize Memtier behavior and tailor the load. Table \ref{tab:memtier_config} outlines the relevant configuration options. The complete set of configuration options is available on RedisLabs \cite{MemtierConfiguration}.
+Memtier provides a comprehensive set of configuration options to customize Memtier behavior and tailor the load. Table \ref{tab:memtier_config} outlines the relevant configuration options. The complete set of configuration options is available on the RedisLabs website \cite{MemtierConfiguration}.
 
 \begin{table}[h!]
 \centering

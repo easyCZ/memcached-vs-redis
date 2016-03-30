@@ -78,7 +78,7 @@ We are showing the Redis deployment command as well as the Memtier command here 
 \end{figure}
 
 Figure \ref{fig:r_baseline_latency} plots the relationship between mean latency, 99th percentile latency and the number of operations per second against the number of connections.
-The mean latency increases with the number of connections linearly. Similarly, the 99th percentile latency increases linearly as the number of connections increases, however, it grows faster than the man latency. At 56 connections, we obtain a 99th percentile latency of 0.88 ms. A further increase in the number of connections leads to QoS violation.
+The mean latency increases with the number of connections linearly. Similarly, the 99th percentile latency increases linearly as the number of connections increases, however, it grows faster than the mean latency. At 56 connections, we obtain a 99th percentile latency of 0.88 ms. A further increase in the number of connections leads to QoS violation.
 The number of operations per second remains constant with the number of connections and latency within QoS. The cache executes 93k requests per second, however, at this load we are unable to increase throughput while satisfying our QoS.
 
 \subsection{CPU Utilization}
@@ -103,9 +103,9 @@ We have shown that Redis is capable of delivering 93k requests per second in its
 \section{Multiple Redis Instances}
 \label{sec:multiple-redis-instances}
 
-As seen in previous section, the overall cache server utilization suffers from single threaded nature of Redis. An immediate solution to this problem is to deploy multiple instances simultaneously. In this section, we consider a multi-instance Redis setup. It is important to keep in mind that each individual instance is completely isolated from the rest. As a result, the amount of memory space available to each instance decreases and therefore the key range we can store on each instance decreases. An application requiring access to a large number of keys will therefore be forced to partition the key space. Client side consistent hashing has the ability to alleviate this problem. Alternatively, a proxy application such as Twemproxy \cite{twemproxy} can be used to spread the load and create a single point of access to the instances.
+As seen in previous section, the overall cache server utilization suffers from the single threaded nature of Redis. An immediate solution to this problem is to deploy multiple instances simultaneously. In this section, we consider a multi-instance Redis setup. It is important to keep in mind that each individual instance is completely isolated from the rest. As a result, the amount of memory space available to each instance decreases and therefore the key range we can store on each instance decreases. An application requiring access to a large number of keys will therefore be forced to partition the key space. Client side consistent hashing has the ability to alleviate this problem. Alternatively, a proxy application such as Twemproxy \cite{twemproxy} can be used to spread the load and create a single point of access to the instances.
 
-As the number of instances increases on the server, we expect the overall throughput to increase. As such, we initially utilize a larger number of connections than in the previous section, namely we use 210 connections (30 connections per each benchmarking host). We have determined empirically that 30 connections allow us to demonstrate Redis multi-instance scalability effectively. Additionally, 30 provides a great deal of flexibility when dealing with load partitioning across instances as we have 6 CPU cores available to us on the server. We consider 5 distinct multi-instance scenarios, they breakdown is outlined in Table \ref{tab:redis_instances}.
+As the number of instances increases on the server, we expect the overall throughput to increase. As such, we initially utilize a larger number of connections than in the previous section, namely we use 210 connections (30 connections per each benchmarking host). We have determined empirically that 30 connections allow us to demonstrate Redis multi-instance scalability effectively. Additionally, 30 provides a great deal of flexibility when dealing with load partitioning across instances as we have 6 CPU cores available to us on the server. We consider 5 distinct multi-instance scenarios, the breakdown is outlined in Table \ref{tab:redis_instances}.
 
 \begin{table}[h!]
 \centering
@@ -126,7 +126,7 @@ As the number of instances increases on the server, we expect the overall throug
 \label{tab:redis_instances}
 \end{table}
 
-Consequently, we can define the following Redis configuration for each scenario. We maintain the same amount total memory while partitioning it evenly across instances. We of course also use the LRU Redis policy.
+Consequently, we can define the following Redis configuration for each scenario. We maintain the same amount of total memory while partitioning it evenly across instances. We of course also use the LRU Redis policy.
 
 \begin{table}[h!]
 \centering
@@ -157,7 +157,7 @@ Consequently, we can define the following Redis configuration for each scenario.
 
 Figure \ref{fig:r_instances_latency} plots the relationship between latency, throughput and the number of instances.
 
-Firstly, as the number of instances increases, both 99th and mean latency decrease and a reach a minimum at 3 instances. At 3 instances, we obtain a 99th percentile latency of 1.33 milliseconds, above the requires QoS. As the number of instances increases further, both mean and tail latency increase too.
+Firstly, as the number of instances increases, both 99th and mean latency decrease and a reach a minimum at 3 instances. At 3 instances, we obtain a 99th percentile latency of 1.33 milliseconds, above the required QoS. As the number of instances increases further, both mean and tail latency increase too.
 
 Secondly, as the number of instances increases, throughput does too up to 3 instances where it reaches a maximum of 285k requests per second. A further increase in the number of instances leads to a decrease in throughput.
 
@@ -187,7 +187,7 @@ We have shown that multiple Redis instances do not scale linearly with the numbe
 \section{IRQ Affinity}
 In this chapter we turn our attention to addressing the load imbalance problem observed in when scaling Redis across multiple instances. In order to spread the software interrupt processing work across to multiple cores, we will assign each individual core a unique CPU core affinity. This process is outlined in detail in Section \ref{sec:m_irq_affinity}.
 
-With IRQ Affinity assigned, we would expect the software interrupt processing to be spread evenly across all CPU cores and therefore removing the single CPU core bottleneck observed in the previous chapter.
+With IRQ Affinity assigned, we would expect the software interrupt processing to be spread evenly across all CPU cores and therefore removing the single CPU core bottleneck observed in the previous section.
 
 \subsection{Latency \& Throughput with IRQ Affinity}
 \begin{figure}[h]
@@ -205,7 +205,7 @@ Figure \ref{fig:r_irq_latency} plots the relationship between latency, throughpu
     \label{fig:r_irq_cpu}
 \end{figure}
 
-Figure \ref{fig:r_irq_cpu} plots the category breakdown of CPU utilization against the number of instances. We can observe that the total utilization is nearly 100\%. Additionally, we can observe that the proportion of kernel, user and software interrupt utilization increases linearly with the number of instances. This is indicative of good multi-instance scalability. At 10 instances, we obtain the same utilization as well as category utilization as with 6 instances. This is due to hard constraint on the amount of resources available on the server.
+Figure \ref{fig:r_irq_cpu} plots the category breakdown of CPU utilization against the number of instances. We can observe that the total utilization is nearly 100\%. Additionally, we can observe that the proportion of kernel, user and software interrupt utilization increases linearly with the number of instances. This is indicative of good multi-instance scalability. At 10 instances, we obtain the same utilization as well as category utilization as with 6 instances. This is due to the hard constraint on the amount of resources available on the server.
 
 Inspecting individual CPU core utilization in Figure \ref{fig:r_irq_cpu_individual} at 6 instances, we can observe that software interrupt processing is spread across all CPU cores and allows all cores to be fully utilized.
 

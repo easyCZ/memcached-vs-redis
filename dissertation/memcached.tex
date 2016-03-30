@@ -77,7 +77,7 @@ Firstly, we are interested in the relationship between throughput, latency and t
     \label{fig:memcached-default-latency-vs-ops}
 \end{figure}
 
-As the number of connection increases, so does mean latency. There is a linear relationship between the mean latency and the number of connections. This is an expected result, as the load increases linearly, we expect the mean latency to increase linearly too. An increase in the number of connections by 21 results in increased mean latency by approximately 0.09ms.
+As the number of connections increases, so does mean latency. There is a linear relationship between the mean latency and the number of connections. This is an expected result, as the load increases linearly, we expect the mean latency to increase linearly too. An increase in the number of connections by 21 results in increased mean latency by approximately 0.09ms.
 
 The 99th percentile latency increases linearly with the number of connections until we reach 105 connections. A further increase in the number of connections results in a disproportionately greater increase in tail latency. The maximum number of connections satisfying the QoS occurs at 147 connections and tail latency at 0.99ms. A further increase in load results in a steeper increase in tail latency. We can observe as the load increases, the tail latency diverges from the mean latency and increases at a faster pace.
 
@@ -86,7 +86,7 @@ The number of operations per second increases linearly with the number of connec
 
 \subsection{CPU Utilization}
 
-Secondly, we consider the effect of the workload on the Memcached server in terms of CPU Utilization. The CPU utilization is monitored through the \textit{mpstat} \cite{mpstat} utility which reports the percentage of CPU utilization broken down into multiple categories. The following table \cite{mpstat} summarizes the responsibilities of each category.
+Secondly, we consider the effect of the workload on the Memcached server in terms of CPU utilization. The CPU utilization is monitored through the \textit{mpstat} \cite{mpstat} utility which reports the percentage of CPU utilization broken down into multiple categories. The following table \cite{mpstat} summarizes the responsibilities of each category.
 
 \begin{enumerate}
     \item [\%usr] Show the percentage of CPU utilization that occurred while executing at the user level (application).
@@ -123,7 +123,7 @@ Given the trends presented in Figures \ref{fig:memcached-default-latency-vs-ops}
 \label{sec:memcached-threads}
 In this section, we focus on increasing CPU utilization through the use of multiple threads. We have shown that the default configuration results in underutilization of the server resources and argued that increased CPU utilization should result in improved performance. Memcached, as a high performance object cache, is designed to be executed on a multi-core architecture. Scalability is primarily implemented through the use of multi threading. It is worth noting that multi-threading also results in increased application complexity. Individual threads requiring access to shared data are required to obtain a lock before they can proceed with data manipulation. We design a benchmark which focuses on thread scalability by linearly increasing the number of threads Memcached is provisioned.
 
-Empirically, we expect the best performance to be achieved when there are as many Memcached threads as there are CPU cores. The cache server is equipped with 6 CPU cores and therefore we would expect 6 threads to maximize performance. This is also suggested by Leverich and Kozyrakis \cite{leverich2014reconciling}. Utilizing less threads should result in underutilization of the CPU leading to sub-optimal throughput. More than 6 threads should conversely result in increased context switching overhead and therefore should lead to increased latency.
+Empirically, we expect the best performance to be achieved when there are as many Memcached threads as there are CPU cores. The cache server is equipped with 6 CPU cores and therefore we would expect 6 threads to maximize performance. This is also suggested by Leverich and Kozyrakis \cite{leverich2014reconciling}. Utilizing fewer threads should result in underutilization of the CPU leading to sub-optimal throughput. More than 6 threads should conversely result in increased context switching overhead and therefore should lead to increased latency.
 
 Utilizing results about the number of connections from previous section, we configure a constant level of workload with 3 Memtier threads and 7 connections per each thread. We maintain the same key-object configuration as in previous benchmark. The configuration details of the Memtier benchmark are outlined in Table \ref{tab:m_threads_memtier}.
 
@@ -183,7 +183,7 @@ Memcached, on the other hand, is configured to increase the number of threads in
 
 Figure \ref{fig:m_threads_latency.png} plots the relationship between the number of threads used by Memcached on the horizontal axis, latency on the left vertical and the number of operations on the right vertical.
 
-Mean latency, experiences a sharp decrease between 1 and 2 threads and increases steadily as the number of threads increases beyond 2 threads.
+Mean latency experiences a sharp decrease between 1 and 2 threads and increases steadily as the number of threads increases beyond 2 threads.
 The 99th percentile latency fails to meet the QoS constraints initially between 1 and 2 threads, dropping below the QoS constraint with 3, 4 and 5 threads. However, it climbs beyond the QoS requirements with 6 threads and continues to increase as the number of threads increases.
 The number of operations increases sharply between 1 and 2 threads, reaching a maximum of 270k requests per second while decreasing as the number of threads increases.
 
@@ -217,7 +217,7 @@ Interestingly, the software interrupt usage only increases between 1 and 2 threa
 
 Figure \ref{fig:m_threads_cpu_individual} shows the category breakdown of CPU utilization by each CPU for Memcached with 6 threads. We can observe that CPU 0 is processing all of the software interrupts while the remaining CPUs handle Memcached and the kernel. It is apparent that processing all of the software interrupts on a single CPU cores is a bottleneck in this case as the remaining CPUs are heavily underutilized. This phenomenon can be described as ``load imbalance'' \cite{leverich2014reconciling}. The kernel is responsible for scheduling software interrupt processing and depending on the configuration it may choose to process all interrupts on a single CPU.
 
-\subsection{Threads Conclusion}
+\subsection{Evaluation}
 In this section, we have explored the impact of threading on Memcached performance. We have reasoned that the best performance will be delivered when running with as many threads as there are CPU cores, however, our benchmarks have showed that this is in fact not the case. Closer inspection of the behavior has shown that the culprit is software interrupt processing on only one CPU core rendering it a bottleneck for the rest of the system. In order to solve this problem, we will examine explicit assignment of IRQ affinity to CPU cores in the next section.
 
 
@@ -230,7 +230,7 @@ Firstly, a request arrives at the network interface controller (NIC). The packet
 
 Therefore, we can reason distributing software interrupt processing across many CPU cores should lead to improved CPU utilization and improved overall performance in terms of throughput and latency as the overhead of context switching and the single CPU bottleneck are mitigated.
 
-The kernel chooses which CPU core is responsible for processing a request is determined through IRQ Affinity. IRQ Affinity is an assignment of a given queue to a given CPU and the overall process is called IRQ Affinity pinning.
+The kernel chooses which CPU core is responsible for processing a request is determined through Interrupt Request (IRQ) Affinity. IRQ Affinity is an assignment of a given queue to a given CPU and the overall process is called IRQ Affinity pinning.
 
 Firstly, let us inspect which IRQ queues are being used by the network interface. We can list the queues our \textit{eth0} interfaces uses with the following command:
 \begin{lstlisting}
@@ -285,7 +285,7 @@ The mean latency decreases as we increase the number of threads and flattens out
 
 Firstly, throughput improved drastically. In the peaks, we are able to achieve 546k requests per second with IRQ pinned compared to 264k requests previously. According to expectation, throughput is maximized with as many threads as CPU cores. Additionally, we can see throughput decline with more threads than CPU cores as context switching overhead increases.
 
-Secondly, the 99th percentile latency has decreased significantly. With six or less threads, we are now able to achieve the required QoS. Additionally, the 99th percentile latency reaches a minimum with 6 threads providing the best combination of low latency and highest throughput. This is according to our expectation.
+Secondly, the 99th percentile latency has decreased significantly. With six or fewer threads, we are now able to achieve the required QoS. Additionally, the 99th percentile latency reaches a minimum with 6 threads providing the best combination of low latency and highest throughput. This is matches our expectation.
 
 \subsection{CPU Utilization with IRQ pinned}
 
@@ -307,7 +307,7 @@ Let us consider individual CPU utilization breakdown with 6 threads. Figure \ref
 
 
 \subsection{IRQ Conclusion}
-We have shown that setting IRQ affinity to individual cores drastically improves performance of Memcached. Throughput has increased more than two fold while the 99th percentile latency decreased. Distribution of work across the CPU cores has improved and we have been able to fully utilize all of the cores available to us. For the rest of this chapter, all benchmarks executed will be considered with IRQ affinity set distinct cores.
+We have shown that setting IRQ affinity to individual cores drastically improves performance of Memcached. Throughput has increased more than two fold while the 99th percentile latency decreased. Distribution of work across the CPU cores has improved and we have been able to fully utilize all of the cores available to us. For the rest of this chapter, all benchmarks executed will be considered with IRQ affinity set to distinct cores.
 
 % ________________________________________________________
 
@@ -315,7 +315,7 @@ We have shown that setting IRQ affinity to individual cores drastically improves
 \label{sec:thread-pinning}
 We now turn our attention to individual threads of Memcached. Thread pinning is the process of assigning a \textit{set\_irq\_affinity} to each individual thread. As suggested by Leverich and Kozyrakis, "pinning memcached threads to distinct cores greatly improves load balance, consequently improving tail latency." \cite{leverich2014reconciling} Furthermore, ``While it is not strictly necessary, it may be additionally beneficial to pin every Memcache worker thread onto a single CPU to further improve performance by minimising cache pollution.'' \cite{solarflarememcached} Therefore, we will investigate thread pinning and their impact on performance.
 
-Firstly, it is important to understand how the kernel determines which core a process/thread will run on. It is the responsibility of the \textit{scheduler} to maintain CPU cores busy and schedule work \cite{siddha2005chip}. As such, the scheduler decided which core an application should be scheduled and executed on. As such, a scheduler aims to optimize for a given metric, such as utilization, priority or aims to avoid starvation. By default, when a new process is started it can be scheduled on any CPU core. As a result, the scheduler may choose to schedule multiple threads on the same CPU core. In order to explicitly prevent such behavior, we can set a distinct core for each thread using the \textit{taskset} utility. We can discover the CPU affinity of a given process through the following command where \textit{pid} is the process identifier.
+Firstly, it is important to understand how the kernel determines which core a process/thread will run on. It is the responsibility of the \textit{scheduler} to maintain CPU cores busy and schedule work \cite{siddha2005chip}. As such, the scheduler decides which core an application should be scheduled and executed on. As such, a scheduler aims to optimize for a given metric, such as utilization, priority or aims to avoid starvation. By default, when a new process is started it can be scheduled on any CPU core. As a result, the scheduler may choose to schedule multiple threads on the same CPU core. In order to explicitly prevent such behavior, we can set a distinct core for each thread using the \textit{taskset} utility. We can discover the CPU affinity of a given process through the following command where \textit{pid} is the process identifier.
 
 \begin{lstlisting}
     taskset -p <pid>
@@ -417,7 +417,7 @@ Figure \ref{fig:m_group_size_latency} plots the relationship between group size,
 Figure \ref{fig:m_group_size_cpu} plots the CPU utilization reported by \textit{mpstat}. We can observe that group size does not have any impact on the distribution of CPU utilization, nor does it impact the total utilization of the CPU.
 
 \subsection{Group Size Conclusion}
-In our benchmarks, we have observed that group size does not have any impact on the overall performance of Memcached. We have used 147 simultaneous connections in our benchmark, however, a smaller number of connections with higher throughput may be required to effectively exploit the group size. The benchmark setup does not allow us to generate a high enough load from a singular connection and therefore we are unable to replicate the results obtained by Blake and Saidi \cite{blake54does}.
+In our benchmarks, we have observed that group size does not have any impact on the overall performance of Memcached. We have used 147 simultaneous connections in our benchmark, however, a smaller number of connections with higher throughput may be required to effectively exploit the group size. The benchmark setup does not allow us to generate a high enough load from a single connection and therefore we are unable to replicate the results obtained by Blake and Saidi \cite{blake54does}.
 
 
 % ---------------------------------------------------------------
@@ -450,7 +450,7 @@ Given the hardware configuration of this paper with 6 CPU cores, we can construc
 \label{tab:m_instances_config}
 \end{table}
 
-For the purposes of this section, we will use a modified configuration for the workload generating clients. We have previously observed that Memtier with 3 threads and 7 connections provides a sufficient workload to saturate the object cache, however, achieves a tail latency close to 0.4ms. We increase the number of connections in this benchmark to 30 in order to gain flexibility for workload partitioning. This is necessary as 21 connections cannot be partitioned evenly across 6 instances due to indivisibility. Instead, we choose 30 connections per each workload generating host. The direct consequence of increasing the number of connections is expected to be an increase in the tail latency. Throughout the benchmark, we continue to target the required QoS.
+For the purposes of this section, we will use a modified configuration for the workload generating clients. We have previously observed that Memtier with 3 threads and 7 connections provides a sufficient workload to saturate the object cache, however, achieves a tail latency close to 0.4ms. We increase the number of connections in this benchmark to 30 in order to gain flexibility for workload partitioning. This is necessary as 21 connections cannot be partitioned evenly across 6 instances. Instead, we choose 30 connections per each workload generating host. The direct consequence of increasing the number of connections is expected to be an increase in the tail latency. Throughout the benchmark, we continue to target the required QoS.
 
 \begin{table}[h!]
 \centering
