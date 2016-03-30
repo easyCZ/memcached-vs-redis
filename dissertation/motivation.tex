@@ -1,3 +1,21 @@
 \section{Motivation}
 
-TODO
+In recent years, we have seen a shift from supercomputer computing to commodity computing. As a result, horizontal scalability has increased, however, complexity increased too. With distributed, it is no longer sufficient to embed caching in an individual application as future requests for data may be directed to other machines in the deployment. And this is where object caches come in.
+
+An object cache is a dedicated application responsible for memoization of expensive computation results. For example, a popular person on a social media site may receive a large number of requests for the number of connections. It would be wasteful to traverse the social graph each time this data is requested and compute the number of connections. Instead, we execute the computation once and store the result in our object cache. Subsequent requests retrieve the results from the cache and avoid incurring the cost of the computation.
+
+Frequently, object caches will change state throughout time. As such, the the object cache attempts to achieve temporal locality and captures the currently most popular requests. This is essential to increasing throughput and decreasing latency in a distributed system.
+
+The motivation behind this study on object caches is their irreplaceability in modern scalable system architectures, their relative design simplicity and high effectiveness.
+
+In this study, we focus on two popular object caches widely used in the industry - Memcached and Redis.
+
+Memcached is a multi threaded object cache introduced in 2003 and it has been studied extensively since then. Researches have targeted various aspects of the memcached system in order to increase performance of the system. For example, memory allocation techniques have been explored as well as direct access to the NIC \cite{lim2014mica}. Other approaches aimed at removal of locks in Memcached's critical section have been explored too \cite{wiggins2012enhancing}.
+
+Unlike Memcached, Redis - a single threaded object cache released in 2009, has not received the same level of attention in published research. Redis features a different architecture design with focus on simplicity through the absence of threads and therefore locks.
+
+Both caches are widely used in the industry, Facebook likely has the largest production deployment of Memcached with more than 800 servers \cite{scalingMemcachedAtFacebook}, however, other companies such as Twitter \cite{twitterMemcached}, Google \cite{googleCloudMemache} and Amazon \cite{awsMemcached} use Memcached. Redis, on the other hand is used by Twitter \cite{redisTwitterRealTime}, GitHub \cite{redisGithub}, Pinterest \cite{redisPinterest} or StackOverflow \cite{redisStackOverflow} among others.
+
+Both caches feature a different architectural design decisions as well as provide different APIs. Memcached is simple with the main operations being \textit{get}, \textit{set} while Redis features a much richer API and supports additional data structures such as lists and sets. In this study, we perform a head to tail comparison of the two caches on a common feature set - \textit{set}, \textit{get}.
+
+Additionally, by comparing the two caches on a common feature set, we can extend our conclusions on the design decisions made in development of each object cache. Can a single threaded application perform better than a multi-threaded one?

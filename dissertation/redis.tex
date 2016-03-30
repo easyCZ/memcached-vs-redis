@@ -262,8 +262,23 @@ As object size increases, the pattern of execution becomes network dominated rat
 Figure \ref{fig:r_object_size_cpu} considers the effect of object size on the CPU utilization of the server. Initially, we obtain a 100\% utilization on the server side with object sizes 64 and 128 bytes large. As object size increases, and the tail latency increases, the inter-arrival time of each packet also increases. This results in reduced utilization. Effectively, the server is idle awaiting work. This pattern dominates as object size increases further.
 
 \subsection{Object Size Conclusion}
-
+We find that Redis does not scale well with object size under the required QoS requirements. This is the result of larger objects being network dominant rather than processing dominant. Relaxation of the QoS requirements for larger objects would allow us to scale Redis to larger object sizes better. With the current QoS requirements, a system could split an object into smaller values and store them independently. This would require disassembly of the object as well as re-assembly upon reception, however, individual requests would be able to meet the QoS.
 
 % ____________________________________________________
 \section{Key Distributions}
-TODO
+In this section, we consider the effect of a Zipf-like distribution on the performance of Redis. We use the same benchmark setup as presented in Section \ref{sec:memcached_zipf}.
+
+We consider a Zipf-like distribution with multiple zipf factors. Note that the higher the zipf factor, the heavier the skew towards a portion of the keys.
+
+\subsection{Latency \& Throughput}
+\begin{figure}[h]
+    \includegraphics[width=\textwidth]{./res2/r_zipf.png}
+    \caption{Redis with Zipf-like key distribution}
+    \label{fig:r_zipf}
+\end{figure}
+
+Figure \ref{fig:r_zipf} plots the relationship between latency, operations per second and the zipf factor. As the zipf factor (skew) increases, the 99th percentile latency decreases slightly from 0.57 ms to 0.55 ms. The number of operations per second increases from 499k requests per second to 510k requests per second as the skew of the distribution increases. The decrease in the number of operations and increase in 99th percentile latency is likely due to spacial locality of the requests resulting in higher hit rate of the CPU cache.
+
+The CPU Utilization of the server remains the same in the IRQ benchmark, Figure \ref{fig:r_irq_cpu} with a total utilization at near 100\%.
+
+We find that Redis performance improves on a Zipf-like key distribution. Throughput increases by about 2\% while the 99th percentile decreases very slightly.

@@ -1,2 +1,16 @@
 \section{Abstract}
-Abstract Goes here
+Object caches are an integral part of a scalable architecture. They are heavily used in web services and allow a service to exploit temporal trends in the services usage as well as increase throughput while decreasing latency of a service.
+
+In this study we consider two popular object caches, Memcached and Redis, and perform a head to tail comparison of their performance on a common feature set - \textit{get}, \textit{set}. Both object caches feature different architectural decisions, Memcached is multi threaded while Redis is single threaded.
+
+Memcached has received a large amount of published research while Redis has not been studies as extensively. We utilize the research on Memcached and apply it, where possible, to Redis. In our analysis, we first focus on fully benchmarking Memcached in order to establish a performance baseline of the system and allow us to validate the results with the literature. Subsequently, we extend our analysis to Redis. Finally, a head to tail comparison of the caches is made. Throughout the study, we aim to answer the following questions:
+
+\begin{enumerate}
+  \item How does performance of Redis compare to Memcached on a common feature set?
+  \item Can a simpler, single threaded, architecture of an application compete with a multi-threaded design?
+\end{enumerate}
+
+Throughout the study, we utilize benchmarking of the object caches as means of data gathering and analysis. We focus on key metrics of object caches - throughput and 99th percentile latency. Additionally, in order for an object cache to be useful, it must deliver a specific quality of service. In our study, we impose a quality of service constraint of 99th percentile latency under 1 ms on both caches. We focus on a wide range of benchmarks in this study including performance out of the box, multiple threads and/or instances as well as analyze the impact of object size on overall performance.
+
+In our analysis, we find that Memcached delivers higher overall performance on a common feature set. However, Redis performance is not dissimilar to Memcached. It achieves an overall 8\% lower level throughput. As a result, we find that a simple application design of Redis can perform as well as more complex, multi-threaded, design.
+

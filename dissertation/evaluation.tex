@@ -86,3 +86,13 @@ In this comparison, we consider M\&R with respect to object size. Figure \ref{fi
 
 As object size increases, we achieve lower server CPU utilization. Furthermore, we can observe that CPU utilization remains similar, with Redis slightly higher than Memcached, between M\&R at various object sizes.
 
+\section{Key Distribution}
+In this comparison, we focus on the effect of a keys which follows a Zipf-like distribution.
+
+\begin{figure}[h]
+    \includegraphics[width=\textwidth]{./res2/mr_zipf.png}
+    \caption{Zipf-like distribution of keys: Latency \& Throughput vs Zipf factor}
+    \label{fig:mr_zipf}
+\end{figure}
+
+Figure \ref{fig:mr_zipf} plots the comparison of M\&R in terms of 99th percentile latency, operations per second and the zipf factor. We can observe that for both M\&R, 99th percentile latency remains unaffected as the skew increases. In terms of operations per second, Memcached remains relatively stable with slight fluctuation, however, it does not exhibit a strong correlation with the skew. Redis, on the other, increases the number of operations as the skew increases. Interestingly, Memcached does not experience the same increase in throughput with increased skew, however, Memcached does experience an increase in the total number of operations, in comparison to results obtained after IRQ pinning, by about 10k. We can conclude that the skewed distribution has an impact on the performance of both caches. As the pattern of gets and sets revolves around the same keys, the overall performance increases. A likely explanation for Memcached's stable throughput with respect to the skew level is lock contention. It would appear that the lock contention does not cause Memcached to reduce throughput, however, it does not allow it increase it either.

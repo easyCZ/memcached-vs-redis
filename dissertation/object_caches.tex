@@ -1,8 +1,10 @@
 \section{Memory Object Caches}
 
-Firstly, the purpose of a memory object cache is to use the machine's available RAM for key-value storage. The implication of a \textit{memory object cache} is that data is only stored in memory and should not be offloaded on the hardware in order to not incur hard drive retrieval delay. As a result, memory caches are often explicitly configured with the maximum amount of memory available.
+Firstly, the purpose of a memory object cache is to use the machine's available RAM for key-value storage. The implication of a \textit{memory object cache} is that data is only stored in memory and should not be offloaded on the hard drive in order to not incur hard drive retrieval latency.
 
-Secondly, an \textit{object} cache implies that the cache itself is not concerned with the type of data (binary, text) stored within. As a result, memory object caches are multi-purpose caches capable of storage of any data type within size restrictions imposed by the cache.
+The most common usage of an object cache is as part of a web service deployment. The cache is utilized to memoize the result of an expensive computation avoid the cost of computation for subsequent requests. Frequently, large web service deployments will utilize object caching heavily in order to decrease cost and scale better.
+
+Secondly, an \textit{object} cache implies that the cache itself is not concerned with the type of data (binary, text) stored within. As a result, memory object caches are multi-purpose caches capable of storage of any data type within size restrictions imposed by the cache. This is an abstraction, however, web services often deal with multiple data formats as well as data sizes.
 
 Finally, memory object caches can be deployed as single purpose servers or also co-located with another deployment. Consequently, general purpose object caches often provide multiple protocols for accessing the cache - socket communication or TCP over the network. Both caches in question - Memcached and Redis - support both deployment strategies. Our primary focus will be on networked protocols used to access the cache.
 
@@ -24,9 +26,7 @@ The design and implementation of a general purpose cache system is heavily influ
 
 Firstly, high performance requirement and the need for storage of entries of varying size generally requires the cache system to implement custom memory management models. As a result, a mapping data structure  with key hashing is used to efficiently locate entries in the cache.
 
-Secondly, due to memory restrictions, the cache is responsible for enforcing an eviction policy. Most state of the art caches utilize least recently used (LRU) cache eviction policy, however, other policies such as first-in-first-out can also be used.
-
-In the case of \textit{Memcached}, multi-threaded approach is utilized in order to improve performance. Conversely to Memcached, \textit{Redis} is implemented as a single threaded application and focuses primarily on a fast execution loop rather than parallel computation.
+Secondly, in the case of \textit{Memcached}, multi-threaded approach is utilized in order to improve performance. Conversely to Memcached, \textit{Redis} is implemented as a single threaded application and focuses primarily on a fast execution loop rather than parallel computation.
 
 
 \subsection{Performance metrics}
@@ -37,11 +37,11 @@ Secondly, being a high performance application with potentially network, underst
 Finally, the \textit{hit} and \textit{miss} rate of the cache can be used as a metric, particularly when evaluating a cache eviction policy, however, the hit and miss rate is tightly correlated with the type of application and the application context and therefore it is not a suitable metric for evaluating performance alone.
 
 
-\subsection{Memcached}
+\section{Memcached}
 
 Memcached is a ``high-performance, distributed memory object caching system, generic in nature, but intended for use in speeding up dynamic web applications by alleviating database load.'' \cite{interactive2006memcached} Despite the official description aimed at dynamic web applications, memcached is also used as a generic key value store to locate servers and services \cite{atikoglu2012workload}.
 
-\subsubsection{Memcached API}
+\subsection{Memcached API}
 Memcached provides a simple communication protocol. It implements the following core operations:
 
 \begin{itemize}
@@ -52,9 +52,8 @@ Memcached provides a simple communication protocol. It implements the following 
 
 Memcached further implements additional useful operations such as \texttt{incr/decr} which increments or decrements a value and \texttt{append/prepend} which append or prepend a given key.
 
-\subsubsection{Implementation}
-Firstly, Memcached is implemented as a multi-threaded application. ``Memcache instance started with n threads will spawn n + 1 threads of which the first n are worker threads and the last
-is a maintenance thread used for hash table expansion under high load factor.'' \cite{solarflarememcached}
+\subsection{Implementation}
+Firstly, Memcached is implemented as a multi-threaded application. ``Memcache instance started with n threads will spawn n + 1 threads of which the first n are worker threads and the last is a maintenance thread used for hash table expansion under high load factor.'' \cite{solarflarememcached}
 
 Secondly, in order to provide performance as well as  portability, memcached is implemented on top of \textit{libevent} \cite{libevent}. ``The libevent API provides a mechanism to execute a callback function when a specific event occurs on a file descriptor or after a timeout has been reached. Furthermore, libevent also support callbacks due to signals or regular timeouts.'' \cite{libevent}
 
@@ -75,20 +74,73 @@ As a result, memcached employs a locking mechanism in order to be able to guaran
 
 We can observe that steps \textit{1-4} and \textit{8} can be parallelized without the need for resource locking. However, the critical section in steps \textit{5-7} is executed with the acquisition of a global lock. Therefore, at this stage execute is not being performed in parallel.
 
-\subsubsection{Configuration}
+\subsection{Memcached Configuration}
 \label{sec:memcached_configuration}
-TODO
+Memcached provides a convenient command line configuration options to tweak the performance of memcached through various parameters, commonly used options include:
+\begin{itemize}
+    \item [-d] runs application in daemon mode
+    \item [-p port] binds application to a TCP port (18080 by default)
+    \item [-U port] binds application to a UDP port (18080 by default)
+    \item [-m memory] defines how much memory to allocate to memcached (default 64)
+    \item [-c conns] maximum number of simultaneous connections (default 1024)
+    \item [-t threads] Number of threads (default 4)
+    \item [-R num] Number of requests per connection (default 20)
+    \item [-B protocol] Protocol support. One of ascii|binary|auto (default auto)
+\end{itemize}
 
-\subsubsection{Production deployments}
-TODO: Discuss Facebook, Amazon, Twitter, ... deployments of memcached
+\subsection{Usage in Production}
+Memcached has gained significant popularity in the industry. Facebook uses ``more than 800 servers supplying over 28 terabytes of memory'' \cite{scalingMemcachedAtFacebook} to their users. From publicly available data, Facebook is considered to have the largest deployment of Memcached. However, other tech companies are betting on Memcached to provide high scalability and speed.
+
+Twitter uses Memcached for caching tweets on a user timeline \cite{twitterMemcached}. Twitter uses Twemcache, a Memcached fork, which ``has been heavily modified to make to suitable for the large scale production environment at Twitter.'' \cite{twemcache}
+
+Aside from direct usage in a software stack, both Google \cite{googleCloudMemache} and Amazon \cite{awsMemcached} offer Memcached as web service in their web platform.
+
+Hard numbers are hard to come by but Memcached is used heavily across the industry and shows maturity of application as well as the level trust large companies have in Memcached.
 
 
-% \subsection{Configuration options}
-% Memcached provides a convenient command line configration options to tweak the performance of memcached through various parameters, the most important ones are:
-% \begin{itemize}
-%     \item \emph{-d} runs application in daemon mode
-%     \item \emph{-p port} binds application to a port (18080 by default)
-%     \item \emph{-m memory} defines how much memory to allocate to memcached.
-% \end{itemize}
+\section{Redis}
+``Redis is an open source (BSD licensed), in-memory data structure store, used as database, cache and message broker. It supports data structures such as strings, hashes, lists, sets, sorted sets with range queries, bitmaps, hyperloglogs and geospatial indexes with radius queries.'' \cite{redis} Redis was first released in 2009 and as such is younger than Memcached. It is frequently favored by developers due to it's rich feature set and good performance.
 
-% Given the host hardware has 8GB memory, 6GB will be allocated to memcached to leave some memory for the underlying operating system. Throughout this paper, mostly options outlined above will be utilized. Where applicable, further settings will be explained.
+\subsection{Redis API}
+Redis includes a rich text based API with a large number of commands. For the purposes of clarity, we will list only a subset of the commands.
+
+\begin{itemize}
+    \item \texttt{get key} - Retrieve a value for a given key,
+    \item \texttt{mget key [key ...]} - Retrieve multiple keys simultaneously,
+    \item \texttt{set key value [expiry] [NX|XX]} - Insert \textit{key} into the cache with a \textit{value} and an optional expiration period. If NX, the key set if it does not already exist. If XX, key is set if already exists.
+    \item \texttt{append key value} - Append \textit{value} to \textit{key}. Effectively creates a list.
+    \item \texttt{del key [key ...]} - Delete a given key or multiple keys.
+\end{itemize}
+
+In this paper, we are primary concerned with \textit{get} and \textit{set}.
+
+\subsection{Redis Implementation}
+Redis is a single threaded application built on top of \textit{libevent}. The single threaded nature of Redis is a conscious design decision and aims to alleviate development complexity arising from parallel programming.
+
+Being single threaded allows Redis to perform an extremely fast event loop. The steps performed by a Redis cache are as follows \cite{redisUnderTheHood}:
+
+\begin{enumerate}
+    \item Requests are received by the Network Interface Controller (NIC) and queued
+    \item \emph{Libevent} receives the request and delivers it to Redis
+    \item Request is parsed
+    \item Hash of \emph{key} is calculated
+    \item Value is retrieved by the hash of the key
+    \item Response is constructed and transmitted
+\end{enumerate}
+
+Therefore, there are no locks required as all processing occurs sequentially.
+
+\subsection{Redis Configuration}
+Redis is configured through the use of a \textit{redis.conf} \cite{RedisConfiguration} file. The following list summaries the configuration options used in this paper.
+
+\begin{itemize}
+    \item \emph{daemonize} run in daemon mode (default yes)
+    \item \emph{port} binds application to a TCP port (default 6379)
+    \item \emph{maxmemory} The maximum amount of memory allocated to Redis (default 100MB)
+    \item \emph{maxmemory-policy} Eviction policy when max memory is reached, one of \textit{volatile-lru, allkeys-lru, volatile-random, allkeys-random, volatile-ttl, noeviction}. We use \textit{allkeys-lru} throughout this paper.
+\end{itemize}
+
+\subsection{Usage in Production}
+Redis does not lack in popularity in the industry. Twitter utilizes Redis for real time delivery \cite{redisTwitterRealTime}. GitHub uses Redis ``as a persistent key/value store for the routing information and a variety of other data.'' \cite{redisGithub}. Pinterest stores a followers graph inside Redis, shared by user IDs \cite{redisPinterest}. StackOverflow uses Redis for aggressive content caching \cite{redisStackOverflow}.
+
+From the above, it is apparent that Redis is popular within the industry with highly popular web services relying on it to deliver performance.

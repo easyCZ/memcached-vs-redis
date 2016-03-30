@@ -581,6 +581,33 @@ In this section, we have explored Memcached scalability with respect to object s
 
 % ---------------------------------------------------------------
 \section{Key Distribution}
+\label{sec:memcached_zipf}
 In this section, we investigate the effect of a skewed key distribution on the cache performance. In practice, ``most web objects follows a zipf-like distribution, although the exact slope may vary'' \cite{lim2013thin}.
 
-We consider a Zipf distribution defined by the following power law distribution $p(f) = f^{-1-1/s} $ where $f$ is the frequency
+We consider a Zipf distribution defined by the following frequency function
+
+$f(k; s, N) = \frac{1 / k^s}{\sum_{n=1}^{N} (1 / n^s)}$
+
+where $k$ represents a given key, $s$ represents an exponent describing the distribution (also called the zipf factor) and $N$ is the total number of keys. Figure \ref{fig:zipf} plots the cumulative density function produced for a 10 million key range with varying values of $s$.
+
+\begin{figure}[h]
+    \includegraphics[width=\textwidth]{./res2/zipf.png}
+    \caption{Zipf Cumulative Density Function with different values of s}
+    \label{fig:zipf}
+\end{figure}
+
+In order to generate a zipf-like distribution with Memtier, a fork of memtier \cite{zipfMemtier} with modified implementation is used as the official implementation does not support the zipf distribution.
+
+\subsection{Latency \& Throughput}
+\begin{figure}[h]
+    \includegraphics[width=\textwidth]{./res2/m_zipf.png}
+    \caption{Memcached with Zipf-like key distribution}
+    \label{fig:m_zipf}
+\end{figure}
+
+Figure \ref{fig:m_zipf} plots the relationship between latency, operations per second and the zipf factor. The higher the zipf factor, the more heavily skewed the distribution is. Overall, mean and 99th percentile latency remain nearly constant. Operations per second drop slightly at zipf factor of 2, however, on the relative scale of the operations per second it is rather insignificant.
+
+The CPU utilization with a Zipf distribution remains the same as in Figure \ref{fig:m_threads_irq_cpu}.
+
+We find that there is no significant difference in overall performance of Memcached nor in CPU utilization with a zipf-like distribution. However, we also find that a Zipf-like key distribution increases throughput as opposed to a uniformly random distribution. We obtain an increase of 10k requests per second as opposed to results obtained after IRQ pinning.
+
