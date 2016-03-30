@@ -1,0 +1,25 @@
+Throughout this study, we have examined the performance of Memcached and Redis under a wide range of configurations and scenarios. We have explored the individual configuration options offered by both caches and executed benchmarks on them to understand and evaluate their performance and behavior.
+
+Firstly, we explored the default configuration of both caches and established a baseline. We learned that Memcached performs better under the default configuration as a direct consequence of multiple threads.
+
+Secondly, we extended our analysis to cover scalability characteristics of both system. In particular, we examined the effect of threads scalability on Memcached as well scaling a Redis deployment through multiple isolated instances. We have observed an increase in performance under the multi-thread/instance configuration. Memcached performed better than Redis, however, both caches suffered from significant scalability problems.
+
+Thirdly, we have investigate the issues causing degraded scalability of both caches and learned that software interrupt processing was the cause. We have analyzed the effect of software interrupt processing on a single CPU core and addressed the problem by spreading software interrupt processing across all the CPU cores through IRQ affinity pinning. As a direct result, we have increased the performance of both caches significantly. At peak throughput, we achieved 546k and 505k requests with Memcached and Redis respectively. At this level of throughput, we have also been able to satisfy the quality of service requirements.
+
+Subsequently, we have examined additional performance optimization techniques and configurations such as group size for Memcached and thread/process pinning for Memcached and Redis. We have found both group size and thread/process pinning to provide no significant improvement to the overall performance in our experimental setup.
+
+Additionally, we have investigated the impact object size has on the performance of both object caches. We have found that object size scalability is limited within the quality of service constraints. We have been able to scale Memcached to object sizes of 256 bytes while Redis only scaled up to 128 bytes of data within the QoS. We have investigate the reasons for limited scalability of object sizes and concluded that larger objects result in network rather than computation bound operations.
+
+Furthermore, we have also paid attention to skewed key distributions, in particular a Zipf-like distribution. Our experiments showed that increased key skew results in overall higher throughput at similar 99th percentile latencies. We have observed that Redis experiences a greater relative increase in throughput as distribution skew increases.
+
+Moreover, we have explored the impact packet coalescing on the overall performance of the cache. We have found that with packet coalescing enabled, throughput is significantly increased while tail latency is reduced.
+
+Overall, Memcached performs better than Redis. However, Redis does not lack behind Memcached performance significantly. We have shown that a simpler application such as Redis modeled around the concept of a fast event loop can perform extremely well in comparison to a parallel application.
+
+Finally, Redis has a lot more offer in terms of features than Memcached. With its performance being a near match to Memcached. Modern systems may be able to utilize a faster development cycle with less overheads by opting for Redis over Memcached.
+
+\section{Future Work}
+In this study, we have only consider one server configuration. In order to obtain a more fine grained picture of Memcached and Redis performance, it would be beneficial to other hardware architectures. In particular, a server with faster CPU clock cycle as well as higher number of cores would allow for the study focus on more fine grained performance optimizations. Additionally, a faster network interface controller as well as corresponding switching capacity would move the study closer to common industry level deployments.
+
+Additionally, the study could be extended to consider clustered deployments of both Memcached and Redis. Redis has recently released clustering support and as a result a fair comparison of Memcached clusters to Redis clusters could be made.
+
